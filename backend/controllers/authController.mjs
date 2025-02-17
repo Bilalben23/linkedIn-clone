@@ -4,6 +4,7 @@ import { hashPassword } from "../utils/bcryptUtils.mjs";
 import { compare } from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwtUtils.mjs";
 import jwt from "jsonwebtoken";
+import { ENV_VARS } from "../configs/enVars.mjs";
 
 
 export const signin = async (req, res) => {
@@ -26,8 +27,8 @@ export const signin = async (req, res) => {
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            secure: ENV_VARS.NODE_ENV === "production",
+            sameSite: ENV_VARS.NODE_ENV === "production" ? "none" : "lax",
             path: "/",
             maxAge: rememberMe ? 1000 * 60 * 60 * 24 * 30 : 1000 * 60 * 60 * 24 * 7
         })
@@ -83,7 +84,7 @@ export const signup = async (req, res) => {
         })
 
         // Sending a welcome email to the registered user
-        const profileUrl = `${process.env.CLIENT_URL}/profile/${user.username}`
+        const profileUrl = `${ENV_VARS.CLIENT_URL}/profile/${user.username}`
         try {
             await sendWelcomeEmail(user.email, user.username, profileUrl);
         } catch (err) {
@@ -116,7 +117,7 @@ export const refreshToken = (req, res) => {
 
     try {
 
-        jwt.verify(refreshToken, process.env.SECRET_REFRESH_TOKEN, async (err, decoded) => {
+        jwt.verify(refreshToken, ENV_VARS.SECRET_REFRESH_TOKEN, async (err, decoded) => {
             if (err) {
                 return res.status(403).json({
                     success: false,
@@ -168,8 +169,8 @@ export const logout = (req, res) => {
 
         res.clearCookie("refreshToken", {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            secure: ENV_VARS.NODE_ENV === "production",
+            sameSite: ENV_VARS.NODE_ENV === "production" ? "none" : "lax",
             path: "/"
         })
 

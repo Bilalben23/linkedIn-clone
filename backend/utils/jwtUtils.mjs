@@ -1,9 +1,10 @@
 import jwt from "jsonwebtoken";
+import { ENV_VARS } from "../configs/enVars.mjs";
 
 export const generateAccessToken = (payload) => {
     return jwt.sign(
         payload,
-        process.env.SECRET_ACCESS_TOKEN,
+        ENV_VARS.SECRET_ACCESS_TOKEN,
         {
             expiresIn: "15m"
         }
@@ -14,7 +15,7 @@ export const generateAccessToken = (payload) => {
 export const generateRefreshToken = (payload, rememberMe) => {
     return jwt.sign(
         payload,
-        process.env.SECRET_REFRESH_TOKEN,
+        ENV_VARS.SECRET_REFRESH_TOKEN,
         {
             expiresIn: rememberMe ? "30d" : "7d"
         }
