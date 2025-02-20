@@ -6,18 +6,26 @@ import passport from "passport";
 import { configurePassport } from "./configs/passport.mjs";
 import helmet from "helmet";
 import cors from "cors";
+import { authenticateJWT } from "./middlewares/authMiddleware.mjs";
+
 import authRoutes from "./routes/authRoutes.mjs";
 import userRoutes from "./routes/userRoutes.mjs";
+import connectionRoutes from "./routes/connectionRoutes.mjs";
+import postRoutes from "./routes/postRoutes.mjs";
+import likeRoutes from "./routes/likeRoutes.mjs";
+import commentRoutes from "./routes/commentRoutes.mjs";
+import notificationRoutes from "./routes/notificationRoutes.mjs";
+
 
 const app = express();
 
 // global middlewares
-app.use(express.json());
+app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(helmet())
 app.use(cors({
-    origin: "*",
+    origin: [ENV_VARS.CLIENT_URL],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", "Accept"],
     credentials: true
@@ -27,8 +35,13 @@ app.use(passport.initialize());
 configurePassport();
 
 // API Routes
-app.use("/api/v1/auth", authRoutes)
-app.use("/api/v1/users", userRoutes)
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/users", authenticateJWT, userRoutes);
+app.use("/api/v1/connections", authenticateJWT, connectionRoutes);
+app.use("/api/v1/posts", authenticateJWT, postRoutes);
+app.use("/api/v1/likes", authenticateJWT, likeRoutes);
+app.use("/api/v1/comments", authenticateJWT, commentRoutes);
+app.use("/api/v1/notifications", authenticateJWT, notificationRoutes);
 
 
 const PORT = ENV_VARS.PORT;

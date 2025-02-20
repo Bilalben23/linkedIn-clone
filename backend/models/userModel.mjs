@@ -1,71 +1,118 @@
 import { Schema, model } from "mongoose";
+import { Post } from "./postModel.mjs";
+import { Comment } from "./commentModel.mjs";
+import { Like } from "./likeModel.mjs";
+import { Connection } from "./connectionModel.mjs";
+import { Notification } from "./notificationModel.mjs";
+
 
 const userSchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     username: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        trim: true,
+        lowercase: true,
+        index: true
     },
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        trim: true,
+        lowercase: true,
+        index: true
     },
     password: {
         type: String,
         required: true
     },
     profilePicture: {
-        type: String,
+        type: String, // store only the Cloudinary public_id
         default: ""
     },
     bannerImg: {
-        type: String,
+        type: String, // store only the cloudinary public_id
         default: ""
     },
     headline: {
-        // [web developer, HR,... ]
         type: String,
-        default: "LinkedIn User"
+        default: "LinkedIn User",
+        trim: true
     },
     location: {
         type: String,
-        default: "Earth"
+        default: "Earth",
+        trim: true
     },
     about: {
         type: String,
-        default: ""
+        default: "",
+        trim: true
     },
     skills: [String],
     experiences: [
         {
-            title: String,
-            company: String,
-            startDate: Date,
-            endDate: Date,
+            title: {
+                type: String,
+                required: true
+            },
+            company: {
+                type: String,
+                required: true
+            },
+            startDate: {
+                type: Date,
+                required: true
+            },
+            endDate: {
+                type: Date,
+            },
             description: String
         }
     ],
     education: [
         {
-            school: String,
-            fieldOfStudy: String,
-            startYear: Number,
-            endYear: Number
-        }
-    ],
-    connections: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "User"
+            school: {
+                type: String,
+                required: true
+            },
+            fieldOfStudy: {
+                type: String,
+                required: true
+            },
+            startYear: {
+                type: Number,
+                required: true
+            },
+            endYear: {
+                type: Number
+            }
         }
     ]
 }, { timestamps: true })
 
-
+userSchema.pre("deleteOne", { document: true, query: false }, async function (next) {
+    const userId = this._id;
+    try {
+        if (userId) {
+            await Promise.all([
+                Post.deleteMany({ author: userId }),
+                Comment.deleteMany({ author: userId }),
+                Like.deleteMany({ author: userId }),
+                Connection.deleteMany({ $or: [{ sender: userId }, { recipient: userId }] }),
+                Notification.deleteMany({ recipient: userId })
+            ])
+        }
+        next();
+    } catch (err) {
+        next(err)
+    }
+})
 
 export const User = model("User", userSchema);

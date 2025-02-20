@@ -7,21 +7,86 @@ import jwt from "jsonwebtoken";
 import { ENV_VARS } from "../configs/enVars.mjs";
 
 
+export const signup = async (req, res) => {
+    const { name, username, email, password } = req.body;
+
+    try {
+        const existingUser = await User.findOne({ $or: [{ email }, { username }] })
+            .select("username email")
+            .lean();
+
+        if (existingUser) {
+            const field = existingUser.email === email ? "email" : "username";
+
+            return res.status(409).json({
+                success: false,
+                message: `${field === "email" ? "Email" : "Username"} already exists`,
+                errors: [
+                    {
+                        field,
+                        msg: `${field === "email" ? "Email" : "Username"} already`
+                    }
+                ]
+            })
+        }
+
+        const hashedPassword = await hashPassword(password);
+
+        const newUser = new User({
+            name,
+            username,
+            email,
+            password: hashedPassword
+        })
+        await newUser.save()
+
+        // send welcome email asynchronously to the new register user
+        const profileUrl = `${ENV_VARS.CLIENT_URL}/profile/${newUser.username}`
+        sendWelcomeEmail(newUser.email, newUser.username, profileUrl)
+            .catch(err => console.error("Error sending welcome email:", err.message));
+
+        res.status(201).json({
+            success: true,
+            message: "User registered successfully"
+        })
+
+    } catch (err) {
+        console.log("Sign up error: " + err)
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+            error: err.message
+        })
+    }
+}
+
+
 export const signin = async (req, res) => {
     const { username, password, rememberMe = false } = req.body;
 
     try {
-        const user = await User.findOne({ username }).select("name username email password headline profilePicture");
+        // Allow login with either username or email
+        const user = await User.findOne({ $or: [{ username }, { email: username }] })
+            .select("name username password profilePicture")
+            .lean();
 
-        if (!user || !(await compare(password, user.password))) {
+        if (!user) {
             return res.status(400).json({
                 success: false,
                 message: "Incorrect Credentials"
             })
         }
 
-        // generate access token and refresh token
-        const accessToken = generateAccessToken({ id: user._id, username: user.username, email: user.email });
+        const isMatch = await compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({
+                success: false,
+                message: "Incorrect Credentials"
+            })
+        }
+
+        // generate tokens
+        const accessToken = generateAccessToken({ id: user._id, username: user.username });
         const refreshToken = generateRefreshToken({ id: user._id }, rememberMe);
 
 
@@ -40,7 +105,6 @@ export const signin = async (req, res) => {
             user: {
                 name: user.name,
                 username: user.username,
-                email: user.email,
                 profilePicture: user.profilePicture
             },
             accessToken
@@ -49,157 +113,118 @@ export const signin = async (req, res) => {
     } catch (err) {
         return res.status(500).json({
             success: false,
-            message: "Internal Server Error"
-        })
-    }
-}
-
-
-export const signup = async (req, res) => {
-    const { name, username, email, password } = req.body;
-
-    try {
-        const doesExist = await User.findOne({ $or: [{ email }, { username }] }, "username email");
-
-        if (doesExist) {
-            return res.status(409).json({
-                success: false,
-                message: doesExist.email === email ? "Email already exists" : "Username already exists",
-                errors: [
-                    {
-                        field: doesExist.email === email ? "email" : "username",
-                        msg: doesExist.email === email ? "Email already exists" : "Username already exists"
-                    }
-                ]
-            })
-        }
-
-        const hashedPassword = await hashPassword(password);
-
-        const user = await User.create({
-            name,
-            username,
-            email,
-            password: hashedPassword
-        })
-
-        // Sending a welcome email to the registered user
-        const profileUrl = `${ENV_VARS.CLIENT_URL}/profile/${user.username}`
-        try {
-            await sendWelcomeEmail(user.email, user.username, profileUrl);
-        } catch (err) {
-            console.error("Error sending welcome email: " + err.message)
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "User registered successfully"
-        })
-
-    } catch (err) {
-        return res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
+            message: "Internal Server Error",
+            error: err.message
         })
     }
 }
 
 
 export const refreshToken = (req, res) => {
-    const refreshToken = req.cookies?.refreshToken;
+    const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
         return res.status(403).json({
             success: false,
             message: "Refresh token is missing"
-        })
+        });
     }
 
     try {
-
         jwt.verify(refreshToken, ENV_VARS.SECRET_REFRESH_TOKEN, async (err, decoded) => {
             if (err) {
                 return res.status(403).json({
                     success: false,
                     message: "Invalid refresh token"
-                })
+                });
             }
-            const user = await User.findById(decoded.id);
-            if (!user) {
-                return res.status(404).json({
+
+            try {
+                const user = await User.findById(decoded.id)
+                    .select("name username profilePicture")
+                    .lean();
+
+                if (!user) {
+                    return res.status(404).json({
+                        success: false,
+                        message: "User not found"
+                    });
+                }
+
+                const newAccessToken = generateAccessToken({ id: user._id, username: user.username });
+
+                res.status(200).json({
+                    success: true,
+                    message: "New Access Token generated successfully",
+                    user: {
+                        name: user.name,
+                        username: user.username,
+                        profilePicture: user.profilePicture
+                    },
+                    accessToken: newAccessToken
+                });
+
+            } catch (err) {
+                console.error("Error fetching user:", err.message);
+                return res.status(500).json({
                     success: false,
-                    message: "User not found"
-                })
+                    message: "Internal Server Error",
+                    error: err.message
+                });
             }
-            const newAccessToken = generateAccessToken({ id: user._id, username: user.username, email: user.email });
-
-            res.status(200).json({
-                success: true,
-                message: "New Access Token generated successfully",
-                user: {
-                    name: user.name,
-                    username: user.username,
-                    email: user.email,
-                    profilePicture: user.profilePicture
-                },
-                accessToken: newAccessToken
-            })
-        })
-
+        });
     } catch (err) {
+        console.error("Server error in refreshToken:", err.message);
         return res.status(500).json({
             success: false,
-            message: "Internal Server Error"
-        })
+            message: "Internal Server Error",
+            error: err.message
+        });
     }
-}
+};
 
 
 export const logout = (req, res) => {
-    const refreshToken = req.cookie.refreshToken;
+    const refreshToken = req.cookies.refreshToken;
 
-    try {
-
-        if (!refreshToken) {
-            return res.status(400).json({
-                success: false,
-                message: "No active session found, user is already logged out"
-            })
-        }
-
-        res.clearCookie("refreshToken", {
-            httpOnly: true,
-            secure: ENV_VARS.NODE_ENV === "production",
-            sameSite: ENV_VARS.NODE_ENV === "production" ? "none" : "lax",
-            path: "/"
-        })
-
-        res.status(200).json({
-            success: true,
-            message: "Logout successfully"
-        })
-
-    } catch (err) {
-        return res.status(500).json({
+    if (!refreshToken) {
+        return res.status(400).json({
             success: false,
-            message: "Internal Server Error"
+            message: "No active session found, user is already logged out"
         })
     }
+
+    res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: ENV_VARS.NODE_ENV === "production",
+        sameSite: ENV_VARS.NODE_ENV === "production" ? "none" : "lax",
+        path: "/"
+    })
+
+    res.status(200).json({
+        success: true,
+        message: "Logout successfully"
+    })
 }
 
 
 export const getCurrentUser = async (req, res) => {
-    console.log(req.user);
     try {
-        const user = await User.findById(req.user._id).select("-password");
+        const user = await User.findById(req.user._id)
+            .select("-password")
+            .lean();
+
         res.status(200).json({
-            user
+            success: true,
+            message: "User retrieved successfully",
+            data: user
         })
 
     } catch (err) {
         return res.status(500).json({
             success: false,
-            message: "Internal Server Error"
+            message: "Internal Server Error",
+            error: err.message
         })
     }
 }

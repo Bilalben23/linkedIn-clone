@@ -12,7 +12,10 @@ export const configurePassport = () => {
     passport.use(
         new JWTStrategy(options, async (payload, done) => {
             try {
-                const user = await User.findById(payload.id).select("name username email profilePicture headline");
+                const user = await User.findById(payload.id)
+                    .select("name username email bannerImg profilePicture")
+                    .lean();
+
                 if (user) {
                     done(null, user);
                 } else {
