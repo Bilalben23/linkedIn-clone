@@ -3,7 +3,7 @@ import { Connection } from "../models/connectionModel.mjs";
 export const getUserConnections = async (req, res) => {
     const userId = req.user._id;
     const limit = 20;
-    const pageNumber = Number(req.query.page) || 1;
+    const pageNumber = Math.max(1, Number(req.query.page) || 1);
 
     try {
         // Get total connections count for pagination

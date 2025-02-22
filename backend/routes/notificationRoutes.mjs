@@ -1,5 +1,11 @@
 import { Router } from "express";
 import {
+    validateDeleteNotification,
+    validateGetUserNotifications,
+    validateMarkNotificationAsRead
+} from "../validations/notificationValidations.mjs";
+import { validateRequest } from "../middlewares/validateRequest.mjs";
+import {
     getUserNotifications,
     markNotificationAsRead,
     markAllNotificationsAsRead,
@@ -15,14 +21,14 @@ const router = Router();
  * @desc Get latest paginated notifications for the authenticated user.
  * @access Private (requires authentication)
  */
-router.get("/", getUserNotifications);
+router.get("/", validateGetUserNotifications, validateRequest, getUserNotifications);
 
 /**
  * @route PATCH /api/v1/notifications/:notificationId
  * @desc Mark a specific notification as read
  * @access Private (requires authentication)
  */
-router.patch("/:notificationId/read", markNotificationAsRead);
+router.patch("/:notificationId/read", validateMarkNotificationAsRead, validateRequest, markNotificationAsRead);
 
 /**
  * @route PATCH /api/v1/notifications/read-all
@@ -36,7 +42,7 @@ router.patch("/read-all", markAllNotificationsAsRead);
  * @desc Delete a specific notification
  * @access Private (requires authentication)
  */
-router.delete("/:notificationId", deleteNotification);
+router.delete("/:notificationId", validateDeleteNotification, validateRequest, deleteNotification);
 
 /**
  * DELETE /api/v1/notifications

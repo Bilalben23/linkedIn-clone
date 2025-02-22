@@ -64,6 +64,8 @@ export const signup = async (req, res) => {
 export const signin = async (req, res) => {
     const { username, password, rememberMe = false } = req.body;
 
+    console.log(rememberMe);
+
     try {
         // Allow login with either username or email
         const user = await User.findOne({ $or: [{ username }, { email: username }] })

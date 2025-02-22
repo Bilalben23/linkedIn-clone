@@ -1,4 +1,12 @@
 import { Router } from "express";
+import { validateRequest } from "../middlewares/validateRequest.mjs";
+import {
+    validateCreatePost,
+    validateDeletePost,
+    validateGetFeedPosts,
+    validateGetPostById,
+    validateUpdatePost
+} from "../validations/postValidations.mjs";
 import {
     getFeedPosts,
     getPostById,
@@ -15,35 +23,34 @@ const router = Router();
  * @desc Get paginated posts for the feed
  * @access Public 
  */
-router.get("/", getFeedPosts);
+router.get("/", validateGetFeedPosts, validateRequest, getFeedPosts);
 
 /**
  * @route GET /api/v1/posts/:postId
  * @desc Get a specific post by ID
  * @access Public 
  */
-router.get("/:postId", getPostById);
+router.get("/:postId", validateGetPostById, validateRequest, getPostById);
 
 /**
  * @route POST /api/v1/posts
  * @desc Create a new post
  * @access Private (Requires authentication)
  */
-router.post("/", createPost);
+router.post("/", validateCreatePost, validateRequest, createPost);
 
 /**
  * @route PATCH /api/v1/posts/:postId
  * @desc Update an existing post by ID
  * @access Private (Requires authentication)
  */
-router.patch("/:postId", updatePost);
+router.patch("/:postId", validateUpdatePost, validateRequest, updatePost);
 
 /**
  * @route DELETE /api/v1/posts/:postId
  * @desc Delete a post by ID
  * @access Private (Only the author can delete)
  */
-router.delete("/:postId", deletePost);
-
+router.delete("/:postId", validateDeletePost, validateRequest, deletePost);
 
 export default router;

@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { authenticateJWT } from "../middlewares/authMiddleware.mjs";
+import { signinValidation, signupValidation } from "../validations/authValidations.mjs";
+import { validateRequest } from "../middlewares/validateRequest.mjs";
 import {
     signup,
     signin,
@@ -16,14 +18,14 @@ const router = Router();
  * @desc Register a new user
  * @access Public
  */
-router.post("/signup", signup);
+router.post("/signup", signupValidation, validateRequest, signup);
 
 /**
  * @route POST /api/v1/auth/signin
  * @desc Authenticate user & get access token
  * @access Public
  */
-router.post("/signin", signin);
+router.post("/signin", signinValidation, validateRequest, signin);
 
 /**
  * @route GET /api/v1/auth/refresh-token

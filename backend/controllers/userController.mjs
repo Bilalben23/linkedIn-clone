@@ -89,7 +89,7 @@ export const updateProfile = async (req, res) => {
 
 export const deleteAccount = async (req, res) => {
     const userId = req.user._id;
-    const deleteOperations = [];
+    let deleteOperations = [];
 
     try {
 

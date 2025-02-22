@@ -1,4 +1,9 @@
 import { Router } from "express";
+import { validateRequest } from "../middlewares/validateRequest.mjs";
+import {
+    updateProfileValidation,
+    validateGetPublicProfile
+} from "../validations/userValidations.mjs";
 import {
     updateProfile,
     deleteAccount,
@@ -8,6 +13,7 @@ import {
 
 } from "../controllers/userController.mjs";
 
+
 const router = Router();
 
 
@@ -16,8 +22,7 @@ const router = Router();
  * @desc Update user profile details
  * @access Private (requires authentication)
  */
-router.patch("/profile", updateProfile);
-
+router.patch("/profile", updateProfileValidation, validateRequest, updateProfile);
 
 /**
  * @route DELETE /api/v1/users/delete-account
@@ -45,7 +50,7 @@ router.get("/search", searchUsers);
  * @desc Get public profile of a user by username
  * @access Public
  */
-router.get("/:username", getPublicProfile);
+router.get("/:username", validateGetPublicProfile, validateRequest, getPublicProfile);
 
 
 export default router;

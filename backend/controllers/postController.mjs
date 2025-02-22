@@ -3,7 +3,6 @@ import { Like } from "../models/likeModel.mjs";
 import cloudinary from "../configs/cloudinary.mjs";
 import { uploadImage } from "../utils/uploadImage.mjs";
 import { Connection } from "../models/connectionModel.mjs";
-import { connections } from "mongoose";
 
 export const getFeedPosts = async (req, res) => {
     const pageNumber = Number(req.query.page) || 1;
