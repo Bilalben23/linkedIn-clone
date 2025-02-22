@@ -2,71 +2,75 @@ import cloudinary from "../configs/cloudinary.mjs";
 import { Connection } from "../models/connectionModel.mjs";
 import { User } from "../models/userModel.mjs"
 import { hashPassword } from "../utils/bcryptUtils.mjs";
-
-
+import { uploadImage } from "../utils/uploadImage.mjs";
 
 
 export const updateProfile = async (req, res) => {
-    try {
+    const userId = req.user._id;
+    const updates = { ...req.body };
+    const timestamp = Date.now();
 
-        const userId = req.user._id;
-        const updates = { ...req.body };
+    try {
 
         if (updates.password) {
             updates.password = await hashPassword(updates.password);
         }
 
-        // handle profile picture update
-        if (updates.profilePicture) {
+        // upload profile picture
+        if (req.files?.profilePicture) {
+            try {
 
-            // delete the old profile picture if does exist
-            if (req.user.profilePicture) {
-                try {
+                const profilePictureName = `profile_${req.user._id}_${timestamp}`;
+                const newProfilePicture = await uploadImage(
+                    req.files.profilePicture,
+                    "linkedin/profile_pictures",
+                    profilePictureName
+                )
+
+                // if upload successful, delete old profile picture
+                if (req.user.profilePicture) {
                     await cloudinary.uploader.destroy(req.user.profilePicture);
-                } catch (deleteErr) {
-                    console.error("Error deleting old profile picture:", deleteErr.message);
                 }
-            }
-            try {
-                const result = await cloudinary.uploader.upload(updates.profilePicture, {
-                    folder: "linkedin_profile_pictures",
-                    public_id: `linkedin_profile_${userId}`,
-                    overwrite: true
-                })
-                updates.profilePicture = result.public_id;
-            } catch (uploadError) {
+
+                updates.profilePicture = newProfilePicture;
+            } catch (err) {
                 return res.status(400).json({
                     success: false,
-                    message: "Upload profile picture failed"
+                    message: "Profile picture upload failed",
+                    error: err.message
                 })
             }
         }
 
-        // handle banner image update
-        if (updates.bannerImg) {
-            // delete the old banner image if does exist
+        // upload banner image
+        if (req.files?.bannerImg) {
             try {
-                await cloudinary.uploader.destroy(req.user.bannerImg);
-            } catch (deleteErr) {
-                console.error("Error deleting old banner image:", deleteErr.message);
-            }
 
-            try {
-                const result = await cloudinary.uploader.upload(updates.bannerImg, {
-                    folder: "linkedIn_banner_images",
-                    public_id: `linkedIn_banner_${userId}`,
-                    overwrite: true
-                })
-                updates.bannerImg = result.public_id;
-            } catch (uploadError) {
+                const bannerName = `banner_${req.user._id}_${timestamp}`
+                const newBannerImg = await uploadImage(
+                    req.files.bannerImg,
+                    "linkedin/banner_images",
+                    bannerName
+                );
+                // if upload successful, delete old banner image
+                if (req.user.bannerImg) {
+                    await cloudinary.uploader.destroy(req.user.bannerImg);
+                }
+                updates.bannerImg = newBannerImg;
+            } catch (err) {
                 return res.status(400).json({
                     success: false,
-                    message: "Upload banner image failed"
+                    message: "Banner image upload failed",
+                    error: err.message
                 })
             }
         }
 
-        const updateUser = await User.findByIdAndUpdate(userId, updates, { new: true }).select("-password");
+        const updateUser = await User.findByIdAndUpdate(
+            userId,
+            updates,
+            { new: true }
+        ).select("-password");
 
         res.status(200).json({
             success: true,
@@ -85,27 +89,31 @@ export const updateProfile = async (req, res) => {
 
 export const deleteAccount = async (req, res) => {
     const userId = req.user._id;
+    const deleteOperations = [];
 
     try {
 
         // delete the profile picture from cloudinary (if exists)
-
         if (req.user.profilePicture) {
-            try {
-                await cloudinary.uploader.destroy(req.user.profilePicture);
-            } catch (err) {
-                console.error("Failed to delete profile picture:", err.message);
-            }
+            deleteOperations.push(
+                cloudinary.uploader.destroy(req.user.profilePicture)
+            );
         }
 
         // delete the banner image from cloudinary (if it exists)
         if (req.user.bannerImg) {
-            try {
-                await cloudinary.uploader.destroy(req.user.bannerImg);
-            } catch (err) {
-                console.error("Failed to delete banner image:", err.message);
-            }
+            deleteOperations.push(
+                cloudinary.uploader.destroy(req.user.bannerImg)
+            );
         }
+
+        const results = await Promise.allSettled(deleteOperations);
+
+        results.forEach((result, index) => {
+            if (result.status === "rejected") {
+                console.error(`Failed to delete ${index === 0 ? "profile picture" : "banner image"}:`, result.reason);
+            }
+        });
 
         // delete the user (Mongoose middleware will handle cascading deletes)
         await User.deleteOne({ _id: userId });
@@ -136,6 +144,9 @@ export const getSuggestedConnections = async (req, res) => {
         })
             .select("sender receiver")
             .lean();
+
+        console.log(userConnections);
+
 
         // Extract only user IDs from connections
         const connectedUserIds = userConnections.flatMap(conn => [conn.sender.toString, conn.receiver.toString])

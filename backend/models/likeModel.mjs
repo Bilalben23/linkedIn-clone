@@ -1,7 +1,7 @@
 import { model, Schema } from "mongoose";
 
 const likeSchema = new Schema({
-    author: {
+    user: {
         type: Schema.Types.ObjectId,
         ref: "User",
         required: true
@@ -13,7 +13,7 @@ const likeSchema = new Schema({
     }
 }, { timestamps: true })
 
-likeSchema.index({ author: 1, post: 1 }, { unique: true });
+likeSchema.index({ user: 1, post: 1 }, { unique: true });
 
 export const Like = model("Like", likeSchema);
 

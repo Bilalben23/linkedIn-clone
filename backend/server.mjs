@@ -7,6 +7,7 @@ import { configurePassport } from "./configs/passport.mjs";
 import helmet from "helmet";
 import cors from "cors";
 import { authenticateJWT } from "./middlewares/authMiddleware.mjs";
+import fileUpload from "express-fileupload";
 
 import authRoutes from "./routes/authRoutes.mjs";
 import userRoutes from "./routes/userRoutes.mjs";
@@ -20,10 +21,19 @@ import notificationRoutes from "./routes/notificationRoutes.mjs";
 const app = express();
 
 // global middlewares
-app.use(express.json({ limit: "5mb" }));
+app.use(express.json({ limit: "15mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(helmet())
+app.use(helmet({ contentSecurityPolicy: false }));
+
+app.use(fileUpload({
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+    abortOnLimit: true,
+    responseOnLimit: "File size too large. Maximum allowed size is 10MB",
+    safeFileNames: true,
+    preserveExtension: true
+}));
+
 app.use(cors({
     origin: [ENV_VARS.CLIENT_URL],
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -49,3 +59,7 @@ app.listen(PORT, () => {
     connectDB();
     console.log(`listening on http://localhost:${PORT}`)
 })
+
+
+// to handle notifications in large scale apps, we should use:  BullMQ + Redis  
+// send emails

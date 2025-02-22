@@ -89,7 +89,6 @@ export const signin = async (req, res) => {
         const accessToken = generateAccessToken({ id: user._id, username: user.username });
         const refreshToken = generateRefreshToken({ id: user._id }, rememberMe);
 
-
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: ENV_VARS.NODE_ENV === "production",
@@ -97,7 +96,6 @@ export const signin = async (req, res) => {
             path: "/",
             maxAge: rememberMe ? 1000 * 60 * 60 * 24 * 30 : 1000 * 60 * 60 * 24 * 7
         })
-
 
         res.status(200).json({
             success: true,
@@ -173,6 +171,7 @@ export const refreshToken = (req, res) => {
                 });
             }
         });
+
     } catch (err) {
         console.error("Server error in refreshToken:", err.message);
         return res.status(500).json({

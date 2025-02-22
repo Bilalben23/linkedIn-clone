@@ -12,7 +12,7 @@ export const getUserNotifications = async (req, res) => {
             .sort({ createdAt: -1 })
             .skip((pageNumber - 1) * limit)
             .limit(limit)
-            .populate("triggerBy", "name username profilePicture headline")
+            .populate("triggeredBy -recipient", "name username profilePicture headline")
             .populate({
                 path: "relatedPost",
                 select: "content image",
@@ -26,8 +26,8 @@ export const getUserNotifications = async (req, res) => {
             currentPage: pageNumber,
             totalPages,
             totalNotifications,
-            hasNextPage: currentPage < totalPages,
-            hasPrevPage: currentPage > 1
+            hasNextPage: pageNumber < totalPages,
+            hasPrevPage: pageNumber > 1
         }
 
         res.status(200).json({
@@ -106,7 +106,6 @@ export const markAllNotificationsAsRead = async (req, res) => {
         })
     }
 }
-
 
 
 export const deleteNotification = async (req, res) => {

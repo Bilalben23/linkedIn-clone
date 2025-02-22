@@ -89,7 +89,6 @@ export const getPendingRequests = async (req, res) => {
             hasPrevPage: pageNumber > 1
         }
 
-
         res.status(200).json({
             success: true,
             message: "User Pending Connections retrieved successfully",
@@ -111,6 +110,14 @@ export const sendConnectionRequest = async (req, res) => {
     const receiver = req.params.userId;
 
     try {
+
+        // prevent sending the request to myself
+        if (sender.toString() === receiver.toString()) {
+            return res.status(400).json({
+                success: false,
+                message: "You cannot send a connection request to yourself"
+            })
+        }
 
         // check if a connection request already exists
         const existingConnection = await Connection.findOne({
@@ -156,10 +163,7 @@ export const acceptConnectionRequest = async (req, res) => {
     const sender = req.params.userId;
 
     // TODO: send accept connection request email in parallel,
-    // TODO: add notification requestAccepted in parallel
-    // TODO: handle the request that is you send to yourself 
-    // TODO: and if the request is already accepted (rejected deleted instantly)
-    // TODO: an ideo comes to your mind, don't forget it: delete and performance
+
     try {
 
         const acceptedConnectionRequest = await Connection.findOneAndUpdate(
@@ -178,6 +182,15 @@ export const acceptConnectionRequest = async (req, res) => {
                 message: "No Pending connection request found"
             })
         }
+
+        Notification.create({
+            recipient: sender,
+            triggeredBy: receiver,
+            type: "connectionAccepted"
+        }).catch(err => {
+            console.error("Notification failed:", err.message);
+        })
+
 
         res.status(200).json({
             success: true,

@@ -97,16 +97,19 @@ const userSchema = new Schema({
     ]
 }, { timestamps: true })
 
+
 userSchema.pre("deleteOne", { document: true, query: false }, async function (next) {
     const userId = this._id;
+    if (!userId) return next();
+
     try {
         if (userId) {
             await Promise.all([
-                Post.deleteMany({ author: userId }),
-                Comment.deleteMany({ author: userId }),
-                Like.deleteMany({ author: userId }),
-                Connection.deleteMany({ $or: [{ sender: userId }, { recipient: userId }] }),
-                Notification.deleteMany({ recipient: userId })
+                Post.deleteMany({ author: userId }).exec(),
+                Comment.deleteMany({ user: userId }).exec(),
+                Like.deleteMany({ user: userId }).exec(),
+                Connection.deleteMany({ $or: [{ sender: userId }, { receiver: userId }] }).exec(),
+                Notification.deleteMany({ $or: [{ recipient: userId }, { triggeredBy: userId }] }).exec()
             ])
         }
         next();

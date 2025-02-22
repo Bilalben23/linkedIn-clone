@@ -18,6 +18,7 @@ const router = Router();
  */
 router.patch("/profile", updateProfile);
 
+
 /**
  * @route DELETE /api/v1/users/delete-account
  * @desc Permanently delete a user account
@@ -48,3 +49,6 @@ router.get("/:username", getPublicProfile);
 
 
 export default router;
+
+
+

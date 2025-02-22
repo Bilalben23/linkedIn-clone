@@ -1,18 +1,35 @@
 import { Like } from "../models/likeModel.mjs";
 import { Notification } from "../models/notificationModel.mjs"
 import { Post } from "../models/postModel.mjs";
+
+
 export const getPostLikes = async (req, res) => {
     const { postId } = req.params;
+    const pageNumber = Number(req.query.page) || 1;
+    const limit = 20;
 
     try {
         const likes = await Like.find({ post: postId })
-            .populate("author", "name username profilePicture headline")
+            .populate("user", "name username profilePicture headline")
+            .skip((pageNumber - 1) * limit)
+            .limit(limit)
             .lean();
+
+        const totalLikes = await Like.countDocuments({ post: postId });
+        const totalPages = Math.ceil(totalLikes / limit);
+
+        const pagination = {
+            currentPage: pageNumber,
+            totalPages,
+            totalLikes,
+            hasNextPage: pageNumber < totalPages,
+            hasPrevPage: pageNumber > 1
+        }
 
         res.status(200).json({
             success: true,
-            likesCount: likes.length,
-            data: likes
+            data: likes,
+            pagination
         })
 
     } catch (err) {
@@ -42,20 +59,18 @@ export const toggleLikePost = async (req, res) => {
 
         // try to delete the like if it exists (unlike)
         const like = await Like.findOneAndDelete({
-            post: postId,
-            author: userId
+            user: userId,
+            post: postId
         })
 
         if (like) {
             // Attempt to remove the notification in parallel, and don't break if it fails
-            Promise.resolve(
-                Notification.deleteOne({
-                    recipient: like.post.author,
-                    type: "like",
-                    triggeredBy: userId,
-                    relatedPost: postId
-                })
-            ).catch((err) => console.error("Error deleting like notification:", err.message));
+            Notification.deleteOne({
+                recipient: post.author,
+                type: "like",
+                triggeredBy: userId,
+                relatedPost: postId
+            }).catch((err) => console.error("Error deleting like notification:", err.message));
 
 
             return res.status(200).json({
@@ -65,21 +80,16 @@ export const toggleLikePost = async (req, res) => {
         }
 
         // if no like exists, create a new one (Like)
-        await Like.create({
-            post: postId,
-            user: userId
-        });
+        await Like.create({ post: postId, user: userId });
 
         // Add like notification in parallel(non-blocking) and only if the liker is not the post author
         if (post.author.toString() !== userId.toString()) {
-            Promise.resolve(
-                Notification.create({
-                    recipient: post.author,
-                    type: "like",
-                    triggeredBy: userId,
-                    relatedPost: postId
-                })
-            ).catch((err) => console.error("Error adding like notification:", err.message));
+            Notification.create({
+                recipient: post.author,
+                type: "like",
+                triggeredBy: userId,
+                relatedPost: postId
+            }).catch((err) => console.error("Error adding like notification:", err.message));
         }
 
         res.status(201).json({

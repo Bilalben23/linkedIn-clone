@@ -3,24 +3,19 @@ import { Notification } from "../models/notificationModel.mjs";
 import { Post } from "../models/postModel.mjs";
 
 export const getPostComments = async (req, res) => {
-    const pageNumber = Number(req.query.page) || 1;
+    const pageNumber = Math.max(1, Number(req.query.page) || 1);
     const limit = 20;
     const { postId } = req.params;
 
     try {
 
-        const comments = await Comment.find({ post: postId })
-            .sort({ createdAt: -1 })
-            .limit(limit)
-            .skip((pageNumber - 1) * limit)
-            .populate("author", "name username profilePicture headline")
-            .lean()
-
+        // First, count total comments (faster than fetching everything)
         const totalComments = await Comment.countDocuments({ post: postId });
         const totalPages = Math.ceil(totalComments / limit);
 
+        // If no comments and requesting page 1, check if the post exists
         if (totalComments === 0 && pageNumber === 1) {
-            const postExists = await Comment.exists({ _id: postId });
+            const postExists = await Post.exists({ _id: postId });
 
             if (!postExists) {
                 return res.status(404).json({
@@ -38,12 +33,28 @@ export const getPostComments = async (req, res) => {
             hasPrevPage: pageNumber > 1
         }
 
+        // if the request page is beyond available pages, return an empty array
+        if (pageNumber > totalPages) {
+            return res.status(200).json({
+                success: true,
+                data: [],
+                pagination
+            })
+        }
+
+        // fetch paginated comments
+        const comments = await Comment.find({ post: postId })
+            .sort({ createdAt: -1 })
+            .skip((pageNumber - 1) * limit)
+            .limit(limit)
+            .populate("user", "name username profilePicture headline")
+            .lean();
+
         res.status(200).json({
             success: true,
             data: comments,
             pagination
         })
-
 
     } catch (err) {
         return res.status(500).json({
@@ -70,7 +81,7 @@ export const commentOnPost = async (req, res) => {
         }
 
         const newComment = new Comment({
-            author: userId,
+            user: userId,
             content,
             post: postId
         })
@@ -85,10 +96,7 @@ export const commentOnPost = async (req, res) => {
                 relatedPost: postId
             })
             await newNotification.save();
-
-            // TODO: send email for the first comment
         }
-
 
         res.status(201).json({
             success: true,
@@ -96,8 +104,8 @@ export const commentOnPost = async (req, res) => {
             data: newComment
         })
 
-
     } catch (err) {
+        console.log(err);
         return res.status(500).json({
             success: false,
             message: "Internal Server Error",
@@ -122,7 +130,7 @@ export const updateComment = async (req, res) => {
             })
         }
 
-        if (userId.toString() !== comment.author.toString()) {
+        if (userId.toString() !== comment.user.toString()) {
             return res.status(403).json({
                 success: false,
                 message: "You are unauthorized to update this comment"
@@ -153,7 +161,7 @@ export const updateComment = async (req, res) => {
 
 export const deleteComment = async (req, res) => {
     const { commentId } = req.params;
-    const userId = req.user._id;
+    const userId = req.user._id.toString();
 
     try {
 
@@ -167,8 +175,8 @@ export const deleteComment = async (req, res) => {
             })
         }
 
-        // check if the user is either the comment author or the post author
-        if (userId !== comment.author.toString() && userId !== comment.post.author.toString()) {
+        // check if the user is either the comment user or the post user
+        if (userId !== comment.user.toString() && userId !== comment.post.author.toString()) {
             return res.status(403).json({
                 success: false,
                 message: "You are unauthorized to delete this comment"

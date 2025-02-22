@@ -12,14 +12,14 @@ const router = Router();
 
 /**
  * @route GET /api/v1/connections
- * @desc Get all connections for the authenticated user
+ * @desc Get paginated connections for the authenticated user
  * @access Private (requires authentication)
  */
 router.get("/", getUserConnections);
 
 /**
  * @route GET /api/v1/connections/pending
- * @desc Get all pending connection requests for the authenticated user
+ * @desc Get paginated pending connection requests for the authenticated user
  * @access Private (requires authentication)
  */
 router.get("/pending", getPendingRequests);

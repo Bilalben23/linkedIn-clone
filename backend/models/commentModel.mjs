@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 const commentSchema = new Schema({
-    author: {
+    user: {
         type: Schema.Types.ObjectId,
         ref: "User",
         required: true
@@ -18,7 +18,6 @@ const commentSchema = new Schema({
     }
 }, { timestamps: true })
 
-commentSchema.index({ author: 1 });
-commentSchema.index({ post: 1 });
+commentSchema.index({ user: 1, post: 1 });
 
 export const Comment = model("Comment", commentSchema);

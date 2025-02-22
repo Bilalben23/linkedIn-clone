@@ -16,7 +16,7 @@ router.get("/:postId", getPostLikes);
 
 /**
  * @route POST /api/v1/likes/:postId
- * @desc Like a post
+ * @desc Like/unlike a post
  * @access Private (Authenticated users only)
  */
 router.post("/:postId", toggleLikePost);
