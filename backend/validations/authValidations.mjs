@@ -5,12 +5,14 @@ export const signupValidation = checkSchema({
         in: "body",
         trim: true,
         escape: true,
+        notEmpty: {
+            errorMessage: "Name is required",
+            bail: true
+        },
         isString: {
             errorMessage: "Name must be a string"
         },
-        notEmpty: {
-            errorMessage: "Name is required"
-        },
+
         isLength: {
             options: { min: 3, max: 50 },
             errorMessage: "Name must be between 3 and 50 characters long"
@@ -22,14 +24,15 @@ export const signupValidation = checkSchema({
         toLowerCase: true,
         escape: true,
         notEmpty: {
-            errorMessage: "Username is required"
+            errorMessage: "Username is required",
+            bail: true
         },
         isAlphanumeric: {
             errorMessage: "Username can only contain letters and numbers"
         },
         isLength: {
-            options: { min: 3, max: 25 },
-            errorMessage: "Username must be between 3 and 25 characters long"
+            options: { min: 3, max: 50 },
+            errorMessage: "Username must be between 3 and 50 characters long"
         }
     },
     email: {
@@ -47,31 +50,38 @@ export const signupValidation = checkSchema({
         in: "body",
         trim: true,
         notEmpty: {
-            errorMessage: "Password is required"
+            errorMessage: "Password is required",
+            bail: true,
         },
         isLength: {
             options: { min: 8 },
-            errorMessage: "Password must be at least 8 characters long",
+            errorMessage: "Password must be at least 8 characters",
             bail: true,
         },
         matches: {
             options: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-            errorMessage: "Password must contain at least one letter, one number, and one special character"
+            errorMessage: "Password must have at least 1 letter, 1 number & 1 special character"
         }
     }
 })
 
 
 export const signinValidation = checkSchema({
-    username: {
+    email: {
         in: "body",
         trim: true,
+        normalizeEmail: true,
         toLowerCase: true,
         escape: true,
         notEmpty: {
-            errorMessage: "Username is required"
+            errorMessage: "Email address is required"
+        },
+        isEmail: {
+            errorMessage: "Email address is invalid"
         }
-    }, password: {
+
+    },
+    password: {
         in: "body",
         trim: true,
         escape: true,
@@ -79,13 +89,11 @@ export const signinValidation = checkSchema({
             errorMessage: "Password is required"
         }
 
-    }, rememberMe: {
+    },
+    rememberMe: {
         in: "body",
         toBoolean: true,
-        optional: true,
-        default: {
-            options: false
-        }
+        optional: true
     }
 })
 

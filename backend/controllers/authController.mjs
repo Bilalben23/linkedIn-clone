@@ -10,6 +10,8 @@ import { ENV_VARS } from "../configs/enVars.mjs";
 export const signup = async (req, res) => {
     const { name, username, email, password } = req.body;
 
+    console.log(name, username, email, password);
+
     try {
         const existingUser = await User.findOne({ $or: [{ email }, { username }] })
             .select("username email")
@@ -62,20 +64,19 @@ export const signup = async (req, res) => {
 
 
 export const signin = async (req, res) => {
-    const { username, password, rememberMe = false } = req.body;
-
-    console.log(rememberMe);
+    const { email, password, rememberMe = false } = req.body;
 
     try {
         // Allow login with either username or email
-        const user = await User.findOne({ $or: [{ username }, { email: username }] })
+        const user = await User.findOne({ email })
             .select("name username password profilePicture")
             .lean();
 
         if (!user) {
             return res.status(400).json({
                 success: false,
-                message: "Incorrect Credentials"
+                message: "Incorrect Credentials",
+                errors: []
             })
         }
 
@@ -83,7 +84,8 @@ export const signin = async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({
                 success: false,
-                message: "Incorrect Credentials"
+                message: "Incorrect Credentials",
+                errors: []
             })
         }
 

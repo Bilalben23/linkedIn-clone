@@ -1,1 +1,12 @@
 @import "tailwindcss";
+@plugin "daisyui";
+
+@layer base {
+
+
+    body {
+        font-family: "Inter", serif;
+        background-color: white;
+        color: black;
+    }
+}
