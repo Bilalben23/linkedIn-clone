@@ -1,7 +1,12 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import useLogout from '../../hooks/useLogout';
 
 export default function Navbar() {
+    const logout = useLogout();
+    const signOut = () => {
+        logout();
+    }
     return (
         <header>
             <nav>
@@ -10,11 +15,13 @@ export default function Navbar() {
                         <NavLink to="/">Home</NavLink>
                     </li>
                     <li>
-                        <NavLink to="/signin">Signin</NavLink>
+                        <NavLink to="/profile">Profile</NavLink>
                     </li>
-                    <li>
-                        <NavLink to="/signup">Signup</NavLink>
-                    </li>
+                    <button
+                        type='button'
+                        className='btn btn-secondary'
+                        onClick={signOut}
+                    >Logout</button>
                 </ul>
             </nav>
         </header>

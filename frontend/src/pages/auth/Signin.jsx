@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import { useFormik } from 'formik';
@@ -23,7 +23,7 @@ export default function Signin() {
             if (data.success) {
                 toast.success(data.message);
                 login(data.user, data.accessToken);
-                navigate("/");
+                navigate("/", { replace: true });
             } else {
                 toast.error(data.message);
                 actions.setFieldValue("password", "");

@@ -18,7 +18,7 @@ export default function Signup() {
             const { data } = await axiosInstance.post("/api/v1/auth/signup", values);
             if (data.success) {
                 toast.success(data.message);
-                navigate("/signin");
+                navigate("/signin", { replace: true });
             } else {
                 toast.error(data.message)
             }
@@ -70,7 +70,6 @@ export default function Signup() {
             </div>
 
             <div className='flex gap-x-10 items-center'>
-
                 <div className="md:flex-1 p-10 shadow rounded-sm">
                     <h1 className="text-2xl md:text-3xl lg:text-4xl text-balance font-medium leading-10 text-orange-900 mb-6">Welcome to your professional community</h1>
                     <form onSubmit={handleSubmit}>

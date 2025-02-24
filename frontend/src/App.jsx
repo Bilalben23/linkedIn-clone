@@ -3,36 +3,49 @@ import Layout from "./components/layout/Layout";
 import Home from "./pages/Home";
 import Signup from "./pages/auth/Signup";
 import Signin from "./pages/auth/Signin";
+import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
+import Profile from "./pages/Profile";
 
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Protected routes - only logged-in users can access */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="/profile" element={<Profile />} />
 
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
+            {/* ..... */}
+
+          </Route>
+
         </Route>
 
-        <Route>
+        {/* Public routes - only guests (not logged in) can access */}
+        <Route element={<PublicRoute />}>
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
         </Route>
       </Routes>
+
     </BrowserRouter>
   )
 }
 
 
 /*  
-  * 10 habits for be a successful developer 
-  1. daily practice
-  2. read other developers codes
-  3. understand fundamentals before tools
-  4. solve problems, not just write code
-  5. continue learning and updates
-  6. write clean and structure code
-  7. understand system, not just code
-  8. works on real projects
-  9. communicate with developers community
+ * 10 Habits to Become a Successful Developer  
+    1. Practice coding daily.  
+    2. Read and analyze other developers' code.  
+    3. Understand the fundamentals before focusing on tools.  
+    4. Solve real-world problems, not just write code.  
+    5. Keep learning and stay updated with new technologies.  
+    6. Write clean, structured, and maintainable code.  
+    7. Understand systems architecture, not just individual code snippets.  
+    8. Work on real projects to gain hands-on experience.  
+    9. Engage with and contribute to the developer community.  
+    10. Learn to debug efficiently and optimize performance.  
 */
