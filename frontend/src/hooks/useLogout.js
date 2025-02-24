@@ -2,24 +2,37 @@ import { useNavigate } from 'react-router-dom';
 import useAuth from './useAuth'
 import useAxios from './useAxios';
 import toast from 'react-hot-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function useLogout() {
     const { logout } = useAuth();
     const axiosInstance = useAxios();
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
-    const signOut = async () => {
-        try {
+
+
+    const mutation = useMutation({
+        mutationFn: async () => {
             const { data } = await axiosInstance.get("/api/v1/auth/logout");
+            return data;
+        },
+        onSuccess: (data) => {
             if (data.success) {
                 logout();
                 toast.success("Logout successfully")
+
+                // invalidate ENTIRE query cache
+                queryClient.clear();
+
                 navigate("/signin", { replace: true });
             }
-        } catch (err) {
-            console.error(err);
+        },
+        onError: (err) => {
+            console.error("Logout failed", err);
+            toast.error("Logout failed. Please try again.");
         }
-    }
+    })
 
-    return signOut;
+    return mutation.mutate;
 }

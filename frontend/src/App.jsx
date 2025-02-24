@@ -6,29 +6,36 @@ import Signin from "./pages/auth/Signin";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import Profile from "./pages/Profile";
+import PersistLogin from "./components/PersistLogin";
 
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Protected routes - only logged-in users can access */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="/profile" element={<Profile />} />
-
-            {/* ..... */}
-
-          </Route>
-
-        </Route>
-
         {/* Public routes - only guests (not logged in) can access */}
         <Route element={<PublicRoute />}>
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
         </Route>
+
+
+        {/* Protected routes - requires authentication*/}
+        <Route element={<PersistLogin />}>
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="/profile" element={<Profile />} />
+
+              {/* .... */}
+
+            </Route>
+          </Route>
+        </Route>
+
+        {/* Catch-All 404 Page */}
+        <Route path="*" element={<h1 className="text-center text-2xl">404 - Page Not Found</h1>} />
+
       </Routes>
 
     </BrowserRouter>

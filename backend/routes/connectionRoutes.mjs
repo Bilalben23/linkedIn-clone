@@ -9,6 +9,7 @@ import { validateRequest } from "../middlewares/validateRequest.mjs";
 import {
     getUserConnections,
     getPendingRequests,
+    getPendingRequestsCount,
     sendConnectionRequest,
     acceptConnectionRequest,
     rejectConnectionRequest
@@ -30,6 +31,13 @@ router.get("/", validateGetUserConnections, validateRequest, getUserConnections)
  * @access Private (requires authentication)
  */
 router.get("/pending", validateGetPendingRequests, validateRequest, getPendingRequests);
+
+/**
+ * @route GET /api/v1/connections/pending/count
+ * @desc Get the count of pending connections requests sent to the authenticated user
+ * @access Private (requires authentication)
+ */
+router.get("/pending/count", getPendingRequestsCount);
 
 /**
  * @route POST /api/v1/connections/:userId

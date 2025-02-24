@@ -16,7 +16,7 @@ const connectionSchema = new Schema({
         enum: ["pending", "accepted"],
         default: "pending"
     }
-}, { timestamps: true })
+}, { timestamps: true });
 
 connectionSchema.index({ sender: 1, receiver: 1 }, { unique: true });
 connectionSchema.index({ status: 1 });

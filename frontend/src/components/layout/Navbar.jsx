@@ -1,29 +1,102 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import useLogout from '../../hooks/useLogout';
+import { MdHome, MdPeopleAlt, MdNotifications, MdSearch, MdLogout } from "react-icons/md";
+import useUnreadNotificationsCount from '../../hooks/useUnreadNotificationsCount';
+import usePendingRequestsCount from '../../hooks/usePendingRequestsCount';
+
 
 export default function Navbar() {
     const logout = useLogout();
-    const signOut = () => {
-        logout();
-    }
+    const { unreadCount } = useUnreadNotificationsCount();
+    const { pendingRequestsCount } = usePendingRequestsCount();
+
+
     return (
-        <header>
+        <header className='py-3 px-8 flex items-center justify-between shadow w-full fixed top-0 bg-white z-50'>
+            <div className='flex items-center gap-x-3'>
+                <div>
+                    <img src="/assets/small-logo.png" alt="linkedIn logo" className='w-8 rounded-md' />
+                </div>
+                <form>
+                    <div className="flex items-center input-sm input bg-gray-200 rounded-md px-2 transition-all duration-300 focus-within:w-70 w-50">
+                        <MdSearch size={25} />
+                        <input
+                            type="text"
+                            className="w-full bg-transparent outline-none transition-all duration-500 focus:w-full"
+                            placeholder="Search"
+                        />
+                    </div>
+
+                </form>
+            </div>
+
             <nav>
-                <ul>
+                <ul className='flex items-center gap-x-8'>
                     <li>
-                        <NavLink to="/">Home</NavLink>
+                        <Link to="/" className='flex flex-col items-center opacity-70 transition-opacity hover:opacity-100'>
+                            <MdHome size={30} />
+                            <span className='text-xs'>Home</span>
+                        </Link>
                     </li>
                     <li>
-                        <NavLink to="/profile">Profile</NavLink>
+                        <Link to="/networks" className='flex flex-col items-center group'>
+                            <span className='indicator'>
+                                <MdPeopleAlt size={30} className='opacity-70 transition-opacity group-hover:opacity-100' />
+                                {
+                                    pendingRequestsCount !== 0 && <span className='indicator-item flex items-center justify-center size-[22px] shadow bg-red-700 top-0.5 rounded-full text-[12px] text-white font-semibold right-1'>{pendingRequestsCount}</span>
+                                }
+
+                            </span>
+                            <span className='text-xs opacity-70 transition-opacity group-hover:opacity-100'>My Network</span>
+                        </Link>
                     </li>
-                    <button
-                        type='button'
-                        className='btn btn-secondary'
-                        onClick={signOut}
-                    >Logout</button>
+                    <li>
+                        <Link to="/notifications" className='flex flex-col items-center group'>
+                            <span className='indicator'>
+                                <MdNotifications size={30} className='opacity-70 transition-opacity group-hover:opacity-100' />
+                                {
+                                    unreadCount !== 0 && <span className='indicator-item flex items-center justify-center size-[22px] shadow bg-red-700 right-1 top-0.5 rounded-full text-[12px] text-white font-semibold'>{unreadCount}</span>
+                                }
+                            </span>
+                            <span className='text-xs opacity-70 transition-opacity group-hover:opacity-100'>Notifications</span>
+                        </Link>
+                    </li>
+
+                    <li>
+                        <div className="dropdown">
+                            <div tabIndex={0} role="button" className='flex flex-col cursor-pointer justify-center items-center opacity-70 transition-opacity hover:opacity-100'>
+                                <img src='/assets/avatar.png' alt="avatar" className='w-7 rounded-full' />
+                                <p className='text-xs flex justify-center items-center gap-x-1'>
+                                    <span>Me</span>
+                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="black" xmlns="http://www.w3.org/2000/svg">
+                                        <polygon points="0,0 10,0 5,6" />
+                                    </svg></p>
+                            </div>
+                            <ul tabIndex={0} className="dropdown-content mt-4 !right-0  rounded-box z-[1] w-52 p-2 shadow-lg bg-white" role='menu'>
+                                <li className='border-b pb-3 border-gray-300'>
+                                    <Link to="/profile" className='flex items-start gap-x-2 mb-1 justify-between'>
+                                        <div className='shrink-0'>
+                                            <img src="/assets/avatar.png" alt="avatar" className='w-11 rounded-full' />
+                                        </div>
+                                        <div >
+                                            <p className='font-semibold mb-0.5 text-sm'>User Name</p>
+                                            <p className='text-xs'>User headline goes here, and maybe a little bit longer that this</p>
+                                        </div>
+                                    </Link>
+                                    <Link to="/profile" className='btn btn-outline btn-block rounded-full btn-xs btn-primary'>View Profile</Link>
+                                </li>
+                                <li className='mt-3'>
+                                    <button type='button' className='btn btn-sm btn-outline rounded-full btn-block' onClick={logout}>
+                                        <MdLogout size={20} />
+                                        Sign Out
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </li>
                 </ul>
             </nav>
-        </header>
+        </header >
     )
 }

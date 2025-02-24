@@ -24,10 +24,11 @@ export const getUserNotifications = async (req, res) => {
 
         const pagination = {
             currentPage: pageNumber,
-            totalPages,
             totalNotifications,
             hasNextPage: pageNumber < totalPages,
-            hasPrevPage: pageNumber > 1
+            hasPrevPage: pageNumber > 1,
+            nextPage: pageNumber < totalPages ? pageNumber + 1 : null,
+            prevPage: pageNumber > 1 ? pageNumber - 1 : null,
         }
 
         res.status(200).json({
@@ -36,6 +37,28 @@ export const getUserNotifications = async (req, res) => {
             pagination
         })
 
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+            error: err.message
+        })
+    }
+}
+
+
+export const getUnreadNotificationCount = async (req, res) => {
+    const userId = req.user._id;
+    try {
+        const unreadCount = await Notification.countDocuments({
+            recipient: userId,
+            read: false
+        });
+
+        res.status(200).json({
+            success: true,
+            unreadCount
+        })
     } catch (err) {
         return res.status(500).json({
             success: false,

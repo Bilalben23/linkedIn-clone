@@ -2,11 +2,12 @@
 @plugin "daisyui";
 
 @layer base {
-
+    html {
+        background-color: #F3F2EF !important;
+    }
 
     body {
         font-family: "Inter", serif;
-        background-color: white;
         color: black;
     }
 }

@@ -104,6 +104,28 @@ export const getPendingRequests = async (req, res) => {
     }
 }
 
+export const getPendingRequestsCount = async (req, res) => {
+    const userId = req.user._id;
+    try {
+        const pendingRequestsCount = await Connection.countDocuments({
+            receiver: userId,
+            status: "pending"
+        })
+
+        res.status(200).json({
+            success: true,
+            pendingRequestsCount
+        })
+
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+            error: err.message
+        })
+    }
+}
+
 
 export const sendConnectionRequest = async (req, res) => {
     const sender = req.user._id;
@@ -184,7 +206,7 @@ export const acceptConnectionRequest = async (req, res) => {
         }
 
         Notification.create({
-            recipient: sender,
+            receiver: sender,
             triggeredBy: receiver,
             type: "connectionAccepted"
         }).catch(err => {

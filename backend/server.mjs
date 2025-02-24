@@ -63,3 +63,18 @@ app.listen(PORT, () => {
 
 // to handle notifications in large scale apps, we should use:  BullMQ + Redis  
 // send emails
+// polling concept & websockets
+
+/*  
+ * 10 Habits to Become a Successful Developer  
+ 1. Practice coding daily.  
+ 2. Read and analyze other developers' code.  
+ 3. Understand the fundamentals before focusing on tools.  
+ 4. Solve real-world problems, not just write code.  
+ 5. Keep learning and stay updated with new technologies.  
+ 6. Write clean, structured, and maintainable code.  
+ 7. Understand systems architecture, not just individual code snippets.  
+ 8. Work on real projects to gain hands-on experience.  
+ 9. Engage with and contribute to the developer community.  
+10. Learn to debug efficiently and optimize performance.  
+*/

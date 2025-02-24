@@ -6,6 +6,7 @@ import {
 } from "../validations/notificationValidations.mjs";
 import { validateRequest } from "../middlewares/validateRequest.mjs";
 import {
+    getUnreadNotificationCount,
     getUserNotifications,
     markNotificationAsRead,
     markAllNotificationsAsRead,
@@ -22,6 +23,15 @@ const router = Router();
  * @access Private (requires authentication)
  */
 router.get("/", validateGetUserNotifications, validateRequest, getUserNotifications);
+
+
+/**
+ * @route GET /api/v1/notifications/unread-count
+ * @desc Get the count of unread notifications for the authenticated user
+ * @access Private (requires authentication)
+ */
+router.get("/unread-count", getUnreadNotificationCount);
+
 
 /**
  * @route PATCH /api/v1/notifications/:notificationId
