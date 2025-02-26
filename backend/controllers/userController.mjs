@@ -149,7 +149,7 @@ export const getSuggestedConnections = async (req, res) => {
 
 
         // Extract only user IDs from connections
-        const connectedUserIds = userConnections.flatMap(conn => [conn.sender.toString, conn.receiver.toString])
+        const connectedUserIds = userConnections.flatMap(conn => [conn.sender.toString(), conn.receiver.toString()])
 
         // Find users who are NOT already connected and exclude the current user
         const suggestedUsers = await User.find({

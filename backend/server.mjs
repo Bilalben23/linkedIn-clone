@@ -13,7 +13,7 @@ import authRoutes from "./routes/authRoutes.mjs";
 import userRoutes from "./routes/userRoutes.mjs";
 import connectionRoutes from "./routes/connectionRoutes.mjs";
 import postRoutes from "./routes/postRoutes.mjs";
-import likeRoutes from "./routes/likeRoutes.mjs";
+import reactionRoutes from "./routes/reactionRoutes.mjs";
 import commentRoutes from "./routes/commentRoutes.mjs";
 import notificationRoutes from "./routes/notificationRoutes.mjs";
 
@@ -49,7 +49,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", authenticateJWT, userRoutes);
 app.use("/api/v1/connections", authenticateJWT, connectionRoutes);
 app.use("/api/v1/posts", authenticateJWT, postRoutes);
-app.use("/api/v1/likes", authenticateJWT, likeRoutes);
+app.use("/api/v1/reactions", authenticateJWT, reactionRoutes);
 app.use("/api/v1/comments", authenticateJWT, commentRoutes);
 app.use("/api/v1/notifications", authenticateJWT, notificationRoutes);
 

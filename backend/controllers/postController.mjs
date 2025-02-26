@@ -1,52 +1,74 @@
 import { Post } from "../models/postModel.mjs"
-import { Like } from "../models/likeModel.mjs";
+import { Reaction } from "../models/reactionModel.mjs";
 import cloudinary from "../configs/cloudinary.mjs";
 import { uploadImage } from "../utils/uploadImage.mjs";
 import { Connection } from "../models/connectionModel.mjs";
 
 export const getFeedPosts = async (req, res) => {
+    const userId = req.user._id;
     const pageNumber = Number(req.query.page) || 1;
     const limit = 20;
 
+
     try {
-
-        const totalPosts = await Post.countDocuments();
-        const totalPages = Math.ceil(totalPosts / limit);
-
-        const posts = await Post.find({})
+        const totalPostsPromise = Post.countDocuments({ author: { $ne: userId } });
+        const postsPromise = Post.find({ author: { $ne: userId } })
             .populate("author", "name username profilePicture headline")
             .sort({ createdAt: -1 })
             .limit(limit)
             .skip((pageNumber - 1) * limit)
             .lean();
 
-        // Get likes count for each post in one query
+        // Fetch totalPosts and posts in parallel
+        const [totalPosts, posts] = await Promise.all([totalPostsPromise, postsPromise]);
+
+        // Get reactions count for each post in one query
         const postIds = posts.map(post => post._id);
-        const likesData = await Like.aggregate([
+        const reactionsData = await Reaction.aggregate([
             {
                 $match: { post: { $in: postIds } }
             },
             {
                 $group: {
-                    _id: "$post", likesCount: { $sum: 1 }
+                    _id: "$post",
+                    reactionsCount: { $sum: 1 },
+                    uniqueReactions: { $addToSet: "$type" },
+                    userReactions: { $addToSet: "$user" }
                 }
             }
         ])
 
-        // Convert likesData into a map for quick lookup
-        const likesMap = new Map(likesData.map(like => [like._id.toString(), like.likesCount]));
+        // Convert reactionsData into a map for quick lookup
+        const reactionsMap = new Map(
+            reactionsData.map(reaction => [
+                reaction._id.toString(),
+                {
+                    count: reaction.reactionsCount,
+                    unique: reaction.uniqueReactions,
+                    hasReacted: reaction.userReactions.some(user => user.toString() === userId.toString())
+                }
+            ])
+        );
 
-        // attach likes to each post
+        // attach reactions to each post
         posts.forEach(post => {
-            post.likesCount = likesMap.get(post._id.toString()) || 0;
+            const reactionInfo = reactionsMap.get(post._id.toString()) || { count: 0, unique: [] };
+            post.reactions = {
+                reactionsCount: reactionInfo.count,
+                uniqueReactions: reactionInfo.unique,
+                hasReacted: reactionInfo.hasReacted
+            }
         })
 
+        const totalPages = Math.ceil(totalPosts / limit);
         const pagination = {
             currentPage: pageNumber,
             totalPages,
             totalPosts,
             hasNextPage: pageNumber < totalPages,
-            hasPrevPage: pageNumber > 1
+            hasPrevPage: pageNumber > 1,
+            nextPage: pageNumber < totalPages ? pageNumber + 1 : null,
+            prevPage: pageNumber > 1 ? pageNumber - 1 : null,
         }
 
         res.status(200).json({
@@ -70,9 +92,9 @@ export const getPostById = async (req, res) => {
     const { postId } = req.params;
 
     try {
-        const [post, likesCount] = await Promise.all([
+        const [post, reactionsCount] = await Promise.all([
             Post.findById(postId).populate("author", "name username profilePicture headline"),
-            Like.countDocuments({ post: postId })
+            Reaction.countDocuments({ post: postId })
         ])
 
         if (!post) {
@@ -85,7 +107,7 @@ export const getPostById = async (req, res) => {
         res.status(200).json({
             success: true,
             data: post,
-            likesCount
+            reactionsCount
         })
 
     } catch (err) {

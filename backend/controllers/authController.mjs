@@ -69,7 +69,7 @@ export const signin = async (req, res) => {
     try {
         // Allow login with either username or email
         const user = await User.findOne({ email })
-            .select("name username password profilePicture")
+            .select("name username password profilePicture bannerImg headline location")
             .lean();
 
         if (!user) {
@@ -107,7 +107,11 @@ export const signin = async (req, res) => {
             user: {
                 name: user.name,
                 username: user.username,
-                profilePicture: user.profilePicture
+                profilePicture: user.profilePicture,
+                bannerImg: user.bannerImg,
+                headline: user.headline,
+                location: user.location,
+
             },
             accessToken
         })
@@ -143,7 +147,7 @@ export const refreshToken = (req, res) => {
 
             try {
                 const user = await User.findById(decoded.id)
-                    .select("name username profilePicture")
+                    .select("name username profilePicture bannerImg headline location")
                     .lean();
 
                 if (!user) {
@@ -161,7 +165,10 @@ export const refreshToken = (req, res) => {
                     user: {
                         name: user.name,
                         username: user.username,
-                        profilePicture: user.profilePicture
+                        profilePicture: user.profilePicture,
+                        bannerImg: user.bannerImg,
+                        headline: user.headline,
+                        location: user.location
                     },
                     accessToken: newAccessToken
                 });

@@ -10,7 +10,7 @@ const notificationSchema = new Schema({
     type: {
         type: String,
         required: true,
-        enum: ["like", "comment", "connectionAccepted", "newPost"]
+        enum: ["reaction", "comment", "connectionAccepted", "newPost"]
     },
     triggeredBy: {
         type: Schema.Types.ObjectId,

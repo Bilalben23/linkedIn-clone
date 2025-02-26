@@ -3,6 +3,9 @@ import useLogout from '../../hooks/useLogout';
 import { MdHome, MdPeopleAlt, MdNotifications, MdSearch, MdLogout } from "react-icons/md";
 import useUnreadNotificationsCount from '../../hooks/useUnreadNotificationsCount';
 import usePendingRequestsCount from '../../hooks/usePendingRequestsCount';
+import useAuth from '../../hooks/useAuth';
+
+const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 
 
 export default function Navbar() {
@@ -10,15 +13,17 @@ export default function Navbar() {
     const { unreadCount } = useUnreadNotificationsCount();
     const { pendingRequestsCount } = usePendingRequestsCount();
 
+    const { authState: { user } } = useAuth();
+
 
     return (
-        <header className='py-3 px-8 flex items-center justify-between shadow w-full fixed top-0 bg-white z-50'>
+        <header className='py-3 px-8 flex items-center justify-between shadow w-full fixed top-0 bg-base-100 z-50'>
             <div className='flex items-center gap-x-3'>
                 <div>
                     <img src="/assets/small-logo.png" alt="linkedIn logo" className='w-8 rounded-md' />
                 </div>
                 <form>
-                    <div className="flex items-center input-sm input bg-gray-200 rounded-md px-2 transition-all duration-300 focus-within:w-70 w-50">
+                    <div className="flex items-center input-sm input bg-blue-50 rounded-md px-2 transition-all duration-300 focus-within:w-70 w-50">
                         <MdSearch size={25} />
                         <input
                             type="text"
@@ -64,19 +69,32 @@ export default function Navbar() {
 
                     <li>
                         <div className="dropdown">
-                            <div tabIndex={0} role="button" className='flex flex-col cursor-pointer justify-center items-center opacity-70 transition-opacity hover:opacity-100'>
-                                <img src='/assets/avatar.png' alt="avatar" className='w-7 rounded-full' />
+                            <div tabIndex={0} role="button" className='flex flex-col cursor-pointer justify-center items-center'>
+                                <img src={user.profilePicture
+                                    ? `${CLOUDINARY_BASE_URL + user.profilePicture}`
+                                    : '/assets/avatar.png'
+                                }
+                                    alt={`${user.name}'s avatar`}
+                                    className='w-7 rounded-full'
+                                />
                                 <p className='text-xs flex justify-center items-center gap-x-1'>
                                     <span>Me</span>
                                     <svg width="10" height="10" viewBox="0 0 10 10" fill="black" xmlns="http://www.w3.org/2000/svg">
                                         <polygon points="0,0 10,0 5,6" />
-                                    </svg></p>
+                                    </svg>
+                                </p>
                             </div>
-                            <ul tabIndex={0} className="dropdown-content mt-4 !right-0  rounded-box z-[1] w-52 p-2 shadow-lg bg-white" role='menu'>
+                            <ul tabIndex={0} className="dropdown-content mt-4 !right-0 rounded-box z-[1] w-52 p-2 shadow-lg bg-base-100" role='menu'>
                                 <li className='border-b pb-3 border-gray-300'>
                                     <Link to="/profile" className='flex items-start gap-x-2 mb-1 justify-between'>
                                         <div className='shrink-0'>
-                                            <img src="/assets/avatar.png" alt="avatar" className='w-11 rounded-full' />
+                                            <img src={user.profilePicture
+                                                ? `${CLOUDINARY_BASE_URL + user.profilePicture}`
+                                                : "/assets/avatar.png"
+                                            }
+                                                alt="avatar"
+                                                className='w-11 rounded-full'
+                                            />
                                         </div>
                                         <div >
                                             <p className='font-semibold mb-0.5 text-sm'>User Name</p>

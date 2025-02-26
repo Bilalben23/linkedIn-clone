@@ -1,14 +1,13 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import useAxios from "./useAxios";
+import { useInfiniteQuery } from '@tanstack/react-query'
+import useAxios from './useAxios'
 
-
-export default function useNotifications() {
+export default function usePostsFeed() {
     const axiosInstance = useAxios();
 
     return useInfiniteQuery({
-        queryKey: ['notifications'],
+        queryKey: ["postsFeed"],
         queryFn: async ({ pageParam }) => {
-            const { data } = await axiosInstance.get(`/api/v1/notifications?page=${pageParam}`);
+            const { data } = await axiosInstance.get(`/api/v1/posts?page=${pageParam}`);
             return data;
         },
         initialPageParam: 1,

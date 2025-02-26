@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 import { Post } from "./postModel.mjs";
 import { Comment } from "./commentModel.mjs";
-import { Like } from "./likeModel.mjs";
+import { Reaction } from "./reactionModel.mjs";
 import { Connection } from "./connectionModel.mjs";
 import { Notification } from "./notificationModel.mjs";
 
@@ -107,7 +107,7 @@ userSchema.pre("deleteOne", { document: true, query: false }, async function (ne
             await Promise.all([
                 Post.deleteMany({ author: userId }).exec(),
                 Comment.deleteMany({ user: userId }).exec(),
-                Like.deleteMany({ user: userId }).exec(),
+                Reaction.deleteMany({ user: userId }).exec(),
                 Connection.deleteMany({ $or: [{ sender: userId }, { receiver: userId }] }).exec(),
                 Notification.deleteMany({ $or: [{ recipient: userId }, { triggeredBy: userId }] }).exec()
             ])

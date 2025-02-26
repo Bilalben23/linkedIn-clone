@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 import { Comment } from "./commentModel.mjs";
-import { Like } from "./likeModel.mjs";
+import { Reaction } from "./reactionModel.mjs";
 import { Notification } from "./notificationModel.mjs";
 
 
@@ -29,7 +29,7 @@ postSchema.pre("deleteOne", { document: true, query: false }, async function (ne
     try {
         if (postId) {
             await Promise.all([
-                Like.deleteMany({ post: postId }),
+                Reaction.deleteMany({ post: postId }),
                 Comment.deleteMany({ post: postId }),
                 Notification.deleteMany({ relatedPost: postId })
             ])
