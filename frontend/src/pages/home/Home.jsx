@@ -23,7 +23,7 @@ export default function Home() {
         hasNextPage,
         hasPreviousPage
     } = usePostsFeed();
-    const { data: suggestedConnections } = useSuggestedConnections();
+    // const { data: suggestedConnections } = useSuggestedConnections();
 
     console.log(postsFeed);
 

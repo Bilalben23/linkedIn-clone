@@ -14,10 +14,10 @@ const PostHeader = ({ post }) => {
         <>
             {
                 true && <div className='border-b mb-3 pb-2 border-gray-300 justify-end flex items-center gap-x-1 mx-3'>
-                    <button type="button" className='btn btn-xs btn-ghost btn-circle'>
+                    <button type="button" className='btn btn-xs btn-ghost btn-circle border-0'>
                         <FaEllipsisH size={15} />
                     </button>
-                    <button type="button" className='btn btn-xs btn-ghost btn-circle'>
+                    <button type="button" className='btn btn-xs btn-ghost btn-circle border-0'>
                         <IoClose size={20} />
                     </button>
                 </div>
@@ -37,7 +37,7 @@ const PostHeader = ({ post }) => {
                         />
                     </div>
                     <div>
-                        <p className='font-black hover:text-blue-700 hover:link-hover text-sm line-clamp-1'>{post.author.name}</p>
+                        <p className='font-black hover:text-[#0A66C2] hover:link-hover text-sm line-clamp-1'>{post.author.name}</p>
                         <p className='text-[13px] line-clamp-1 text-gray-700'>{post.author.headline}</p>
                         <p className='text-[12px] flex items-center gap-x-1 text-gray-700'>
                             <span>{timeAgo(post.createdAt)}</span>
@@ -57,7 +57,7 @@ const PostHeader = ({ post }) => {
                             </button>
                         </div>
                         : <div>
-                            <button type='button' className='btn text-blue-800 btn-xs hover:bg-blue-50 border-none  btn-ghost'>
+                            <button type='button' className='btn text-[#0A66C2] btn-xs hover:bg-blue-50 border-none  btn-ghost'>
                                 <FaUserPlus />
                                 <span className='!font-bold'>Connect</span>
                             </button>

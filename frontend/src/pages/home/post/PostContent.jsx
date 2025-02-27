@@ -16,7 +16,7 @@ const PostContent = ({ post }) => {
                         }
                         {
                             post.content.length > 200 && <span
-                                className='text-blue-700 cursor-pointer'
+                                className='text-[#0A66C2] cursor-pointer'
                                 onClick={() => setExpandedText(!expandedText)}
                             >...{expandedText ? "Less" : "More"}</span>
                         }

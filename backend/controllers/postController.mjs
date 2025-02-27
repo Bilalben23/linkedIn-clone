@@ -3,40 +3,61 @@ import { Reaction } from "../models/reactionModel.mjs";
 import cloudinary from "../configs/cloudinary.mjs";
 import { uploadImage } from "../utils/uploadImage.mjs";
 import { Connection } from "../models/connectionModel.mjs";
+import { Comment } from "../models/commentModel.mjs";
 
 export const getFeedPosts = async (req, res) => {
     const userId = req.user._id;
     const pageNumber = Number(req.query.page) || 1;
     const limit = 20;
 
-
     try {
+        // Start fetching totalPosts in parallel with post data
         const totalPostsPromise = Post.countDocuments({ author: { $ne: userId } });
-        const postsPromise = Post.find({ author: { $ne: userId } })
+
+        // Fetch posts
+        const posts = await Post.find({ author: { $ne: userId } })
             .populate("author", "name username profilePicture headline")
             .sort({ createdAt: -1 })
             .limit(limit)
             .skip((pageNumber - 1) * limit)
             .lean();
 
-        // Fetch totalPosts and posts in parallel
-        const [totalPosts, posts] = await Promise.all([totalPostsPromise, postsPromise]);
-
-        // Get reactions count for each post in one query
+        // Get reactions count for each post
         const postIds = posts.map(post => post._id);
-        const reactionsData = await Reaction.aggregate([
-            {
-                $match: { post: { $in: postIds } }
-            },
+        const reactionsPromise = Reaction.aggregate([
+            { $match: { post: { $in: postIds } } },
             {
                 $group: {
                     _id: "$post",
                     reactionsCount: { $sum: 1 },
                     uniqueReactions: { $addToSet: "$type" },
-                    userReactions: { $addToSet: "$user" }
+                    userReactions: {
+                        $push: {
+                            user: "$user",
+                            type: "$type"
+                        }
+                    }
                 }
             }
-        ])
+        ]);
+
+        // Fetch comments count
+        const commentsPromise = Comment.aggregate([
+            { $match: { post: { $in: postIds } } },
+            {
+                $group: {
+                    _id: "$post",
+                    commentsCount: { $sum: 1 }
+                }
+            }
+        ]);
+
+        // Execute all queries in parallel
+        const [reactionsData, commentsData, totalPosts] = await Promise.all([
+            reactionsPromise,
+            commentsPromise,
+            totalPostsPromise
+        ]);
 
         // Convert reactionsData into a map for quick lookup
         const reactionsMap = new Map(
@@ -45,21 +66,38 @@ export const getFeedPosts = async (req, res) => {
                 {
                     count: reaction.reactionsCount,
                     unique: reaction.uniqueReactions,
-                    hasReacted: reaction.userReactions.some(user => user.toString() === userId.toString())
+                    hasReacted: reaction.userReactions.some(r => r.user.toString() === userId.toString()),
+                    userReactionType: reaction.userReactions.find(r => r.user.toString() === userId.toString())?.type || null
                 }
             ])
         );
 
-        // attach reactions to each post
+        // Convert commentsData into a map for quick lookup
+        const commentsMap = new Map(commentsData.map(comment => [comment._id.toString(), comment.commentsCount]));
+
+        // Attach reactions and comments count to each post
         posts.forEach(post => {
-            const reactionInfo = reactionsMap.get(post._id.toString()) || { count: 0, unique: [] };
+            const reactionInfo = reactionsMap.get(post._id.toString()) || {
+                count: 0,
+                unique: [],
+                hasReacted: false,
+                userReactionType: null
+            };
+
             post.reactions = {
                 reactionsCount: reactionInfo.count,
                 uniqueReactions: reactionInfo.unique,
-                hasReacted: reactionInfo.hasReacted
-            }
-        })
+                hasReacted: reactionInfo.hasReacted,
+                userReactionType: reactionInfo.userReactionType
+            };
 
+            post.commentsCount = commentsMap.get(post._id.toString()) || 0;
+
+            // TODO: add reposts logic in feature improvements
+            post.repostsCount = 0
+        });
+
+        // Pagination
         const totalPages = Math.ceil(totalPosts / limit);
         const pagination = {
             currentPage: pageNumber,
@@ -69,13 +107,13 @@ export const getFeedPosts = async (req, res) => {
             hasPrevPage: pageNumber > 1,
             nextPage: pageNumber < totalPages ? pageNumber + 1 : null,
             prevPage: pageNumber > 1 ? pageNumber - 1 : null,
-        }
+        };
 
         res.status(200).json({
             success: true,
             data: posts,
             pagination
-        })
+        });
 
     } catch (err) {
         console.error("Error in getFeedPosts:", err);
@@ -83,9 +121,10 @@ export const getFeedPosts = async (req, res) => {
             success: false,
             message: "Internal Server Error",
             error: err.message
-        })
+        });
     }
-}
+};
+
 
 
 export const getPostById = async (req, res) => {

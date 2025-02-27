@@ -43,11 +43,11 @@ export default function Sidebar({ user }) {
             <div className="p-4 bg-base-100 rounded-lg shadow border border-gray-200 flex flex-col gap-y-2">
                 <Link to="#" className="flex items-center justify-between group font-semibold">
                     <p className="text-sm group-hover:underline">Profile Views</p>
-                    <p className="text-sm text-blue-600 group-hover:underline">222</p>
+                    <p className="text-sm text-[#0A66C2] group-hover:underline">222</p>
                 </Link>
                 <Link to="#" className="flex items-center justify-between group font-semibold">
                     <p className="text-sm group-hover:underline">Post Impressions</p>
-                    <p className="text-sm text-blue-600 group-hover:underline">1991</p>
+                    <p className="text-sm text-[#0A66C2] group-hover:underline">1991</p>
                 </Link>
             </div>
             <div className="p-4 bg-base-100 rounded-lg shadow border border-gray-200 flex flex-col gap-y-2">
