@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import { useFormik } from 'formik';
 import { signinValidationSchema } from '../../validations/authValidations';
 import { axiosInstance } from "../../utils/axiosInstance";
 import { ClipLoader } from "react-spinners";
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 import useAuth from "../../hooks/useAuth";
 
 

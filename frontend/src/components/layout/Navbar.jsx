@@ -17,7 +17,7 @@ export default function Navbar() {
 
 
     return (
-        <header className='py-3 px-8 flex items-center justify-between shadow w-full fixed top-0 bg-base-100 z-50'>
+        <header className='py-3 px-8 flex items-center justify-between shadow-xs border-b border-gray-300 w-full fixed top-0 bg-base-100 z-50'>
             <div className='flex items-center gap-x-3'>
                 <div>
                     <img src="/assets/small-logo.png" alt="linkedIn logo" className='w-8 rounded-md' />
@@ -86,7 +86,7 @@ export default function Navbar() {
                             </div>
                             <ul tabIndex={0} className="dropdown-content mt-4 !right-0 rounded-box z-[1] w-52 p-2 shadow-lg bg-base-100" role='menu'>
                                 <li className='border-b pb-3 border-gray-300'>
-                                    <Link to="/profile" className='flex items-start gap-x-2 mb-1 justify-between'>
+                                    <Link to="/profile" className='flex items-start gap-x-2 mb-1'>
                                         <div className='shrink-0'>
                                             <img src={user.profilePicture
                                                 ? `${CLOUDINARY_BASE_URL + user.profilePicture}`
@@ -97,8 +97,8 @@ export default function Navbar() {
                                             />
                                         </div>
                                         <div >
-                                            <p className='font-semibold mb-0.5 text-sm'>User Name</p>
-                                            <p className='text-xs'>User headline goes here, and maybe a little bit longer that this</p>
+                                            <p className='font-semibold mb-0.5 text-sm'>{user.name}</p>
+                                            <p className='text-xs'>{user.headline}</p>
                                         </div>
                                     </Link>
                                     <Link to="/profile" className='btn btn-outline btn-block rounded-full btn-xs btn-primary'>View Profile</Link>

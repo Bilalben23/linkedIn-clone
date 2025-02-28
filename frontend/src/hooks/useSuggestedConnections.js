@@ -8,7 +8,7 @@ export default function useSuggestedConnections() {
         queryKey: ["suggestedConnections"],
         queryFn: async () => {
             const { data } = await axiosInstance.get("/api/v1/users/suggestions");
-            return data;
+            return data.data;
         }
     })
 }

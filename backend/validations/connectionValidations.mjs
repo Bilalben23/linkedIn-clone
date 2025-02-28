@@ -18,6 +18,6 @@ const userIdValidation = checkSchema({
 
 export const validateGetUserConnections = pageValidation;
 export const validateGetPendingRequests = pageValidation;
-export const validateSendConnectionRequest = userIdValidation;
+export const validateToggleConnectionRequest = userIdValidation;
 export const validateAcceptConnectionRequest = userIdValidation;
 export const validateRejectConnectionRequest = userIdValidation;

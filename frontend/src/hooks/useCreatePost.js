@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useAxios from './useAxios';
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 
 
 export default function useCreatePost() {

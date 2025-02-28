@@ -3,10 +3,19 @@ import { LuGlobe } from "react-icons/lu";
 import { FaEllipsisH, FaUserPlus } from 'react-icons/fa';
 import { IoClose } from "react-icons/io5";
 import { timeAgo } from "../../../utils/timeAgo";
+import useSendConnectionRequest from '../../../hooks/useSendConnectionRequest';
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 
-const PostHeader = ({ post }) => {
+export default function PostHeader({ post }) {
+    const sendConnectionRequest = useSendConnectionRequest();
+
+    const handleSendConnectionRequest = (userId) => {
+        sendConnectionRequest.mutate(userId);
+    }
+
+
+
     return (
         <>
             {
@@ -64,5 +73,3 @@ const PostHeader = ({ post }) => {
         </>
     );
 };
-
-export default PostHeader;

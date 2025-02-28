@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useAxios from './useAxios'
+import { toast } from 'react-toastify';
 
 export default function useToggleReaction() {
     const axiosInstance = useAxios();
@@ -17,6 +18,7 @@ export default function useToggleReaction() {
             queryClient.invalidateQueries({ queryKey: ["postsFeed"] });
         },
         onError: (err) => {
+            toast.error(err.message);
             console.log("Error toggling reaction: ", err)
         }
     })

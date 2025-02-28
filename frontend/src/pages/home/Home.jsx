@@ -6,6 +6,7 @@ import Sidebar from './Sidebar';
 import PostCreation from './PostCreation';
 import SortDropdown from './SortDropdown';
 import FeedPosts from './post/FeedPosts';
+import SuggestedConnections from './SuggestedConnections/SuggestedConnections';
 
 export default function Home() {
     const [sortOption, setSortOption] = useState("top");
@@ -40,8 +41,7 @@ export default function Home() {
                 <FeedPosts postsFeed={postsFeed} />
             </section>
 
-            <div className='border p-20 bg-base-100 hidden md:block'>
-            </div>
+            <SuggestedConnections />
         </section>
     )
 }

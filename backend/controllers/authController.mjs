@@ -215,25 +215,3 @@ export const logout = (req, res) => {
         message: "Logout successfully"
     })
 }
-
-
-export const getCurrentUser = async (req, res) => {
-    try {
-        const user = await User.findById(req.user._id)
-            .select("-password")
-            .lean();
-
-        res.status(200).json({
-            success: true,
-            message: "User retrieved successfully",
-            data: user
-        })
-
-    } catch (err) {
-        return res.status(500).json({
-            success: false,
-            message: "Internal Server Error",
-            error: err.message
-        })
-    }
-}

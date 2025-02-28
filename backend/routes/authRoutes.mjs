@@ -41,11 +41,4 @@ router.get("/refresh-token", refreshToken);
  */
 router.get("/logout", authenticateJWT, logout);
 
-/**
- * @route GET /api/v1/auth/me
- * @desc Get current authenticated user
- * @access Private
- */
-router.get("/me", authenticateJWT, getCurrentUser);
-
 export default router;

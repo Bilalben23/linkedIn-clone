@@ -4,11 +4,11 @@ import PostContent from './PostContent';
 import PostFooter from './PostFooter';
 import PostComments from '../comments/PostComments';
 
-const Post = ({ post }) => {
+export default function Post({ post }) {
     const [showComments, setShowComments] = useState(false);
 
     return (
-        <div className='bg-base-100 rounded-lg shadow-2xs border border-gray-300 py-2'>
+        <div className='bg-base-100 rounded-box shadow-2xs border border-gray-300 py-2'>
             {/* Post Header */}
             <PostHeader post={post} />
 
@@ -26,5 +26,3 @@ const Post = ({ post }) => {
         </div>
     );
 };
-
-export default Post;

@@ -137,16 +137,12 @@ export const getSuggestedConnections = async (req, res) => {
     const userId = req.user._id;
 
     try {
-        // Get accepted connections (users already connected with the current user)
+        // Get user connections (users already connected or the request is pending with the current user)
         const userConnections = await Connection.find({
             $or: [{ sender: userId }, { receiver: userId }],
-            status: "accepted"
         })
             .select("sender receiver")
             .lean();
-
-        console.log(userConnections);
-
 
         // Extract only user IDs from connections
         const connectedUserIds = userConnections.flatMap(conn => [conn.sender.toString(), conn.receiver.toString()])

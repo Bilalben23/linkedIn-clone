@@ -8,18 +8,16 @@ import useAuth from '../../../hooks/useAuth';
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 
-export default function CommentItem({ comment }) {
+export default function CommentItem({ comment, postId }) {
     const [showReactions, setShowReactions] = useState(false);
     const [hoveredReaction, setHoveredReaction] = useState(null);
     const { authState: { user } } = useAuth()
 
-    console.log(comment);
     const isEdited = new Date(comment.createdAt).getTime() !== new Date(comment.updatedAt).getTime();
     const formattedTimeAgo = timeAgo(comment.createdAt);
 
-    const isCommentAuthorPostAuthor = comment.user._id?.toString() === comment.post.author?.toString();
+    const isCommentAuthorPostAuthor = comment.user._id?.toString() === postId.toString();
     const isMyCommentButNotPostAuthor = comment.user._id?.toString() === user._id?.toString() && !isCommentAuthorPostAuthor;
-
 
     return (
         <div className='flex flex-col gap-y-2'>

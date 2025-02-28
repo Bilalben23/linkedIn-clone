@@ -127,7 +127,7 @@ export const getPendingRequestsCount = async (req, res) => {
 }
 
 
-export const sendConnectionRequest = async (req, res) => {
+export const toggleConnectionRequest = async (req, res) => {
     const sender = req.user._id;
     const receiver = req.params.userId;
 
@@ -150,13 +150,16 @@ export const sendConnectionRequest = async (req, res) => {
         }).lean();
 
         if (existingConnection) {
-            return res.status(400).json({
-                success: false,
-                message: "Connection request already exists"
-            })
+            // If it exists, remove the connection request (toggle off)
+            await Connection.findByIdAndDelete(existingConnection._id);
+            return res.status(200).json({
+                success: true,
+                isConnected: false,
+                message: "Connection request withdrew successfully",
+            });
         }
 
-        // create a new connection request 
+        // if doesn't exist, create a new connection request (toggle on)
         const newConnection = new Connection({
             sender,
             receiver,
@@ -164,10 +167,10 @@ export const sendConnectionRequest = async (req, res) => {
         })
         await newConnection.save()
 
-        res.status(200).json({
+        res.status(201).json({
             success: true,
             message: "Connection request sent successfully",
-            data: newConnection
+            isConnected: true
         })
 
     } catch (err) {

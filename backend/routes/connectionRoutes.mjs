@@ -2,15 +2,15 @@ import { Router } from "express";
 import {
     validateAcceptConnectionRequest,
     validateGetPendingRequests,
-    validateGetUserConnections,
-    validateSendConnectionRequest
+    validateToggleConnectionRequest,
+    validateGetUserConnections
 } from "../validations/connectionValidations.mjs";
 import { validateRequest } from "../middlewares/validateRequest.mjs";
 import {
     getUserConnections,
     getPendingRequests,
     getPendingRequestsCount,
-    sendConnectionRequest,
+    toggleConnectionRequest,
     acceptConnectionRequest,
     rejectConnectionRequest
 } from "../controllers/connectionController.mjs"
@@ -41,10 +41,10 @@ router.get("/pending/count", getPendingRequestsCount);
 
 /**
  * @route POST /api/v1/connections/:userId
- * @desc Send a connection request to a user
+ * @desc Toggle connection request (send or cancel) to a user
  * @access Private (requires authentication)
  */
-router.post("/:userId", validateSendConnectionRequest, validateRequest, sendConnectionRequest);
+router.post("/:userId", validateToggleConnectionRequest, validateRequest, toggleConnectionRequest);
 
 /**
  * @route PATCH /api/v1/connections/:userId/accept

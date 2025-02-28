@@ -4,7 +4,7 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import { useFormik } from 'formik';
 import { signupValidationSchema } from '../../validations/authValidations';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 import { ClipLoader } from 'react-spinners';
 import { axiosInstance } from '../../utils/axiosInstance';
 

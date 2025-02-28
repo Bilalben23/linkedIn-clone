@@ -50,7 +50,6 @@ export const getPostComments = async (req, res) => {
             .skip((pageNumber - 1) * limit)
             .limit(limit)
             .populate("user", "name username profilePicture headline")
-            .populate("post", "author")
             .lean();
 
         res.status(200).json({

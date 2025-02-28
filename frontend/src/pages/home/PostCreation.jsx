@@ -27,7 +27,7 @@ export default function PostCreation({ user }) {
     return (
         <section>
 
-            <div className='border bg-base-100 rounded-lg shadow border-gray-200 px-4 pt-4 pb-2 flex flex-col gap-y-5'>
+            <div className='border bg-base-100 rounded-box shadow-xs border-gray-300 px-4 pt-4 pb-2 flex flex-col gap-y-5'>
                 <div className='flex items-center gap-x-3'>
                     <Link to={`/profile/${user.username}`} className='flex-none'>
                         <img

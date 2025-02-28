@@ -8,7 +8,7 @@ export default function Sidebar({ user }) {
     return (
         <section className="md:flex-col md:gap-y-2 hidden md:flex">
 
-            <Link to={`/profile/${user.username}`} className='bg-base-100 rounded-md shadow border border-gray-200 overflow-hidden'>
+            <Link to={`/profile/${user.username}`} className='bg-base-100 rounded-box shadow-xs border border-gray-300 overflow-hidden'>
                 <div className='relative mb-9'>
                     <div className='h-[85px] w-full'>
                         <img src={
@@ -40,7 +40,7 @@ export default function Sidebar({ user }) {
                 </div>
             </Link>
 
-            <div className="p-4 bg-base-100 rounded-lg shadow border border-gray-200 flex flex-col gap-y-2">
+            <div className="p-4 bg-base-100 rounded-box shadow-xs border border-gray-300 flex flex-col gap-y-2">
                 <Link to="#" className="flex items-center justify-between group font-semibold">
                     <p className="text-sm group-hover:underline">Profile Views</p>
                     <p className="text-sm text-[#0A66C2] group-hover:underline">222</p>
@@ -50,7 +50,7 @@ export default function Sidebar({ user }) {
                     <p className="text-sm text-[#0A66C2] group-hover:underline">1991</p>
                 </Link>
             </div>
-            <div className="p-4 bg-base-100 rounded-lg shadow border border-gray-200 flex flex-col gap-y-2">
+            <div className="p-4 bg-base-100 rounded-box shadow-xs border border-gray-300 flex flex-col gap-y-2">
                 <Link to="#" className="text-sm font-semibold flex items-center gap-x-2 group">
                     <FaBookmark fill="#000000" />
                     <span className="group-hover:underline">Saved Item</span>

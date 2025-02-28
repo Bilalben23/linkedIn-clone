@@ -7,7 +7,7 @@ import { ClipLoader } from "react-spinners";
 
 
 export default function PostComments({ postId }) {
-    const { data: comments, fetchNextPage, isFetchingNextPage, hasNextPage } = useComments(postId);
+    const { data: comments, fetchNextPage, isFetchingNextPage, hasNextPage, } = useComments(postId);
 
     return (
         <section className='px-4 mt-5'>
@@ -20,6 +20,7 @@ export default function PostComments({ postId }) {
                                 group.data.map((comment) => {
                                     return <CommentItem
                                         key={comment._id}
+                                        postId={postId}
                                         comment={comment}
                                     />
                                 })
@@ -28,6 +29,7 @@ export default function PostComments({ postId }) {
                     ))
                 }
 
+                {/* Load more button */}
                 {
                     hasNextPage && (
                         isFetchingNextPage
