@@ -16,7 +16,7 @@ export default function Sidebar({ user }) {
                                 ? `${CLOUDINARY_BASE_URL + user.bannerImg}`
                                 : "/assets/banner.png"
                         }
-                            alt={`${user.name}'s banner image`}
+                            alt={`${user.name}'s banner`}
                             className="size-full rounded-t-lg"
                         />
                     </div>
@@ -25,7 +25,7 @@ export default function Sidebar({ user }) {
                             ? `${CLOUDINARY_BASE_URL + user.profilePicture}`
                             : "/assets/avatar.png"
                         }
-                            alt={`${user.name}'s profile picture`}
+                            alt={`${user.name}'s profile`}
                             className='size-full rounded-full'
                         />
                     </div>

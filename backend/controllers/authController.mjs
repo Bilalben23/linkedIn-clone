@@ -10,8 +10,6 @@ import { ENV_VARS } from "../configs/enVars.mjs";
 export const signup = async (req, res) => {
     const { name, username, email, password } = req.body;
 
-    console.log(name, username, email, password);
-
     try {
         const existingUser = await User.findOne({ $or: [{ email }, { username }] })
             .select("username email")
@@ -105,13 +103,13 @@ export const signin = async (req, res) => {
             success: true,
             message: "Login Successfully",
             user: {
+                _id: user._id,
                 name: user.name,
                 username: user.username,
                 profilePicture: user.profilePicture,
                 bannerImg: user.bannerImg,
                 headline: user.headline,
-                location: user.location,
-
+                location: user.location
             },
             accessToken
         })
@@ -163,6 +161,7 @@ export const refreshToken = (req, res) => {
                     success: true,
                     message: "New Access Token generated successfully",
                     user: {
+                        _id: user._id,
                         name: user.name,
                         username: user.username,
                         profilePicture: user.profilePicture,

@@ -25,8 +25,6 @@ export default function Home() {
     } = usePostsFeed();
     // const { data: suggestedConnections } = useSuggestedConnections();
 
-    console.log(postsFeed);
-
 
     return (
         <section className='grid grid-cols-1 items-start md:grid-cols-4 mt-3 gap-x-6'>

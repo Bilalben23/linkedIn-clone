@@ -4,7 +4,7 @@ import { Post } from "../models/postModel.mjs";
 
 export const getPostComments = async (req, res) => {
     const pageNumber = Math.max(1, Number(req.query.page) || 1);
-    const limit = 20;
+    const limit = 4;
     const { postId } = req.params;
 
     try {
@@ -30,7 +30,9 @@ export const getPostComments = async (req, res) => {
             totalComments,
             totalPages,
             hasNextPage: pageNumber < totalPages,
-            hasPrevPage: pageNumber > 1
+            hasPrevPage: pageNumber > 1,
+            nextPage: pageNumber < totalPages ? pageNumber + 1 : null,
+            prevPage: pageNumber > 1 ? pageNumber - 1 : null,
         }
 
         // if the request page is beyond available pages, return an empty array
@@ -48,6 +50,7 @@ export const getPostComments = async (req, res) => {
             .skip((pageNumber - 1) * limit)
             .limit(limit)
             .populate("user", "name username profilePicture headline")
+            .populate("post", "author")
             .lean();
 
         res.status(200).json({

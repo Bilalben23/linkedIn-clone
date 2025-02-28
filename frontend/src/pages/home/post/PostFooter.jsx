@@ -6,11 +6,12 @@ import { RiRepeatLine } from "react-icons/ri";
 import { TbSend } from "react-icons/tb";
 import useToggleReaction from '../../../hooks/useToggleReaction';
 
-const PostFooter = ({ post }) => {
+const PostFooter = ({ post, setShowComments }) => {
     const [showReactions, setShowReactions] = useState(false);
     const [hoveredReaction, setHoveredReaction] = useState(null);
 
     const toggleReaction = useToggleReaction();
+
     const handleReaction = (reactionType) => {
         setShowReactions(false);
         toggleReaction.mutate({ postId: post._id, reactionType });
@@ -52,19 +53,25 @@ const PostFooter = ({ post }) => {
                         <div className="flex items-center gap-x-1">
                             {
                                 post.commentsCount !== 0 && (
-                                    <button type="button" className="cursor-pointer hover:text-[#0A66C2] hover:underline">
+                                    <button
+                                        type="button"
+                                        className="cursor-pointer hover:text-[#0A66C2] hover:underline"
+                                        onClick={() => setShowComments(true)}
+                                    >
                                         {post.commentsCount} comment{post.commentsCount !== 1 ? "s" : ""}
                                     </button>
                                 )
                             }
-
-                            {(post.commentsCount !== 0 && post.repostsCount !== 0) && <span>•</span>}
-
-                            {post.repostsCount !== 0 && (
-                                <button type="button" className="cursor-pointer hover:text-[#0A66C2] hover:underline">
-                                    {post.repostsCount} Repost{post.repostsCount !== 1 ? "s" : ""}
-                                </button>
-                            )}
+                            {
+                                (post.commentsCount !== 0 && post.repostsCount !== 0) && <span>•</span>
+                            }
+                            {
+                                post.repostsCount !== 0 && (
+                                    <button type="button" className="cursor-pointer hover:text-[#0A66C2] hover:underline">
+                                        {post.repostsCount} Repost{post.repostsCount !== 1 ? "s" : ""}
+                                    </button>
+                                )
+                            }
                         </div>
                     )
                 }
@@ -159,7 +166,11 @@ const PostFooter = ({ post }) => {
                 </div>
 
                 {/* Comment Button */}
-                <button type='button' className='btn flex-1 btn-bold btn-sm hover:bg-gray-200/50 btn-ghost border-0 text-gray-700 font-bold'>
+                <button
+                    type='button'
+                    className='btn flex-1 btn-bold btn-sm hover:bg-gray-200/50 btn-ghost border-0 text-gray-700 font-bold'
+                    onClick={() => setShowComments(true)}
+                >
                     <FaRegCommentDots size={18} /> Comment
                 </button>
                 {/* Repost Button */}

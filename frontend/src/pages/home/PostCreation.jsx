@@ -1,4 +1,3 @@
-import React from 'react'
 import { useFormik } from "formik";
 import useCreatePost from '../../hooks/useCreatePost';
 import { Link } from 'react-router-dom';
@@ -37,7 +36,7 @@ export default function PostCreation({ user }) {
                                     ? `${CLOUDINARY_BASE_URL + user.profilePicture}`
                                     : "/assets/avatar.png"
                             }
-                            alt={`${user.name}'s profile picture`}
+                            alt={`${user.name}'s avatar`}
                             className='size-10 rounded-full'
                         />
                     </Link>

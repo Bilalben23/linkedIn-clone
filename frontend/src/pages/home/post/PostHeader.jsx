@@ -2,14 +2,11 @@ import { Link } from 'react-router-dom';
 import { LuGlobe } from "react-icons/lu";
 import { FaEllipsisH, FaUserPlus } from 'react-icons/fa';
 import { IoClose } from "react-icons/io5";
-import { formatDistanceToNow } from 'date-fns';
+import { timeAgo } from "../../../utils/timeAgo";
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 
-
 const PostHeader = ({ post }) => {
-    const timeAgo = (createdAt) => formatDistanceToNow(createdAt, { addSuffix: true });
-
     return (
         <>
             {
@@ -32,7 +29,7 @@ const PostHeader = ({ post }) => {
                                     ? `${CLOUDINARY_BASE_URL + post.author.profilePicture}`
                                     : "/assets/avatar.png"
                             }
-                            alt={`${post.author.name}'s profile`}
+                            alt={`${post.author.name}'s avatar`}
                             className='size-11 rounded-full'
                         />
                     </div>
