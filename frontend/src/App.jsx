@@ -7,6 +7,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import Profile from "./pages/Profile";
 import PersistLogin from "./components/PersistLogin";
+import Networks from "./pages/Networks";
+import Notifications from "./pages/Notifications";
 
 
 export default function App() {
@@ -25,6 +27,8 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
+              <Route path="/networks" element={<Networks />} />
+              <Route path="/notifications" element={<Notifications />} />
               <Route path="/profile" element={<Profile />} />
 
               {/* .... */}

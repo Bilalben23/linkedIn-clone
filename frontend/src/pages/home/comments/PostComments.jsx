@@ -34,7 +34,7 @@ export default function PostComments({ postId }) {
                     hasNextPage && (
                         isFetchingNextPage
                             ? <div className='flex items-center justify-center'>
-                                <ClipLoader size={30} color='#6a7282' />
+                                <span className='loading loading-spinner text-gray-600' />
                             </div>
                             : <div className='flex items-center gap-x-1'>
                                 <button

@@ -5,6 +5,10 @@
 }
 
 @layer base {
+    html {
+        background-color: #F4F2EE !important;
+    }
+
     body {
         font-family: "Inter", serif;
         color: black;

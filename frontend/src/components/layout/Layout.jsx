@@ -7,7 +7,7 @@ export default function Layout() {
         <div className='min-h-screen'>
             <Navbar />
 
-            <main className='max-w-7xl mx-auto px-4 py-6 mt-12'>
+            <main className='max-w-7xl mx-auto px-4 py-6 mt-9'>
                 <Outlet />
             </main>
         </div>
