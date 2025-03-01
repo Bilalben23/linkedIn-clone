@@ -1,11 +1,10 @@
 @import "tailwindcss";
-@plugin "daisyui";
+
+@plugin "daisyui" {
+    themes: light --default;
+}
 
 @layer base {
-    html {
-        background-color: #F3F2EF !important;
-    }
-
     body {
         font-family: "Inter", serif;
         color: black;

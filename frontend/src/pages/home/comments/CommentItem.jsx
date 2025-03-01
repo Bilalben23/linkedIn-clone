@@ -20,7 +20,7 @@ export default function CommentItem({ comment, postId }) {
     const isMyCommentButNotPostAuthor = comment.user._id?.toString() === user._id?.toString() && !isCommentAuthorPostAuthor;
 
     return (
-        <div className='flex flex-col gap-y-2'>
+        <div className='flex flex-col gap-y-0.5'>
             <div className='flex justify-between items-start gap-x-2'>
                 <Link to={`/profile/${comment.user.username}`} className='flex gap-x-2 flex-1'>
                     <div className='shrink-0'>

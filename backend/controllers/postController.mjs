@@ -11,93 +11,69 @@ export const getFeedPosts = async (req, res) => {
     const limit = 20;
 
     try {
-        // Start fetching totalPosts in parallel with post data
-        const totalPostsPromise = Post.countDocuments({ author: { $ne: userId } });
-
-        // Fetch posts
-        const posts = await Post.find({ author: { $ne: userId } })
-            .populate("author", "name username profilePicture headline")
-            .sort({ createdAt: -1 })
-            .limit(limit)
-            .skip((pageNumber - 1) * limit)
-            .lean();
-
-        // Get reactions count for each post
-        const postIds = posts.map(post => post._id);
-        const reactionsPromise = Reaction.aggregate([
-            { $match: { post: { $in: postIds } } },
-            {
-                $group: {
-                    _id: "$post",
-                    reactionsCount: { $sum: 1 },
-                    uniqueReactions: { $addToSet: "$type" },
-                    userReactions: {
-                        $push: {
-                            user: "$user",
-                            type: "$type"
-                        }
+        // Fetch all required data in parallel
+        const [totalPosts, reactionsData, commentsData, connections, posts] = await Promise.all([
+            Post.countDocuments({ author: { $ne: userId } }),  // Get total posts count
+            Reaction.aggregate([ // Fetch reactions data
+                { $match: { post: { $exists: true } } },
+                {
+                    $group: {
+                        _id: "$post",
+                        reactionsCount: { $sum: 1 },
+                        uniqueReactions: { $addToSet: "$type" },
+                        userReactions: { $push: { user: "$user", type: "$type" } }
                     }
                 }
-            }
+            ]),
+            Comment.aggregate([ // Fetch comments data
+                { $match: { post: { $exists: true } } },
+                { $group: { _id: "$post", commentsCount: { $sum: 1 } } }
+            ]),
+            Connection.find({  // Fetch user connections
+                $or: [{ sender: userId }, { receiver: userId }]
+            }).select("sender receiver status"),
+            Post.find({ author: { $ne: userId } }) // Fetch paginated posts
+                .populate("author", "name username profilePicture headline")
+                .sort({ createdAt: -1 })
+                .limit(limit)
+                .skip((pageNumber - 1) * limit)
+                .lean()
         ]);
 
-        // Fetch comments count
-        const commentsPromise = Comment.aggregate([
-            { $match: { post: { $in: postIds } } },
-            {
-                $group: {
-                    _id: "$post",
-                    commentsCount: { $sum: 1 }
-                }
-            }
-        ]);
-
-        // Execute all queries in parallel
-        const [reactionsData, commentsData, totalPosts] = await Promise.all([
-            reactionsPromise,
-            commentsPromise,
-            totalPostsPromise
-        ]);
-
-        // Convert reactionsData into a map for quick lookup
-        const reactionsMap = new Map(
-            reactionsData.map(reaction => [
-                reaction._id.toString(),
-                {
-                    count: reaction.reactionsCount,
-                    unique: reaction.uniqueReactions,
-                    hasReacted: reaction.userReactions.some(r => r.user.toString() === userId.toString()),
-                    userReactionType: reaction.userReactions.find(r => r.user.toString() === userId.toString())?.type || null
-                }
-            ])
+        // Create lookup maps for fast access
+        const reactionsMap = new Map(reactionsData.map(r => [r._id.toString(), r]));
+        const commentsMap = new Map(commentsData.map(c => [c._id.toString(), c.commentsCount]));
+        const connectionStatusMap = new Map(
+            connections.map(conn => {
+                const otherUserId = conn.sender.toString() === userId.toString()
+                    ? conn.receiver.toString()
+                    : conn.sender.toString();
+                return [otherUserId, conn.status];
+            })
         );
 
-        // Convert commentsData into a map for quick lookup
-        const commentsMap = new Map(commentsData.map(comment => [comment._id.toString(), comment.commentsCount]));
+        // Process posts with additional data
+        const enrichedPosts = posts.map(post => {
+            const authorId = post.author._id.toString();
+            const reactionInfo = reactionsMap.get(post._id.toString()) || { reactionsCount: 0, uniqueReactions: [], userReactions: [] };
 
-        // Attach reactions and comments count to each post
-        posts.forEach(post => {
-            const reactionInfo = reactionsMap.get(post._id.toString()) || {
-                count: 0,
-                unique: [],
-                hasReacted: false,
-                userReactionType: null
+            return {
+                ...post,
+                connectionStatus: connectionStatusMap.get(authorId) || null,
+                isConnected: connectionStatusMap.get(authorId) === "accepted",
+                reactions: {
+                    reactionsCount: reactionInfo.reactionsCount,
+                    uniqueReactions: reactionInfo.uniqueReactions,
+                    hasReacted: reactionInfo.userReactions.some(r => r.user.toString() === userId.toString()),
+                    userReactionType: reactionInfo.userReactions.find(r => r.user.toString() === userId.toString())?.type || null
+                },
+                // TODO: add logic up for it in future improvements
+                repostsCount: 0,
+                commentsCount: commentsMap.get(post._id.toString()) || 0
             };
-
-            post.reactions = {
-                reactionsCount: reactionInfo.count,
-                uniqueReactions: reactionInfo.unique,
-                hasReacted: reactionInfo.hasReacted,
-                userReactionType: reactionInfo.userReactionType
-            };
-
-            post.commentsCount = commentsMap.get(post._id.toString()) || 0;
-
-            // TODO: add reposts logic in feature improvements
-            post.repostsCount = 0
         });
 
-        // Pagination
+        // Pagination data
         const totalPages = Math.ceil(totalPosts / limit);
         const pagination = {
             currentPage: pageNumber,
@@ -106,24 +82,25 @@ export const getFeedPosts = async (req, res) => {
             hasNextPage: pageNumber < totalPages,
             hasPrevPage: pageNumber > 1,
             nextPage: pageNumber < totalPages ? pageNumber + 1 : null,
-            prevPage: pageNumber > 1 ? pageNumber - 1 : null,
+            prevPage: pageNumber > 1 ? pageNumber - 1 : null
         };
 
         res.status(200).json({
             success: true,
-            data: posts,
+            data: enrichedPosts,
             pagination
         });
 
     } catch (err) {
         console.error("Error in getFeedPosts:", err);
-        return res.status(500).json({
+        res.status(500).json({
             success: false,
             message: "Internal Server Error",
             error: err.message
         });
     }
 };
+
 
 
 

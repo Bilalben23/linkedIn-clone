@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
 import { FaUserPlus, FaSpinner } from "react-icons/fa";
 import useSendConnectionRequest from "../../../hooks/useSendConnectionRequest";
+import { useRef } from "react";
 
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
+const CONNECT_SOUND_URL = "/assets/sounds/connect.mp3";
 
 export default function SuggestedConnectionItem({ user }) {
+    const connectSoundEffect = useRef(null);
 
     const {
         mutate: sendConnectionRequest,
@@ -15,8 +18,17 @@ export default function SuggestedConnectionItem({ user }) {
     } = useSendConnectionRequest();
 
     const handleSendConnectionRequest = (userId) => {
-        sendConnectionRequest(userId);
-    }
+        sendConnectionRequest(userId, {
+            onSuccess: (data) => {
+                if (data.isConnected && connectSoundEffect.current) {
+                    connectSoundEffect.current.volume = 1.0;
+                    connectSoundEffect.current.play().catch((err) => {
+                        console.error("Audio play error:", err);
+                    });
+                }
+            }
+        });
+    };
 
     const isConnected = isSuccess && data?.isConnected;
 
@@ -39,6 +51,14 @@ export default function SuggestedConnectionItem({ user }) {
                     <p className="text-[14px] line-clamp-2">{user?.headline}</p>
                 </Link>
                 <div className="mt-3">
+                    {/* Connection Sound Effect */}
+                    <audio
+                        ref={connectSoundEffect}
+                        src={CONNECT_SOUND_URL}
+                        preload="auto"
+                    />
+
+
                     <button
                         type="button"
                         className="btn btn-xs rounded-full hover:bg-gray-200/50 btn-outline hover:ring-2"

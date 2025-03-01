@@ -6,8 +6,7 @@ import {
     signup,
     signin,
     logout,
-    refreshToken,
-    getCurrentUser
+    refreshToken
 } from "../controllers/authController.mjs";
 
 

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useAxios from './useAxios'
 import { toast } from 'react-toastify';
 
-export default function useSendConnectionRequest() {
+export default function useSendConnectionRequest(sendFrom = "suggestedConnections") {
     const axiosInstance = useAxios();
     const queryClient = useQueryClient();
 
@@ -13,7 +13,12 @@ export default function useSendConnectionRequest() {
             return data;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ["suggestedConnections"], refetchType: "none" });
+            if (sendFrom === "suggestedConnections") {
+                queryClient.invalidateQueries({ queryKey: ["suggestedConnections"], refetchType: "none" });
+            } else if (sendFrom === "postsFeed") {
+                queryClient.invalidateQueries({ queryKey: ["postsFeed"] });
+            }
+
             if (data.isConnected) {
                 toast.success(data.message, {
                     position: "bottom-left"

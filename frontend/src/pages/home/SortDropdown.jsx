@@ -10,7 +10,7 @@ export default function SortDropdown({ handleSortChange, sortOption }) {
                         <polygon points="0,0 10,0 5,6" />
                     </svg>
                 </div>
-                <ul tabIndex={0} className="dropdown-content !mt-4 !right-0 menu bg-base-100 rounded-box !rounded-tr-none z-[1] !px-0 w-36 py-2 shadow-md border border-gray-200">
+                <ul tabIndex={0} className="dropdown-content !mt-4 !right-0 menu bg-base-100 rounded-box !rounded-tr-none z-[1] !px-0 w-36 py-2 shadow-md border border-gray-300">
                     <li>
                         <button
                             type="button"

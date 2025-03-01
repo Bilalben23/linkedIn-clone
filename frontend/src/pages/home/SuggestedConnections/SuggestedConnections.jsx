@@ -1,12 +1,6 @@
 import React from 'react'
 import useSuggestedConnections from '../../../hooks/useSuggestedConnections'
-import { Link } from 'react-router-dom';
-import { FaUserPlus } from 'react-icons/fa';
-import useSendConnectionRequest from '../../../hooks/useSendConnectionRequest';
 import SuggestedConnectionItem from './SuggestedConnectionItem';
-
-const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
-
 
 export default function SuggestedConnections() {
     const {

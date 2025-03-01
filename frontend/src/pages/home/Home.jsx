@@ -26,9 +26,8 @@ export default function Home() {
     } = usePostsFeed();
     // const { data: suggestedConnections } = useSuggestedConnections();
 
-
     return (
-        <section className='grid grid-cols-1 items-start md:grid-cols-4 mt-3 gap-x-6'>
+        <section className='grid grid-cols-1 items-start md:grid-cols-4 mt-3 gap-x-4'>
             <Sidebar user={authState.user} />
 
             <section className='col-span-1 md:col-span-2 order-first md:order-none'>
