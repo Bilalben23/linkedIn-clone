@@ -1,5 +1,3 @@
-
-
 export default function PostSkeleton() {
     return (
         <div className='bg-base-100 rounded-box shadow-2xs border border-gray-300 py-2'>

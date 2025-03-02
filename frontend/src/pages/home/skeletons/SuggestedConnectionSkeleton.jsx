@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function SuggestedConnectionSkeleton() {
     return (
         <div className="flex gap-x-2 border-gray-300 last:border-0 gap-y-2 border-b py-4">

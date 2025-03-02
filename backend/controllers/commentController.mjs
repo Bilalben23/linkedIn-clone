@@ -4,8 +4,8 @@ import { Post } from "../models/postModel.mjs";
 
 export const getPostComments = async (req, res) => {
     const pageNumber = Math.max(1, Number(req.query.page) || 1);
-    const limit = 4;
     const { postId } = req.params;
+    const limit = 4;
 
     try {
 
