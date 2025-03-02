@@ -36,12 +36,15 @@ export default function PostComments({ postId }) {
                                 </Fragment>
                             ))
                         }
-
                         {
                             hasNextPage && (
                                 isFetchingNextPage
                                     ? <div className='flex items-center justify-center'>
-                                        <span className='loading loading-spinner text-gray-600' />
+                                        <img
+                                            src="/assets/loading-spinner.gif"
+                                            alt="loading-spinner"
+                                            className='size-6'
+                                        />
                                     </div>
                                     : <div className='flex items-center gap-x-1'>
                                         <button

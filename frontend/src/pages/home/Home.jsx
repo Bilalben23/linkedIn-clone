@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useAuth from '../../hooks/useAuth';
 import usePostsFeed from '../../hooks/usePostsFeed';
 import Sidebar from './Sidebar';
@@ -9,20 +9,41 @@ import SuggestedConnections from './SuggestedConnections/SuggestedConnections';
 
 export default function Home() {
     const [sortOption, setSortOption] = useState("top");
+    const { authState } = useAuth();
+    const lastPostRef = useRef(null);
     const handleSortChange = (option) => setSortOption(option);
 
-    const { authState } = useAuth();
     const {
         data: postsFeed,
         fetchNextPage,
-        fetchPreviousPage,
         isLoading,
         isError,
         error,
         isFetchingNextPage,
-        hasNextPage,
-        hasPreviousPage
+        hasNextPage
     } = usePostsFeed();
+
+
+    useEffect(() => {
+        if (!hasNextPage) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && !isFetchingNextPage) {
+                    fetchNextPage();
+                }
+            }, {
+            threshold: 0.5
+        })
+
+        if (lastPostRef.current) {
+            observer.observe(lastPostRef.current);
+        }
+
+        return () => {
+            if (lastPostRef.current) observer.unobserve(lastPostRef.current);
+        }
+    }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
 
     return (
@@ -34,14 +55,29 @@ export default function Home() {
 
                 <SortDropdown
                     handleSortChange={handleSortChange}
-                    sortOption={sortOption} />
+                    sortOption={sortOption}
+                />
 
                 <FeedPosts
                     postsFeed={postsFeed}
                     isLoading={isLoading}
                     isError={isError}
                     error={error}
+                    lastPostRef={lastPostRef}
                 />
+
+                {/* loading indicator */}
+                {
+                    hasNextPage && isFetchingNextPage && (
+                        <div className='flex items-center justify-center mt-1.5'>
+                            <img
+                                src="/assets/loading-spinner.gif"
+                                alt="loading-spinner"
+                                className='size-9'
+                            />
+                        </div>
+                    )
+                }
             </section>
 
             <SuggestedConnections />

@@ -1,8 +1,7 @@
-import { Fragment } from 'react';
-import Post from './Post'; // Import the Post component
+import PostItem from './PostItem';
 import PostSkeleton from '../skeletons/PostSkeleton';
 
-export default function FeedPosts({ postsFeed, isLoading, isError, error }) {
+export default function FeedPosts({ postsFeed, isLoading, isError, error, lastPostRef }) {
 
     if (isError) {
         return (
@@ -15,19 +14,18 @@ export default function FeedPosts({ postsFeed, isLoading, isError, error }) {
 
     return (
         <section className='flex flex-col gap-y-3'>
-
             {
                 isLoading
                     ? Array.from({ length: 5 }).map((_, index) => <PostSkeleton key={index} />)
-                    : postsFeed?.pages?.map((group, i) => (
-                        <Fragment key={i}>
-                            {
-                                group.data.map((post) => (
-                                    <Post key={post._id} post={post} />
-                                ))
-                            }
-                        </Fragment>
-                    ))
+                    : postsFeed?.pages?.map((group) => {
+                        return group.data.map((post, index, array) => {
+                            return <PostItem
+                                key={post._id}
+                                post={post}
+                                lastPostRef={index === array.length - 1 ? lastPostRef : null}
+                            />
+                        })
+                    })
             }
         </section>
     );
