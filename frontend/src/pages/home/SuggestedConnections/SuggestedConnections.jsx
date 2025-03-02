@@ -1,6 +1,7 @@
 import React from 'react'
 import useSuggestedConnections from '../../../hooks/useSuggestedConnections'
 import SuggestedConnectionItem from './SuggestedConnectionItem';
+import SuggestedConnectionSkeleton from '../skeletons/SuggestedConnectionSkeleton';
 
 export default function SuggestedConnections() {
     const {
@@ -15,16 +16,25 @@ export default function SuggestedConnections() {
     return (
         <div className='border p-4 bg-base-100 hidden md:block shadow-xs rounded-box border-gray-300'>
             <h2 className='font-bold text-sm'>People you may know</h2>
-            <div className='flex flex-col'>
-                {
-                    suggestedConnections?.map(user => {
-                        return <SuggestedConnectionItem
-                            key={user?._id}
-                            user={user}
-                        />
-                    })
-                }
-            </div>
+            {
+                !isError
+                    ? <div className='flex flex-col'>
+                        {
+                            isLoading
+                                ? Array.from({ length: 4 }).map((_, i) => <SuggestedConnectionSkeleton key={i} />)
+                                : suggestedConnections?.map(user => {
+                                    return <SuggestedConnectionItem
+                                        key={user?._id}
+                                        user={user}
+                                    />
+                                })
+                        }
+                    </div>
+                    : <div className="py-3 border mt-3 text-xs border-red-300 bg-red-50 text-red-600 rounded-lg text-center">
+                        <p>⚠️ Error fetching suggestions</p>
+                        <p>{error?.message}</p>
+                    </div>
+            }
         </div>
     )
 }
