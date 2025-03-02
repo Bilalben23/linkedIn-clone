@@ -8,6 +8,7 @@ import { AuthProvider } from './context/authContext.jsx';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -21,10 +22,9 @@ createRoot(document.getElementById('root')).render(
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <App />
-
         <ToastContainer />
       </AuthProvider>
       <ReactQueryDevtools />
     </QueryClientProvider>
-  </StrictMode>,
+  </StrictMode >,
 )

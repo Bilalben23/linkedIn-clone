@@ -28,6 +28,7 @@ const PostContent = ({ post }) => {
                     <Img
                         src={`${CLOUDINARY_BASE_URL + post.image}`}
                         alt='post image'
+                        loader={<div className="skeleton rounded-none w-full h-[350px] mt-3" />}
                         className="w-full"
                     />
                 </div>
@@ -35,5 +36,6 @@ const PostContent = ({ post }) => {
         </div>
     );
 };
+
 
 export default PostContent;

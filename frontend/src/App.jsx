@@ -7,7 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import Profile from "./pages/Profile";
 import PersistLogin from "./components/PersistLogin";
-import Networks from "./pages/Networks";
+import Networks from "./pages/networks/Networks";
 import Notifications from "./pages/Notifications";
 
 
