@@ -52,10 +52,41 @@ export const useAddComment = (postId) => {
                     }))
                 };
             });
-
         }
     })
-
 }
 
 
+// Delete Comment
+export const useDeleteComment = (postId) => {
+    const axiosInstance = useAxios();
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationKey: ["deleteComment"],
+        mutationFn: async (commentId) => {
+            const { data } = await axiosInstance.delete(`/api/v1/comments/${commentId}`);
+            return data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["comments", postId] });
+
+            // ✅ Update posts feed cache (decrement commentsCount)
+            queryClient.setQueryData(['postsFeed'], oldData => {
+                if (!oldData) return oldData;
+
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map(page => ({
+                        ...page,
+                        data: page.data.map(post =>
+                            post._id === postId
+                                ? { ...post, commentsCount: post.commentsCount - 1 }
+                                : post
+                        )
+                    }))
+                };
+            });
+        }
+    })
+}

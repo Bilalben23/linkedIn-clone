@@ -46,6 +46,10 @@ export default function Home() {
     }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
+
     return (
         <section className='grid grid-cols-1 items-start md:grid-cols-4 mt-3 gap-x-4'>
             <Sidebar user={authState.user} />

@@ -4,7 +4,7 @@ import { Fragment } from 'react';
 import CommentItem from './CommentItem';
 import { TbArrowsDiagonal2 } from "react-icons/tb";
 
-export default function PostComments({ postId }) {
+export default function PostComments({ postId, postAuthorId }) {
     const {
         data: comments,
         fetchNextPage,
@@ -29,6 +29,7 @@ export default function PostComments({ postId }) {
                                             return <CommentItem
                                                 key={comment._id}
                                                 postId={postId}
+                                                postAuthorId={postAuthorId}
                                                 comment={comment}
                                             />
                                         })

@@ -36,7 +36,6 @@ export default function CommentInput({ postId }) {
         });
     }
 
-
     return (
         <>
             <div className='flex gap-x-2'>

@@ -1,14 +1,18 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { FaEllipsisH } from 'react-icons/fa';
+import { FiTrash2, FiEdit2, FiLink, FiFlag, FiEyeOff } from "react-icons/fi";
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from "framer-motion";
 import { REACTIONS_ARRAY } from '../../../utils/constants';
 import { timeAgo } from '../../../utils/timeAgo';
 import useAuth from '../../../hooks/useAuth';
+import { useDeleteComment } from '../../../hooks/useComments';
+import { toast } from 'react-toastify';
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 
-export default function CommentItem({ comment, postId }) {
+
+export default function CommentItem({ comment, postId, postAuthorId }) {
     const [showReactions, setShowReactions] = useState(false);
     const [hoveredReaction, setHoveredReaction] = useState(null);
     const { authState: { user } } = useAuth()
@@ -16,14 +20,26 @@ export default function CommentItem({ comment, postId }) {
     const isEdited = new Date(comment.createdAt).getTime() !== new Date(comment.updatedAt).getTime();
     const formattedTimeAgo = timeAgo(comment.createdAt);
 
-    const isCommentAuthorPostAuthor = comment.user._id?.toString() === postId.toString();
-    const isMyCommentButNotPostAuthor = comment.user._id?.toString() === user._id?.toString() && !isCommentAuthorPostAuthor;
+    const isMyPost = useMemo(() => user?._id?.toString() === postAuthorId?.toString(), [user, postAuthorId]);
+    const isMyComment = useMemo(() => user?._id?.toString() === comment?.user?._id?.toString(), [user, comment]);
+    const isMyCommentAndMyPost = isMyPost && isMyComment;
+    const isMyCommentAndNotMyPost = isMyComment && !isMyPost;
+
+    const { mutate: deleteComment, isPending } = useDeleteComment(postId);
+
+    const handleDeleteComment = () => {
+        deleteComment(comment._id, {
+            onError: () => {
+                toast.error("Failed to delete the comment!")
+            }
+        });
+    }
 
     return (
         <div className='flex flex-col gap-y-0.5'>
-            <div className='flex justify-between items-start gap-x-2'>
-                <Link to={`/profile/${comment.user.username}`} className='flex gap-x-2 flex-1'>
-                    <div className='shrink-0'>
+            <div className='flex justify-between items-start gap-x-4'>
+                <div className='flex gap-x-2 flex-1'>
+                    <Link to={`/profile/${comment.user.username}`} className='shrink-0 block'>
                         <img
                             src={comment.user.profilePicture
                                 ? `${CLOUDINARY_BASE_URL + comment.user.profilePicture}`
@@ -31,31 +47,83 @@ export default function CommentItem({ comment, postId }) {
                             alt={`${comment.user.username}'s avatar`}
                             className='size-9 rounded-full'
                         />
-                    </div>
+                    </Link>
                     <div>
-                        <div to={`/profile/${comment.user.username}`} >
+                        <Link to={`/profile/${comment.user.username}`} className='block' >
                             <div className='flex items-center gap-x-0.5'>
                                 <p className='font-bold text-xs'>{comment.user.name}</p>
                                 {
-                                    isMyCommentButNotPostAuthor && <>
+                                    isMyCommentAndNotMyPost && <>
                                         <span className="text-gray-500 text-[12px]">•</span>
                                         <span className='text-gray-500 text-[12px]'>You</span>
                                     </>
                                 }
                                 {
-                                    isCommentAuthorPostAuthor && <p className='badge ml-2 font-bold badge-xs !rounded-sm bg-slate-600 text-white'>Author</p>
+                                    isMyCommentAndMyPost && <p className='badge ml-2 font-bold badge-xs !rounded-sm bg-slate-600 text-white'>Author</p>
                                 }
 
                             </div>
                             <p className='text-[12px] line-clamp-1'>{comment.user.headline}</p>
-                        </div>
+                        </Link>
                     </div>
-                </Link>
+                </div>
                 <div className='flex items-center gap-x-1 text-gray-500'>
                     <p className='text-[12px]'>{isEdited && "(edited)"} {formattedTimeAgo}</p>
-                    <button type='button' className='btn btn-xs btn-ghost btn-circle border-0 hover:bg-gray-200/50'>
-                        <FaEllipsisH />
-                    </button>
+                    <div className="dropdown">
+                        <div tabIndex={0} role="button" className='btn btn-xs btn-ghost btn-circle border-0 hover:bg-gray-200/50'>
+                            <FaEllipsisH />
+                        </div>
+                        <ul tabIndex={0} className="dropdown-content !mt-1 !right-0 menu menu-sm bg-base-100 rounded-box !rounded-tr-none z-[1] text-gray-700 !px-0 w-fit py-1 font-bold shadow-md border border-gray-300">
+                            <li>
+                                <button type="button" className="rounded-none leading-loose !gap-x-4 whitespace-nowrap tracking-wide">
+                                    <FiLink strokeWidth={3} /> Copy link to comment
+                                </button>
+                            </li>
+
+
+                            {/* for other users or post author */}
+                            {
+                                (isMyPost || !isMyComment) && <li>
+                                    <button type="button" className="rounded-none gap-x-4 leading-loose whitespace-nowrap tracking-wide">
+                                        <FiFlag strokeWidth={3} /> Report
+                                    </button>
+                                </li>
+                            }
+
+                            {/* for other users (not my comment and not the post author ) */}
+                            {
+                                (!isMyComment && !isMyPost) && <li>
+                                    <button type="button" className="rounded-none leading-loose !gap-x-4 whitespace-nowrap tracking-wide">
+                                        <FiEyeOff strokeWidth={3} /> I don't want to see this
+                                    </button>
+                                </li>
+                            }
+
+                            {/* for comment owner*/}
+                            {
+                                isMyComment &&
+                                <li>
+                                    <button type="button" className="rounded-none leading-loose !gap-x-4 tracking-wide">
+                                        <FiEdit2 strokeWidth={3} /> Edit
+                                    </button>
+                                </li>
+                            }
+
+                            {/* for post author or comment owner */}
+                            {
+                                (isMyComment || isMyPost) && <li>
+                                    <button
+                                        type="button"
+                                        className="rounded-none leading-loose !gap-x-4 tracking-wide "
+                                        onClick={handleDeleteComment}
+                                        disabled={isPending}
+                                    >
+                                        <FiTrash2 strokeWidth={3} /> Delete
+                                    </button>
+                                </li>
+                            }
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div className='ml-11'>
@@ -131,3 +199,19 @@ export default function CommentItem({ comment, postId }) {
         </div>
     )
 }
+
+// 1. I am the comment owner:
+// Copy link to comment.
+// edit the comment.
+// delete the comment.
+
+// 2. I am the post owner
+// copy link to the comment
+// delete the comment 
+// block the user
+// report the comment
+
+// 3. other users comment(I am not the commenter and not the post owner)
+// copy link to the comment
+// report the comment
+// don't want to see this
