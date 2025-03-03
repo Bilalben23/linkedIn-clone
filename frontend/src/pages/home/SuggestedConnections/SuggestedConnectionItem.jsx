@@ -58,7 +58,6 @@ export default function SuggestedConnectionItem({ user }) {
                         preload="auto"
                     />
 
-
                     <button
                         type="button"
                         className="btn btn-xs rounded-full hover:bg-gray-200/50 btn-outline hover:ring-2"

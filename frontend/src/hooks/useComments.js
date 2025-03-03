@@ -56,6 +56,25 @@ export const useAddComment = (postId) => {
     })
 }
 
+// update comment
+export const useUpdateComment = (postId) => {
+    const axiosInstance = useAxios();
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationKey: ["updateComment"],
+        mutationFn: async ({ commentId, updatedContent }) => {
+            const { data } = await axiosInstance.patch(`/api/v1/comments/${commentId}`, {
+                content: updatedContent
+            })
+            return data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["comments", postId] });
+        }
+    })
+}
+
 
 // Delete Comment
 export const useDeleteComment = (postId) => {
@@ -90,3 +109,4 @@ export const useDeleteComment = (postId) => {
         }
     })
 }
+

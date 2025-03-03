@@ -36,7 +36,7 @@ app.use(fileUpload({
 
 app.use(cors({
     origin: [ENV_VARS.CLIENT_URL],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", "Accept"],
     credentials: true
 }))
