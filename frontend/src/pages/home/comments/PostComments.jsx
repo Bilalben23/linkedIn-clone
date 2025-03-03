@@ -1,5 +1,5 @@
 import CommentInput from './commentInput';
-import useComments from "../../../hooks/useComments";
+import { useFetchComments } from "../../../hooks/useComments";
 import { Fragment } from 'react';
 import CommentItem from './CommentItem';
 import { TbArrowsDiagonal2 } from "react-icons/tb";
@@ -13,11 +13,11 @@ export default function PostComments({ postId }) {
         isLoading,
         isError,
         error
-    } = useComments(postId);
+    } = useFetchComments(postId);
 
     return (
         <section className='px-4 mt-5'>
-            <CommentInput />
+            <CommentInput postId={postId} />
             {
                 !isError
                     ? !isLoading && <div className='mt-6 flex flex-col gap-y-4'>

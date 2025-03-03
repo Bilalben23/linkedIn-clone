@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth';
 import useRefresh from '../hooks/useRefresh';
 import { Outlet } from 'react-router-dom';
-import { PropagateLoader } from "react-spinners";
 
 export default function PersistLogin() {
 
@@ -29,7 +28,11 @@ export default function PersistLogin() {
 
     return isLoading
         ? <div className="min-h-screen flex items-center justify-center">
-            <PropagateLoader color="#0073b1" size={20} />
+            <img
+                src="/assets/loading-spinner.gif"
+                alt='loading-spinner'
+                className='size-12'
+            />
         </div>
         : <Outlet />
 }

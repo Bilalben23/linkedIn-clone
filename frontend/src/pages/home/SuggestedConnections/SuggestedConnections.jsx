@@ -2,6 +2,7 @@ import React from 'react'
 import useSuggestedConnections from '../../../hooks/useSuggestedConnections'
 import SuggestedConnectionItem from './SuggestedConnectionItem';
 import SuggestedConnectionSkeleton from '../skeletons/SuggestedConnectionSkeleton';
+import { FaUserSlash } from 'react-icons/fa';
 
 export default function SuggestedConnections() {
     const {
@@ -10,8 +11,6 @@ export default function SuggestedConnections() {
         isError,
         error
     } = useSuggestedConnections();
-
-    console.log(suggestedConnections);
 
     return (
         <div className='border p-4 bg-base-100 hidden md:block shadow-xs rounded-box border-gray-300'>
@@ -22,13 +21,17 @@ export default function SuggestedConnections() {
                         {
                             isLoading
                                 ? Array.from({ length: 4 }).map((_, i) => <SuggestedConnectionSkeleton key={i} />)
-                                : suggestedConnections?.map(user => {
-                                    return <SuggestedConnectionItem
-                                        key={user?._id}
-                                        user={user}
-                                    />
-                                })
-                        }
+                                : suggestedConnections?.length > 0
+                                    ? suggestedConnections?.map(user => {
+                                        return <SuggestedConnectionItem
+                                            key={user?._id}
+                                            user={user}
+                                        />
+                                    })
+                                    : <p className='text-sm text-center mt-4 flex flex-col items-center text-gray-600'>
+                                        <FaUserSlash size={20} className="mb-1 text-gray-500" />
+                                        No suggested users found for you
+                                    </p>}
                     </div>
                     : <div className="py-3 border mt-3 text-xs border-red-300 bg-red-50 text-red-600 rounded-lg text-center">
                         <p>⚠️ Error fetching suggestions</p>

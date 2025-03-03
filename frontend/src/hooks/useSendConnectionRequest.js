@@ -17,6 +17,7 @@ export default function useSendConnectionRequest(sendFrom = "suggestedConnection
                 queryClient.invalidateQueries({ queryKey: ["suggestedConnections"], refetchType: "none" });
             } else if (sendFrom === "postsFeed") {
                 queryClient.invalidateQueries({ queryKey: ["postsFeed"] });
+                queryClient.invalidateQueries({ queryKey: ["suggestedConnections"] });
             }
 
             if (data.isConnected) {
