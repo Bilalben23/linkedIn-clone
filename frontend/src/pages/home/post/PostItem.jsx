@@ -6,6 +6,9 @@ import PostComments from '../comments/PostComments';
 
 export default function PostItem({ post, lastPostRef }) {
     const [showComments, setShowComments] = useState(false);
+    const toggleShowComments = () => {
+        setShowComments(!showComments);
+    }
 
     return (
         <div className='bg-base-100 rounded-box shadow-2xs border border-gray-300 py-2' ref={lastPostRef} >
@@ -18,7 +21,7 @@ export default function PostItem({ post, lastPostRef }) {
             {/* Post footer */}
             <PostFooter
                 post={post}
-                setShowComments={setShowComments}
+                toggleShowComments={toggleShowComments}
             />
 
             {/* Post comments section */}

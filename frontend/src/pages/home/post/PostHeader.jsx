@@ -90,9 +90,9 @@ export default function PostHeader({ post }) {
 
                         <button
                             type='button'
-                            className='btn text-[#0A66C2] btn-xs font-bold hover:bg-blue-50 border-none btn-ghost'
+                            className={`btn ${post.connectionStatus === "pending" ? "!cursor-not-allowed" : "text-[#0A66C2] hover:bg-blue-50"} btn-xs font-bold  border-none `}
                             onClick={() => handleSendConnectionRequest(post.author._id)}
-                            disabled={isPending}
+                            disabled={isPending || post.connectionStatus === "pending"}
                         >
                             {post.connectionStatus === "pending" ? (
                                 <>

@@ -5,8 +5,9 @@ import { REACTIONS_ARRAY, REACTIONS_OBJECT } from '../../../utils/constants';
 import { RiRepeatLine } from "react-icons/ri";
 import { TbSend } from "react-icons/tb";
 import useToggleReaction from '../../../hooks/useToggleReaction';
+import { formatShortNumber } from '../../../utils/formatShortNumber';
 
-const PostFooter = ({ post, setShowComments }) => {
+const PostFooter = ({ post, toggleShowComments }) => {
     const [showReactions, setShowReactions] = useState(false);
     const [hoveredReaction, setHoveredReaction] = useState(null);
 
@@ -40,7 +41,7 @@ const PostFooter = ({ post, setShowComments }) => {
                                     </span>
                                     <span className='text-gray-700 hover:underline hover:text-[#0A66C2]'>
                                         {post.reactions.hasReacted && post.reactions.reactionsCount !== 1
-                                            ? `You and ${post.reactions.reactionsCount - 1} other${post.reactions.reactionsCount - 1 !== 1 ? "s" : ""}`
+                                            ? `You and ${formatShortNumber(post.reactions.reactionsCount - 1)} other${post.reactions.reactionsCount - 1 !== 1 ? "s" : ""}`
                                             : post.reactions.reactionsCount}
                                     </span>
                                 </span>
@@ -56,9 +57,9 @@ const PostFooter = ({ post, setShowComments }) => {
                                     <button
                                         type="button"
                                         className="cursor-pointer hover:text-[#0A66C2] hover:underline"
-                                        onClick={() => setShowComments(true)}
+                                        onClick={toggleShowComments}
                                     >
-                                        {post.commentsCount} comment{post.commentsCount !== 1 ? "s" : ""}
+                                        {formatShortNumber(post.commentsCount)} comment{post.commentsCount !== 1 ? "s" : ""}
                                     </button>
                                 )
                             }
@@ -68,7 +69,7 @@ const PostFooter = ({ post, setShowComments }) => {
                             {
                                 post.repostsCount !== 0 && (
                                     <button type="button" className="cursor-pointer hover:text-[#0A66C2] hover:underline">
-                                        {post.repostsCount} Repost{post.repostsCount !== 1 ? "s" : ""}
+                                        {formatShortNumber(post.repostsCount)} Repost{post.repostsCount !== 1 ? "s" : ""}
                                     </button>
                                 )
                             }
@@ -169,7 +170,7 @@ const PostFooter = ({ post, setShowComments }) => {
                 <button
                     type='button'
                     className='btn flex-1 btn-bold btn-sm hover:bg-gray-200/50 btn-ghost border-0 text-gray-700 font-bold'
-                    onClick={() => setShowComments(true)}
+                    onClick={toggleShowComments}
                 >
                     <FaRegCommentDots size={18} /> Comment
                 </button>

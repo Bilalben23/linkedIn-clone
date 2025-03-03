@@ -11,6 +11,7 @@ export default function usePostsFeed() {
             return data;
         },
         initialPageParam: 1,
-        getNextPageParam: (lastPage) => lastPage.pagination.hasNextPage ? lastPage.pagination.nextPage : undefined
+        getNextPageParam: (lastPage) => lastPage.pagination.hasNextPage ? lastPage.pagination.nextPage : undefined,
+        staleTime: 1000 * 60 * 5
     })
 }

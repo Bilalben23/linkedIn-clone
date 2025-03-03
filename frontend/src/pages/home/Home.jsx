@@ -6,6 +6,7 @@ import PostCreation from './PostCreation';
 import SortDropdown from './SortDropdown';
 import FeedPosts from './post/FeedPosts';
 import SuggestedConnections from './SuggestedConnections/SuggestedConnections';
+import { FaArrowUp } from 'react-icons/fa';
 
 export default function Home() {
     const [sortOption, setSortOption] = useState("top");
@@ -19,6 +20,8 @@ export default function Home() {
         isLoading,
         isError,
         error,
+        isStale,
+        refetch,
         isFetchingNextPage,
         hasNextPage
     } = usePostsFeed();
@@ -61,7 +64,17 @@ export default function Home() {
                     handleSortChange={handleSortChange}
                     sortOption={sortOption}
                 />
-
+                {
+                    isStale && <div className='sticky z-1 top-15 flex -my-2.5 justify-center'>
+                        <button
+                            type="button"
+                            className='btn btn-primary shadow-gray-500 shadow-md rounded-full btn-xs'
+                            onClick={refetch}
+                        >
+                            <FaArrowUp /> New Posts
+                        </button>
+                    </div>
+                }
                 <FeedPosts
                     postsFeed={postsFeed}
                     isLoading={isLoading}

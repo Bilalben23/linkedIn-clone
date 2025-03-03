@@ -17,6 +17,7 @@
     "formik": "^2.4.6",
     "framer-motion": "^12.4.7",
     "javascript-time-ago": "^2.5.11",
+    "numeral": "^2.0.6",
     "react": "^19.0.0",
     "react-content-loader": "^7.0.2",
     "react-dom": "^19.0.0",
