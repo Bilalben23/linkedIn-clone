@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import useAuth from '../../hooks/useAuth';
-import usePostsFeed from '../../hooks/usePostsFeed';
+import { usePostsFeed } from '../../hooks/usePosts';
 import Sidebar from './Sidebar';
 import PostCreation from './postCreation/PostCreation';
 import SortDropdown from './SortDropdown';
@@ -27,7 +27,6 @@ export default function Home() {
         isFetchingNextPage,
         hasNextPage
     } = usePostsFeed();
-
 
     useEffect(() => {
         if (!hasNextPage) return;

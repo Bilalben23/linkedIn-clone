@@ -46,17 +46,7 @@ const createPostValidation = checkSchema({
                 return true;
             },
         },
-    },
-    postValidation: {
-        custom: {
-            options: (_, { req }) => {
-                if (!req.body.content && (!req.files || !req.files.image)) {
-                    throw new Error("Post must contain either text or an image.");
-                }
-                return true;
-            },
-        },
-    },
+    }
 });
 
 const updatePostValidation = checkSchema({
@@ -84,17 +74,7 @@ const updatePostValidation = checkSchema({
                 return true;
             },
         },
-    },
-    updateValidation: {
-        custom: {
-            options: (_, { req }) => {
-                if (!req.body.content && (!req.files || !req.files.image)) {
-                    throw new Error("Update must contain either text or an image.");
-                }
-                return true;
-            },
-        },
-    },
+    }
 });
 
 export const validateGetFeedPosts = pageValidation;

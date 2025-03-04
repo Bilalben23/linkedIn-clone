@@ -12,7 +12,8 @@ const postSchema = new Schema({
     },
     content: {
         type: String,
-        trim: true
+        trim: true,
+        default: ""
     },
     image: {
         type: String,
