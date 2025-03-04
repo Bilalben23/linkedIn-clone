@@ -2,11 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import useAuth from '../../hooks/useAuth';
 import usePostsFeed from '../../hooks/usePostsFeed';
 import Sidebar from './Sidebar';
-import PostCreation from './PostCreation';
+import PostCreation from './postCreation/PostCreation';
 import SortDropdown from './SortDropdown';
 import FeedPosts from './post/FeedPosts';
 import SuggestedConnections from './SuggestedConnections/SuggestedConnections';
 import { FaArrowUp } from 'react-icons/fa';
+import { motion } from "framer-motion";
+
 
 export default function Home() {
     const [sortOption, setSortOption] = useState("top");
@@ -48,10 +50,11 @@ export default function Home() {
         }
     }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-
-    useEffect(() => {
+    const refetchPostsFeed = () => {
+        refetch();
         window.scrollTo(0, 0);
-    }, [])
+    }
+
 
     return (
         <section className='grid grid-cols-1 items-start md:grid-cols-4 mt-3 gap-x-4'>
@@ -64,17 +67,24 @@ export default function Home() {
                     handleSortChange={handleSortChange}
                     sortOption={sortOption}
                 />
-                {
-                    isStale && <div className='sticky z-1 top-15 flex -my-2.5 justify-center'>
+                {isStale && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                        className="sticky z-1 top-15 flex -my-2.5 justify-center"
+                    >
                         <button
                             type="button"
-                            className='btn btn-primary shadow-gray-500 shadow-md rounded-full btn-xs'
-                            onClick={refetch}
+                            className="btn btn-primary shadow-gray-500 shadow-md rounded-full btn-xs"
+                            onClick={refetchPostsFeed}
                         >
                             <FaArrowUp /> New Posts
                         </button>
-                    </div>
-                }
+                    </motion.div>
+                )}
+
                 <FeedPosts
                     postsFeed={postsFeed}
                     isLoading={isLoading}

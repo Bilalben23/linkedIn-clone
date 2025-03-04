@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { FaUserPlus, FaSpinner } from "react-icons/fa";
+import { FaUserPlus } from "react-icons/fa";
 import useSendConnectionRequest from "../../../hooks/useSendConnectionRequest";
 import { useRef } from "react";
+import { MdOutlineSchedule } from "react-icons/md";
 
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
@@ -67,7 +68,7 @@ export default function SuggestedConnectionItem({ user }) {
                         {
                             isConnected
                                 ? <>
-                                    <FaSpinner />
+                                    <MdOutlineSchedule size={15} />
                                     pending
                                 </> : <>
                                     <FaUserPlus /> connect

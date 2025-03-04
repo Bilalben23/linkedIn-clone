@@ -1,32 +1,15 @@
-import { useFormik } from "formik";
-import useCreatePost from '../../hooks/useCreatePost';
 import { Link } from 'react-router-dom';
 import { FiImage } from "react-icons/fi";
 import { BsPlayBtnFill } from "react-icons/bs";
 import { RiArticleFill } from "react-icons/ri";
+import CreatePostModal from './CreatePostModal'; // Import the new modal component
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 
-
 export default function PostCreation({ user }) {
-
-    const { mutate: createPostMutation } = useCreatePost();
-
-    const onSubmit = (values, actions) => {
-    }
-    const { errors, values, handleSubmit, isSubmitting } = useFormik({
-        initialValues: {
-            content: "",
-            image: "",
-            imagePreview: ""
-        },
-        onSubmit
-    })
-
 
     return (
         <section>
-
             <div className='border bg-base-100 rounded-box shadow-xs border-gray-300 px-4 pt-4 pb-2 flex flex-col gap-y-5'>
                 <div className='flex items-center gap-x-3'>
                     <Link to={`/profile/${user.username}`} className='flex-none'>
@@ -40,12 +23,19 @@ export default function PostCreation({ user }) {
                             className='size-10 rounded-full'
                         />
                     </Link>
+
                     <div className='w-full'>
-                        <button type='button'
+                        <button
                             className='btn !justify-start !border-gray-400 btn-outline rounded-full btn-block'
-                        >Start a post</button>
+                            onClick={() => document.getElementById('createPost_modal').showModal()}
+                        >
+                            Start a post
+                        </button>
+
+                        <CreatePostModal user={user} />
                     </div>
                 </div>
+
                 <div className='flex justify-between items-center'>
                     <button type="button" className='btn btn-ghost'>
                         <FiImage className="text-[#378fe9] size-5" />
@@ -61,9 +51,6 @@ export default function PostCreation({ user }) {
                     </button>
                 </div>
             </div>
-
-            {/* post create modal */}
-
         </section>
-    )
+    );
 }

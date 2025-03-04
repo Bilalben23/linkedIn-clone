@@ -2,9 +2,12 @@ import { Link } from 'react-router-dom';
 import { LuGlobe } from "react-icons/lu";
 import { FaEllipsisH, FaSpinner, FaUserPlus } from 'react-icons/fa';
 import { IoClose } from "react-icons/io5";
+import { FiBookmark, FiLink, FiCode, FiFlag, FiEyeOff } from "react-icons/fi";
 import { timeAgo } from "../../../utils/timeAgo";
 import useSendConnectionRequest from '../../../hooks/useSendConnectionRequest';
 import { useRef } from 'react';
+import { MdOutlineSchedule } from "react-icons/md";
+
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 const CONNECT_SOUND_URL = "/assets/sounds/connect.mp3";
@@ -34,9 +37,42 @@ export default function PostHeader({ post }) {
             {
                 !isConnected && (
                     <div className='border-b mb-3 pb-2 border-gray-300 justify-end flex items-center gap-x-1 mx-3'>
-                        <button type="button" className='btn btn-xs btn-ghost btn-circle border-0'>
-                            <FaEllipsisH size={15} />
-                        </button>
+                        <div className="dropdown">
+                            <div tabIndex={0} role="button" className='btn btn-xs btn-ghost btn-circle border-0'>
+                                <FaEllipsisH size={15} />
+                            </div>
+                            <ul tabIndex={0} className='dropdown-content !mt-1 !right-0 menu menu-sm bg-base-100 rounded-box !rounded-tr-none z-[1] text-gray-700 w-56 py-1 font-bold shadow-md border border-gray-300 !px-0'>
+                                <li>
+                                    <button type="button" className="rounded-none px-4 py-3">
+                                        <FiBookmark size={20} strokeWidth={3} /> Save
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" className="rounded-none py-3 px-4">
+                                        <FiLink size={20} strokeWidth={3} />
+                                        Copy link to post
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" className="rounded-none px-4 py-3">
+                                        <FiCode size={20} strokeWidth={3} />
+                                        Embed this post
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" className="rounded-none px-4 py-3">
+                                        <FiEyeOff size={20} strokeWidth={3} />
+                                        Not interested
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" className="rounded-none px-4 py-3">
+                                        <FiFlag size={20} fill='currentColor' strokeWidth={3} />
+                                        Report post
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                         <button type="button" className='btn btn-xs btn-ghost btn-circle border-0'>
                             <IoClose size={20} />
                         </button>
@@ -72,9 +108,15 @@ export default function PostHeader({ post }) {
                 {/* Connection Request Button */}
                 {isConnected ? (
                     <div className='flex items-center gap-x-1'>
-                        <button type="button" className='btn btn-xs btn-ghost btn-circle'>
-                            <FaEllipsisH size={15} />
-                        </button>
+                        <div className="dropdown">
+                            <div tabIndex={0} role="button" className='btn btn-xs btn-ghost btn-circle'>
+                                <FaEllipsisH size={15} />
+                            </div>
+                            <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                                <li><a>Item 1</a></li>
+                                <li><a>Item 2</a></li>
+                            </ul>
+                        </div>
                         <button type="button" className='btn btn-xs btn-ghost btn-circle'>
                             <IoClose size={20} />
                         </button>
@@ -96,7 +138,7 @@ export default function PostHeader({ post }) {
                         >
                             {post.connectionStatus === "pending" ? (
                                 <>
-                                    <FaSpinner /> pending
+                                    <MdOutlineSchedule size={15} /> pending
                                 </>
                             ) : (
                                 <>
