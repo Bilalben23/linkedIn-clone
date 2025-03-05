@@ -45,8 +45,8 @@ const createCommentValidation = {
             errorMessage: "Comment content cannot be empty",
         },
         isLength: {
-            options: { min: 1, max: 500 },
-            errorMessage: "Comment must be between 1 and 500 characters",
+            options: { min: 1, max: 1000 },
+            errorMessage: "Comment must be between 1 and 1000 characters",
         },
     },
 };
@@ -62,8 +62,8 @@ const updateCommentValidation = {
             errorMessage: "Updated comment content cannot be empty",
         },
         isLength: {
-            options: { min: 1, max: 500 },
-            errorMessage: "Updated comment must be between 1 and 500 characters",
+            options: { min: 1, max: 1000 },
+            errorMessage: "Updated comment must be between 1 and 1000 characters",
         }
     },
 };

@@ -6,10 +6,10 @@ export default function DeletePostConfirmationModal({ setIsConfirmPostDeletion, 
             <p className="py-4 text-black/60">Are you sure you want to permanently remove this post from LinkedIn?</p>
             <div className="modal-action">
                 <form method="dialog" ref={dialogFormRef}>
-                    <button className="btn btn-outline rounded-full btn-sm">Cancel</button>
+                    <button className="btn btn-outline rounded-full btn-sm font-bold">Cancel</button>
                 </form>
                 <button
-                    className="btn rounded-full btn-primary btn-sm"
+                    className="btn rounded-full btn-primary btn-sm font-bold"
                     onClick={() => setIsConfirmPostDeletion(true)}
                     disabled={isDeleting}>
                     {

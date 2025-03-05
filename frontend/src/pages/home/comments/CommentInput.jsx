@@ -30,8 +30,8 @@ export default function CommentInput({ postId }) {
             onSuccess: () => {
                 resetCommentBox();
             },
-            onError: () => {
-                toast.error("Failed to comment")
+            onError: (err) => {
+                toast.error(err.response.data.errors[0].message || "Failed to comment")
             }
         });
     }

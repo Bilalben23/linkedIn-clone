@@ -63,7 +63,7 @@ export default function PostHeader({ post }) {
                 },
             })
         }
-    }, [isConfirmPostDeletion, post._id, deletePost])
+    }, [isConfirmPostDeletion, post._id])
 
     return (
         <>
