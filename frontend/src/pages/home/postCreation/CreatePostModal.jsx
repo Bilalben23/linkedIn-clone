@@ -117,7 +117,7 @@ export default function CreatePostModal({ user }) {
                         name="content"
                         aria-label="Post Content"
                         placeholder="What do you want to talk about?"
-                        className={`w-full ${postImagePreview && postContent.length < 10 ? "h-14" : "h-52"} transition-[height] duration-500 pr-3 pt-2 focus:outline-0 resize-none`}
+                        className={`w-full whitespace-pre-wrap ${postImagePreview && postContent.length < 10 ? "h-14" : "h-52"} transition-[height] duration-500 pr-3 pt-2 focus:outline-0 resize-none`}
                         onChange={handlePostContentChange}
                         value={postContent}
                     />
@@ -207,12 +207,12 @@ export default function CreatePostModal({ user }) {
                         disabled={(postContent.trim().length === 0 && !postImagePreview) || isPending}
                     >
                         {
-                            isPending ? <img
+                            isPending && <img
                                 src="/assets/loading-spinner.gif"
                                 alt="Loading-spinner"
                                 className="w-3"
-                            /> : "Post"
-                        }
+                            />
+                        } Post
                     </button>
                 </div>
             </div>

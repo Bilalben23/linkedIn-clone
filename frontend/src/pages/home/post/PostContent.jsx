@@ -10,7 +10,7 @@ const PostContent = ({ post }) => {
         <div className='mt-3'>
             {
                 post.content && <div className='px-4'>
-                    <p className='text-sm'>
+                    <p className='text-sm whitespace-pre-wrap'>
                         {
                             expandedText ? post.content : post.content.slice(0, 200)
                         }

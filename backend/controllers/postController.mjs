@@ -32,7 +32,7 @@ export const getFeedPosts = async (req, res) => {
             Connection.find({  // Fetch user connections
                 $or: [{ sender: userId }, { receiver: userId }]
             }).select("sender receiver status"),
-            Post.find({ author: { $ne: userId } }) // Fetch paginated posts
+            Post.find({}) // Fetch paginated posts
                 .populate("author", "name username profilePicture headline")
                 .sort({ createdAt: -1 })
                 .limit(limit)

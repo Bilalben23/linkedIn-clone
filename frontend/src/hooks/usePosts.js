@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useMutation } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import useAxios from './useAxios'
 
 export const usePostsFeed = () => {
@@ -12,19 +12,23 @@ export const usePostsFeed = () => {
         },
         initialPageParam: 1,
         getNextPageParam: (lastPage) => lastPage.pagination.hasNextPage ? lastPage.pagination.nextPage : undefined,
-        staleTime: 1000 * 60 * 5
+        staleTime: 1000 * 60 * 5,
+        refetchOnWindowFocus: false
     })
 }
 
 
 export const useCreatePost = () => {
     const axiosInstance = useAxios();
-
+    const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationKey: ["createPost"],
         mutationFn: async (newPostData) => {
             const { data } = await axiosInstance.post("/api/v1/posts", newPostData);
             return data;
+        },
+        onSuccess: () => {
+            queryClient.refetchQueries(["postsFeed"]);
         }
     })
 

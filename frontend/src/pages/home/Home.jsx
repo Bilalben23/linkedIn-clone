@@ -49,9 +49,13 @@ export default function Home() {
         }
     }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
+
     const refetchPostsFeed = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
         refetch();
-        window.scrollTo(0, 0);
     }
 
 
@@ -66,23 +70,27 @@ export default function Home() {
                     handleSortChange={handleSortChange}
                     sortOption={sortOption}
                 />
-                {isStale && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.3, ease: "easeOut" }}
-                        className="sticky z-1 top-15 flex -my-2.5 justify-center"
-                    >
-                        <button
-                            type="button"
-                            className="btn btn-primary shadow-gray-500 shadow-md rounded-full btn-xs"
-                            onClick={refetchPostsFeed}
+                {
+                    isStale && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
+                            className="sticky z-1 top-15 flex -my-2.5 justify-center"
                         >
-                            <FaArrowUp /> New Posts
-                        </button>
-                    </motion.div>
-                )}
+                            <button
+                                type="button"
+                                className="btn btn-primary shadow-gray-500 shadow-md rounded-full btn-xs"
+                                onClick={refetchPostsFeed}
+                                disabled={isLoading}
+                                aria-label="Fetch new posts"
+                            >
+                                <FaArrowUp /> New Posts
+                            </button>
+                        </motion.div>
+                    )
+                }
 
                 <FeedPosts
                     postsFeed={postsFeed}
@@ -98,7 +106,7 @@ export default function Home() {
                         <div className='flex items-center justify-center mt-1.5'>
                             <img
                                 src="/assets/loading-spinner.gif"
-                                alt="loading-spinner"
+                                alt="Loading spinner"
                                 className='size-9'
                             />
                         </div>

@@ -183,7 +183,7 @@ export default function CommentItem({ comment, postId, postAuthorId }) {
                             ref={contentEditableRef}
                             suppressContentEditableWarning={true}
                             contentEditable={true}
-                            className={`text-xs relative border border-gray-500 rounded-full p-2.5 focus:outline-blue-500 ${editedComment.trim().length === 0 ? "before:content-['Add_a_comment'] before:absolute before:left-3 before:text-gray-500" : ""
+                            className={`text-xs relative break-words border border-gray-500 rounded-full p-2.5 focus:outline-blue-500 ${editedComment.trim().length === 0 ? "before:content-['Add_a_comment'] before:absolute before:left-3 before:text-gray-500" : ""
                                 }`}
                             role='textbox'
                             onInput={handleInput}
@@ -208,7 +208,7 @@ export default function CommentItem({ comment, postId, postAuthorId }) {
                     </>
                 ) : (
                     <>
-                        <p className='text-sm'>{comment.content}</p>
+                        <p className='text-sm break-words'>{comment.content}</p>
                         <div className='flex mt-1 items-center gap-x-1.5 text-xs'>
                             <div
                                 className='relative w-fit'

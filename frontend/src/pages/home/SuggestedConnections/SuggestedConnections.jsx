@@ -1,7 +1,7 @@
 import React from 'react'
 import useSuggestedConnections from '../../../hooks/useSuggestedConnections'
 import SuggestedConnectionItem from './SuggestedConnectionItem';
-import SuggestedConnectionSkeleton from '../skeletons/SuggestedConnectionSkeleton';
+import SuggestedConnectionSkeleton from '../../../components/skeletons/SuggestedConnectionSkeleton';
 import { FaUserSlash } from 'react-icons/fa';
 
 export default function SuggestedConnections() {

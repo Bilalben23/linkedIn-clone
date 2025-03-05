@@ -37,7 +37,9 @@ export default function PostCreation({ user }) {
                 </div>
 
                 <div className='flex justify-between items-center'>
-                    <button type="button" className='btn btn-ghost'>
+                    <button
+                        type="button" className='btn btn-ghost'
+                    >
                         <FiImage className="text-[#378fe9] size-5" />
                         Photo
                     </button>

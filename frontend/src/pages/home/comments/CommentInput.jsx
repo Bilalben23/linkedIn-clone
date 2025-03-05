@@ -48,10 +48,10 @@ export default function CommentInput({ postId }) {
                         className='size-9 rounded-full'
                     />
                 </div>
-                <div className='relative w-full text-xs'>
+                <div className='relative overflow-x-auto w-full text-xs'>
                     <div
                         ref={commentBoxRef}
-                        className={`w-full border relative border-gray-500 rounded-3xl p-2.5 focus:outline-gray-500 ${comment.trim().length === 0 ? "before:content-['Add_a_comment'] before:absolute before:left-3 before:text-gray-500" : ""
+                        className={`w-full break-words border relative border-gray-500 rounded-3xl p-2.5 focus:outline-gray-500 ${comment.trim().length === 0 ? "before:content-['Add_a_comment'] before:absolute before:left-3 before:text-gray-500" : ""
                             }`}
                         role='textbox'
                         contentEditable="true"

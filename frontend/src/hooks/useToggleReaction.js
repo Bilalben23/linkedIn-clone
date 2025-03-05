@@ -7,6 +7,7 @@ export default function useToggleReaction() {
     const queryClient = useQueryClient();
 
     return useMutation({
+        mutationKey: ["toggleReaction"],
         mutationFn: async ({ postId, reactionType }) => {
             const { data } = await axiosInstance.post(`/api/v1/reactions/${postId}`, {
                 type: reactionType
@@ -15,7 +16,7 @@ export default function useToggleReaction() {
         },
         onSuccess: () => {
             // invalid and refetch the post feed to update reactions
-            queryClient.invalidateQueries({ queryKey: ["postsFeed"] });
+            queryClient.refetchQueries({ queryKey: ["postsFeed"] });
         },
         onError: (err) => {
             toast.error(err.message);

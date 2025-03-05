@@ -1,5 +1,5 @@
 import PostItem from './PostItem';
-import PostSkeleton from '../skeletons/PostSkeleton';
+import PostSkeleton from '../../../components/skeletons/PostSkeleton';
 
 export default function FeedPosts({ postsFeed, isLoading, isError, error, lastPostRef }) {
 
