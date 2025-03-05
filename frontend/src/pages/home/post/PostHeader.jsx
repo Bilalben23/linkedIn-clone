@@ -4,19 +4,27 @@ import { FaUserPlus } from 'react-icons/fa';
 import { IoClose } from "react-icons/io5";
 import { timeAgo } from "../../../utils/timeAgo";
 import useSendConnectionRequest from '../../../hooks/useSendConnectionRequest';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MdOutlineSchedule } from "react-icons/md";
 import useAuth from '../../../hooks/useAuth';
 import PostActionsDropdown from './PostActionsDropdown';
+import { useDeletePost } from '../../../hooks/usePosts';
+import { toast } from 'react-toastify';
+import DeletePostConfirmationModal from './DeletePostConfirmationModal';
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 const CONNECT_SOUND_URL = "/assets/sounds/connect.mp3";
 
 export default function PostHeader({ post }) {
     const connectSoundEffect = useRef(null);
-    const { mutate: sendConnectionRequest, isPending } = useSendConnectionRequest("postsFeed");
     const { authState: { user } } = useAuth();
     const isMyPost = user._id.toString() === post.author._id.toString();
+    const [isConfirmPostDeletion, setIsConfirmPostDeletion] = useState(false);
+    const { mutate: deletePost, isPending: isDeleting } = useDeletePost()
+    const { mutate: sendConnectionRequest, isPending: isSending } = useSendConnectionRequest("postsFeed");
+    const dialogFormRef = useRef(null);
+    const isConnected = post.isConnected;
+
 
     const handleSendConnectionRequest = (userId) => {
         sendConnectionRequest(userId, {
@@ -31,7 +39,6 @@ export default function PostHeader({ post }) {
         });
     };
 
-    const isConnected = post.isConnected;
 
     // Dropdown handlers
     const handleSave = () => console.log("Save post");
@@ -41,10 +48,32 @@ export default function PostHeader({ post }) {
     const handleReport = () => console.log("Report post");
     const handleFeature = () => console.log("Feature on top of profile");
     const handleEdit = () => console.log("Edit post");
-    const handleDelete = () => console.log("Delete post");
+
+    const handleDelete = () => document.getElementById('deleteConfirmationModal').showModal();
+
+    useEffect(() => {
+        if (isConfirmPostDeletion) {
+            deletePost(post._id, {
+                onSuccess: () => {
+                    dialogFormRef.current?.submit();
+                    toast.success("Post deleted successfully");
+                },
+                onError: (err) => {
+                    toast.error(`Failed to delete post: ${err.message || "Something went wrong"}`);
+                },
+            })
+        }
+    }, [isConfirmPostDeletion, post._id, deletePost])
 
     return (
         <>
+            {/* Delete Confirmation Modal */}
+            <DeletePostConfirmationModal
+                setIsConfirmPostDeletion={setIsConfirmPostDeletion}
+                isDeleting={isDeleting}
+                dialogFormRef={dialogFormRef}
+            />
+
             {/* Connection actions */}
             {!isConnected && !isMyPost && (
                 <div className='border-b mb-3 pb-2 border-gray-300 justify-end flex items-center gap-x-1 mx-3'>
@@ -124,7 +153,7 @@ export default function PostHeader({ post }) {
                             type='button'
                             className={`btn ${post.connectionStatus === "pending" ? "!cursor-not-allowed" : "text-[#0A66C2] hover:bg-blue-50"} btn-xs font-bold  border-none `}
                             onClick={() => handleSendConnectionRequest(post.author._id)}
-                            disabled={isPending || post.connectionStatus === "pending"}
+                            disabled={isSending || post.connectionStatus === "pending"}
                         >
                             {post.connectionStatus === "pending" ? (
                                 <>

@@ -21,7 +21,7 @@ export default function CreatePostModal({ user }) {
     const [postContent, setPostContent] = useState("");
     const [postImage, setPostImage] = useState(null);
     const [postImagePreview, setPostImagePreview] = useState(null);
-    const dialogForm = useRef(null);
+    const dialogFormRef = useRef(null);
     const connectSoundEffect = useRef(null);
 
     // Handle post content change
@@ -69,7 +69,7 @@ export default function CreatePostModal({ user }) {
                 setPostContent("");
                 setPostImage(null);
                 setPostImagePreview(null);
-                dialogForm.current?.submit();
+                dialogFormRef.current?.submit();
                 if (connectSoundEffect.current) {
                     connectSoundEffect.current.volume = 1.0;
                     connectSoundEffect.current.play().catch((err) => {
@@ -104,7 +104,7 @@ export default function CreatePostModal({ user }) {
                             <p className="text-xs">Post to anyone</p>
                         </div>
                     </div>
-                    <form method="dialog" ref={dialogForm}>
+                    <form method="dialog" ref={dialogFormRef}>
                         <button type="submit" className="btn btn-sm text-gray-700 btn-ghost btn-circle border-0">
                             <IoClose size={30} />
                         </button>

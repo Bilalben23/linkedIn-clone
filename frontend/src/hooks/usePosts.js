@@ -21,6 +21,7 @@ export const usePostsFeed = () => {
 export const useCreatePost = () => {
     const axiosInstance = useAxios();
     const queryClient = useQueryClient();
+
     const mutation = useMutation({
         mutationKey: ["createPost"],
         mutationFn: async (newPostData) => {
@@ -50,14 +51,21 @@ export const useUpdatePost = () => {
     })
 }
 
-export const useDeletePost = () => {
+export const useDeletePost = (sendFrom = "postsFeed") => {
     const axiosInstance = useAxios();
+    const queryClient = useQueryClient();
 
     return useMutation({
         mutationKey: ["deletePost"],
         mutationFn: async (postId) => {
             const { data } = await axiosInstance.delete(`/api/v1/posts/${postId}`);
             return data;
+        },
+        onSuccess: () => {
+            if (sendFrom === "postsFeed") {
+                queryClient.refetchQueries({ queryKey: ["postsFeed"] });
+
+            }
         }
     })
 }
