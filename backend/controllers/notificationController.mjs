@@ -4,7 +4,7 @@ import { Notification } from "../models/notificationModel.mjs"
 export const getUserNotifications = async (req, res) => {
     const pageNumber = Number(req.query?.page) || 1;
     const { filter } = req.query;
-    const limit = 20;
+    const limit = 8;
     const userId = req.user._id;
 
     let filterTypes = [];

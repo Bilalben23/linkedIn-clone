@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxios from "./useAxios";
 
 
@@ -25,7 +25,7 @@ export function useFetchNotifications(filter) {
 
 
 // Mark notification as read
-export function useMarksAsRead() {
+export function useMarksAsRead(filter) {
     const axiosInstance = useAxios();
     const queryClient = useQueryClient();
 
@@ -36,7 +36,7 @@ export function useMarksAsRead() {
             return data;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["notifications"] });
+            queryClient.invalidateQueries({ queryKey: ["notifications", filter] });
         }
     })
 }
