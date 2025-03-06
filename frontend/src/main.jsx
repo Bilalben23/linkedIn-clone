@@ -26,5 +26,5 @@ createRoot(document.getElementById('root')).render(
       </AuthProvider>
       <ReactQueryDevtools />
     </QueryClientProvider>
-  </StrictMode >,
+  </StrictMode>
 )

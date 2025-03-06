@@ -45,12 +45,12 @@ app.use(passport.initialize());
 configurePassport();
 
 // API Routes
-app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/auth", authRoutes); 
 app.use("/api/v1/users", authenticateJWT, userRoutes);
 app.use("/api/v1/connections", authenticateJWT, connectionRoutes);
-app.use("/api/v1/posts", authenticateJWT, postRoutes);
+app.use("/api/v1/posts", authenticateJWT, postRoutes); 
 app.use("/api/v1/reactions", authenticateJWT, reactionRoutes);
-app.use("/api/v1/comments", authenticateJWT, commentRoutes);
+app.use("/api/v1/comments", authenticateJWT, commentRoutes); 
 app.use("/api/v1/notifications", authenticateJWT, notificationRoutes);
 
 
@@ -80,3 +80,5 @@ app.listen(PORT, () => {
 */
 
 // learn "numeral" to deal with short forms of numbers, like 1k, 1M...
+
+// what is SSO ( Single Sign-On)

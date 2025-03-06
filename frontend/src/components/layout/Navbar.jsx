@@ -4,17 +4,27 @@ import { MdHome, MdPeopleAlt, MdNotifications, MdSearch, MdLogout } from "react-
 import useUnreadNotificationsCount from '../../hooks/useUnreadNotificationsCount';
 import usePendingRequestsCount from '../../hooks/usePendingRequestsCount';
 import useAuth from '../../hooks/useAuth';
+import { useQueryClient } from '@tanstack/react-query';
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 
 
 export default function Navbar() {
+    const queryClient = useQueryClient();
     const logout = useLogout();
     const { unreadCount } = useUnreadNotificationsCount();
     const { pendingRequestsCount } = usePendingRequestsCount();
-
     const { authState: { user } } = useAuth();
 
+    const queryState = queryClient.getQueryState(['postsFeed']);
+    console.log(queryState);
+
+    const isStale = (() => {
+        if (!queryState?.dataUpdatedAt) return false;
+        const staleTime = 1000 * 60 * 5;
+        const currentTime = Date.now();
+        return currentTime - queryState.dataUpdatedAt > staleTime;
+    })();
 
     return (
         <header className='px-8 flex items-center justify-between shadow-xs border-b border-gray-300 w-full fixed top-0 bg-base-100 z-50'>
@@ -36,11 +46,17 @@ export default function Navbar() {
             </div>
 
             <nav>
-                <ul className='flex items-center gap-x-4'>
+                <ul className='flex items-center gap-x-3'>
                     <li className='flex-1'>
-                        <NavLink to="/" className={({ isActive }) => `relative flex flex-col after:w-0 py-2 px-5 items-center  ${isActive ? " after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-full after:h-[2px] after:bg-black after:transition-[width] after:duration-300" : "opacity-70 transition-opacity hover:opacity-100"}`}>
-                            <MdHome size={30} />
-                            <span className='text-xs'>Home</span>
+                        <NavLink to="/" className={({ isActive }) => `relative group flex flex-col after:w-0 py-2 px-5 items-center  ${isActive ? "active-link after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-full after:h-[2px] after:bg-black after:transition-[width] after:duration-300" : ""}`}>
+                            <span className='indicator'>
+                                <MdHome size={30} className='opacity-70 group-[.active-link]:opacity-100 transition-opacity group-hover:opacity-100' />
+                                {
+                                    isStale && <span className='indicator-item flex items-center justify-center size-[18px] shadow bg-red-700 top-0.5 rounded-full text-[11px] text-white before:content-[""] before:absolute before:size-[8px] before:left-1/2 before:top-1/2 before:-translate-1/2 before:rounded-full before:bg-white before:inset-0 font-semibold right-1'></span>
+                                }
+
+                            </span>
+                            <span className='text-xs group-[.active-link]:opacity-100 opacity-70 transition-opacity group-hover:opacity-100'>Home</span>
                         </NavLink>
                     </li>
                     <li className='flex-1'>
@@ -56,7 +72,7 @@ export default function Navbar() {
                         </NavLink>
                     </li>
                     <li className='flex-1'>
-                        <NavLink to="/notifications" className={({ isActive }) => `relative group flex flex-col after:w-0 py-2 px-3 items-center  ${isActive ? "active-link after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-full after:h-[2px] after:bg-black after:transition-[width] after:duration-300" : ""}`}>
+                        <NavLink to="/notifications?filter=all" className={({ isActive }) => `relative group flex flex-col after:w-0 py-2 px-3 items-center  ${isActive ? "active-link after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-full after:h-[2px] after:bg-black after:transition-[width] after:duration-300" : ""}`}>
                             <span className='indicator'>
                                 <MdNotifications size={30} className='opacity-70 transition-opacity group-hover:opacity-100 group-[.active-link]:opacity-100' />
                                 {
@@ -96,7 +112,7 @@ export default function Navbar() {
                                                 className='w-11 rounded-full'
                                             />
                                         </div>
-                                        <div >
+                                        <div>
                                             <p className='font-semibold mb-0.5 text-sm'>{user.name}</p>
                                             <p className='text-xs'>{user.headline}</p>
                                         </div>
@@ -111,7 +127,6 @@ export default function Navbar() {
                                 </li>
                             </ul>
                         </div>
-
                     </li>
                 </ul>
             </nav>

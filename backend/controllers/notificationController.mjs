@@ -12,12 +12,13 @@ export const getUserNotifications = async (req, res) => {
             .sort({ createdAt: -1 })
             .skip((pageNumber - 1) * limit)
             .limit(limit)
-            .populate("triggeredBy -recipient", "name username profilePicture headline")
+            .populate("triggeredBy", "name username profilePicture headline")
             .populate({
                 path: "relatedPost",
                 select: "content image",
                 match: { _id: { $ne: null } }
             })
+            .select("-recipient")
             .lean();
 
         const totalPages = Math.ceil(totalNotifications / limit);
@@ -38,6 +39,7 @@ export const getUserNotifications = async (req, res) => {
         })
 
     } catch (err) {
+        console.log(err);
         return res.status(500).json({
             success: false,
             message: "Internal Server Error",

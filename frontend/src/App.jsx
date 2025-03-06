@@ -5,10 +5,10 @@ import Signup from "./pages/auth/Signup";
 import Signin from "./pages/auth/Signin";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
-import Profile from "./pages/Profile";
+import Profile from "./pages/profile/Profile";
 import PersistLogin from "./components/PersistLogin";
 import Networks from "./pages/networks/Networks";
-import Notifications from "./pages/Notifications";
+import Notifications from "./pages/notifications/Notifications";
 
 
 export default function App() {
