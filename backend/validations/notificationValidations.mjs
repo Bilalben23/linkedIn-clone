@@ -1,15 +1,15 @@
 import { checkSchema } from "express-validator";
 
-const notificationIdValidation = checkSchema({
+const notificationIdValidation = {
     notificationId: {
         in: "params",
         isMongoId: {
             errorMessage: "Invalid notification ID format",
         },
     },
-});
+};
 
-const pageValidation = checkSchema({
+const pageValidation = {
     page: {
         in: "query",
         toInt: true,
@@ -21,9 +21,23 @@ const pageValidation = checkSchema({
         },
         default: { options: 1 },
     },
-});
+};
 
-export const validateGetUserNotifications = pageValidation;
-export const validateMarkNotificationAsRead = notificationIdValidation;
-export const validateDeleteNotification = notificationIdValidation;
+const filterValidation = {
+    filter: {
+        in: "query",
+        isString: {
+            errorMessage: "Filter query must be a string"
+        },
+        optional: true,
+        isIn: {
+            options: [['all', 'my_posts_all', 'connection_accepted']],
+            errorMessage: 'Filter must be one of "all", "my_posts_all", or "connection_accepted"',
+        }
+    }
+}
+
+export const validateGetUserNotifications = checkSchema({ ...pageValidation, ...filterValidation });
+export const validateMarkNotificationAsRead = checkSchema(notificationIdValidation);
+export const validateDeleteNotification = checkSchema(notificationIdValidation);
 

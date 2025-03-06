@@ -3,18 +3,23 @@ import useAxios from "./useAxios";
 
 
 // Fetch notifications with infinite scrolling
-export function useFetchNotifications() {
+export function useFetchNotifications(filter) {
     const axiosInstance = useAxios();
 
     return useInfiniteQuery({
-        queryKey: ['notifications'],
+        queryKey: ['notifications', filter],
         queryFn: async ({ pageParam }) => {
-            const { data } = await axiosInstance.get(`/api/v1/notifications?page=${pageParam}`);
+            const { data } = await axiosInstance.get(`/api/v1/notifications`, {
+                params: {
+                    page: pageParam,
+                    filter: "all"
+                }
+            });
             return data;
         },
         initialPageParam: 1,
         getNextPageParam: (lastPage) => lastPage.pagination.hasNextPage ? lastPage.pagination.nextPage : undefined,
-        staleTime: 5 * 60 * 100
+        staleTime: 1000 * 10
     })
 }
 

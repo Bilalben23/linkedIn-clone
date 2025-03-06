@@ -1,14 +1,27 @@
 import { Notification } from "../models/notificationModel.mjs"
 
+
 export const getUserNotifications = async (req, res) => {
-    const pageNumber = Number(req.query.page) || 1;
+    const pageNumber = Number(req.query?.page) || 1;
+    const { filter } = req.query;
     const limit = 20;
     const userId = req.user._id;
 
-    try {
-        const totalNotifications = await Notification.countDocuments({ recipient: userId });
+    let filterTypes = [];
+    if (filter === "all") {
+        filterTypes = ["reaction", "comment", "newPost"];
+    } else if (filter === "my_posts_all") {
+        filterTypes = ["reaction", "comment"];
+    } else if ("connection_accepted") {
+        filterTypes = ["connectionAccepted"];
+    } else {
+        filterTypes = ["reaction", "comment", "newPost", "connectionAccepted"];
+    }
 
-        const paginatedNotifications = await Notification.find({ recipient: userId })
+    try {
+        const totalNotifications = await Notification.countDocuments({ recipient: userId, type: { $in: filterTypes } });
+
+        const paginatedNotifications = await Notification.find({ recipient: userId, type: { $in: filterTypes } })
             .sort({ createdAt: -1 })
             .skip((pageNumber - 1) * limit)
             .limit(limit)

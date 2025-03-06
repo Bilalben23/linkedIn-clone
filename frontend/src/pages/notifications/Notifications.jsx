@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import useAuth from '../../hooks/useAuth';
 import { useFetchNotifications } from '../../hooks/useNotifications';
 import { useSearchParams } from 'react-router-dom';
@@ -11,13 +11,49 @@ export default function Notifications() {
     const { authState: { user } } = useAuth();
     const [searchParams, setSearchParams] = useSearchParams();
     const filter = searchParams.get("filter") || "all";
-    const { data: notifications, isLoading, isStale, isError, error } = useFetchNotifications();
+    const lastNotificationRef = useRef(null);
+
+    const {
+        data: notifications,
+        isLoading,
+        isStale,
+        isError,
+        error,
+        fetchNextPage,
+        isFetchingNextPage,
+        hasNextPage
+
+    } = useFetchNotifications(filter);
 
     const updateSearchParam = (filter) => setSearchParams({ filter });
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
+
+
+
+    useEffect(() => {
+        if (!hasNextPage) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && !isFetchingNextPage) {
+                    fetchNextPage();
+                }
+            }, {
+            threshold: 0.1
+        })
+
+        if (lastNotificationRef.current) {
+            observer.observe(lastNotificationRef.current);
+        }
+
+        return () => {
+            if (lastNotificationRef.current) observer.unobserve(lastNotificationRef.current);
+        }
+    }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
 
     return (
         <section className='grid grid-cols-1 items-start md:grid-cols-4 mt-3 gap-x-4'>
@@ -27,9 +63,18 @@ export default function Notifications() {
                 <NotificationFilters
                     filter={filter}
                     updateSearchParam={updateSearchParam}
+                    isLoading={isLoading}
                 />
 
-                <NotificationContent />
+                <NotificationContent
+                    notifications={notifications}
+                    isLoading={isLoading}
+                    isError={isError}
+                    error={error}
+                    hasNextPage={hasNextPage}
+                    isFetchingNextPage={isFetchingNextPage}
+                    lastNotificationRef={lastNotificationRef}
+                />
 
             </section>
 

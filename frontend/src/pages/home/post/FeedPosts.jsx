@@ -16,7 +16,7 @@ export default function FeedPosts({ postsFeed, isLoading, isError, error, lastPo
         <section className='flex flex-col gap-y-3'>
             {
                 isLoading
-                    ? Array.from({ length: 5 }).map((_, index) => <PostSkeleton key={index} />)
+                    ? Array.from({ length: 20 }).map((_, index) => <PostSkeleton key={index} />)
                     : postsFeed?.pages?.map((group) => {
                         return group.data.map((post, index, array) => {
                             return <PostItem

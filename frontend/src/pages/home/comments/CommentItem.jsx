@@ -24,7 +24,6 @@ export default function CommentItem({ comment, postId, postAuthorId }) {
     const contentEditableRef = useRef(null);
     const dialogFormRef = useRef(null);
 
-
     // Memoized values
     const isEdited = useMemo(() => new Date(comment.createdAt).getTime() !== new Date(comment.updatedAt).getTime(), [comment]);
     const formattedTimeAgo = useMemo(() => timeAgo(comment.createdAt), [comment]);
