@@ -37,6 +37,26 @@ export function useMarksAsRead(filter) {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["notifications", filter] });
+            queryClient.invalidateQueries({ queryKey: ["unreadNotificationsCount"] });
+        }
+    })
+}
+
+
+// delete notification
+export function useDeleteNotification() {
+    const axiosInstance = useAxios();
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFnKey: ["deleteNotification"],
+        mutationFn: async (notificationId) => {
+            const { data } = await axiosInstance.delete(`/api/v1/notifications/${notificationId}`);
+            return data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["notifications"] });
+            queryClient.invalidateQueries({ queryKey: ["unreadNotificationsCount"] });
         }
     })
 }

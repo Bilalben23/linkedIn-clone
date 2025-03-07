@@ -1,7 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom';
-import { FaEllipsisH } from "react-icons/fa";
+import { FaBell, FaChevronRight, FaEllipsisH, FaTrash } from "react-icons/fa";
 import { timeAgo } from "../../utils/timeAgo";
-import { useMarksAsRead } from '../../hooks/useNotifications';
+import { useDeleteNotification, useMarksAsRead } from '../../hooks/useNotifications';
 
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
@@ -12,9 +12,14 @@ export default function NotificationItem({ notification, lastNotificationRef }) 
     console.log(notification);
 
     const { mutate: markNotificationAsRead } = useMarksAsRead(filter);
+    const { mutate: deleteNotification, isPending: isDeleting } = useDeleteNotification()
 
     const handleMarkNotificationAsRead = () => {
         markNotificationAsRead(notification._id);
+    }
+
+    const handleNotificationDeletion = () => {
+        deleteNotification(notification._id);
     }
 
 
@@ -71,9 +76,36 @@ export default function NotificationItem({ notification, lastNotificationRef }) 
 
                     <div className='shrink-0 flex mt-1 flex-col gap-y-0.5 items-center'>
                         <p className='text-[12px] text-black/70'>{timeAgo(notification.createdAt)}</p>
-                        <button type="button" className='btn btn-circle btn-sm border-0 btn-ghost'>
-                            <FaEllipsisH className='text-black/70' />
-                        </button>
+
+                        <div className="dropdown">
+                            <div tabIndex={0} role="button" className='btn btn-circle btn-sm border-0 btn-ghost'>
+                                <FaEllipsisH className='text-black/70' />
+                            </div>
+                            <ul tabIndex={0} className='dropdown-content !mt-1 !right-0 menu menu-sm bg-base-100 rounded-box !rounded-tr-none z-[1] text-gray-700 !px-0 w-fit py-1 font-bold shadow-md border border-gray-300'>
+                                <li>
+                                    <button
+                                        type='button'
+                                        className='rounded-none  btn btn-ghost leading-loose whitespace-nowrap tracking-wide !justify-start btn-sm'
+                                        disabled
+                                    >
+                                        <FaBell />
+                                        Change notification preferences
+                                        <FaChevronRight />
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        type='button'
+                                        className='rounded-none btn-sm btn btn-ghost leading-loose whitespace-nowrap tracking-wide !justify-start'
+                                        onClick={handleNotificationDeletion}
+                                        disabled={isDeleting}
+                                    >
+                                        <FaTrash />
+                                        Delete Notification
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </>
             }
@@ -82,6 +114,6 @@ export default function NotificationItem({ notification, lastNotificationRef }) 
                     new post notification
                 </>
             }
-        </div>
+        </div >
     )
 }
