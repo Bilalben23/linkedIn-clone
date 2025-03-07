@@ -4,6 +4,7 @@ import cloudinary from "../configs/cloudinary.mjs";
 import { uploadImage } from "../utils/uploadImage.mjs";
 import { Connection } from "../models/connectionModel.mjs";
 import { Comment } from "../models/commentModel.mjs";
+import { Notification } from "../models/notificationModel.mjs";
 
 export const getFeedPosts = async (req, res) => {
     const userId = req.user._id;

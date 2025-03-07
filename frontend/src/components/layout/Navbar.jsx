@@ -1,10 +1,11 @@
 import { Link, NavLink } from 'react-router-dom'
 import useLogout from '../../hooks/useLogout';
 import { MdHome, MdPeopleAlt, MdNotifications, MdSearch, MdLogout } from "react-icons/md";
-import useUnreadNotificationsCount from '../../hooks/useUnreadNotificationsCount';
+import { useUnreadNotificationsCount } from '../../hooks/useNotifications';
 import usePendingRequestsCount from '../../hooks/usePendingRequestsCount';
 import useAuth from '../../hooks/useAuth';
 import { useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 
@@ -12,19 +13,19 @@ const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 export default function Navbar() {
     const queryClient = useQueryClient();
     const logout = useLogout();
-    const { unreadCount } = useUnreadNotificationsCount();
+    const { data: unreadCount } = useUnreadNotificationsCount();
     const { pendingRequestsCount } = usePendingRequestsCount();
     const { authState: { user } } = useAuth();
 
     const queryState = queryClient.getQueryState(['postsFeed']);
-    console.log(queryState);
 
-    const isStale = (() => {
-        if (!queryState?.dataUpdatedAt) return false;
-        const staleTime = 1000 * 60 * 5;
-        const currentTime = Date.now();
-        return currentTime - queryState.dataUpdatedAt > staleTime;
-    })();
+    const isStale = queryState?.dataUpdatedAt
+        ? Date.now() - queryState.dataUpdatedAt > 1000 * 60 * 5
+        : false;
+
+    useEffect(() => {
+        queryClient.invalidateQueries({ queryKey: ["notifications"], exact: false, refetchType: "none" });
+    }, [unreadCount])
 
     return (
         <header className='px-8 flex items-center justify-between shadow-xs border-b border-gray-300 w-full fixed top-0 bg-base-100 z-50'>

@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxios from "./useAxios";
 
 
@@ -12,14 +12,15 @@ export function useFetchNotifications(filter) {
             const { data } = await axiosInstance.get(`/api/v1/notifications`, {
                 params: {
                     page: pageParam,
-                    filter: "all"
+                    filter
                 }
             });
             return data;
         },
         initialPageParam: 1,
         getNextPageParam: (lastPage) => lastPage.pagination.hasNextPage ? lastPage.pagination.nextPage : undefined,
-        staleTime: 1000 * 10
+        staleTime: 1000 * 60 * 5,
+        refetchOnWindowFocus: false
     })
 }
 
@@ -39,6 +40,22 @@ export function useMarksAsRead(filter) {
             queryClient.invalidateQueries({ queryKey: ["notifications", filter] });
             queryClient.invalidateQueries({ queryKey: ["unreadNotificationsCount"] });
         }
+    })
+}
+
+
+// count unread notifications
+export function useUnreadNotificationsCount() {
+    const axiosInstance = useAxios();
+
+    return useQuery({
+        queryKey: ["unreadNotificationsCount"],
+        queryFn: async () => {
+            const { data } = await axiosInstance.get("/api/v1/notifications/unread-count");
+            return data.unreadCount;
+        },
+        staleTime: 10000,
+        refetchInterval: 30000
     })
 }
 

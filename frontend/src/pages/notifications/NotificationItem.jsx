@@ -1,8 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom';
-import { FaBell, FaChevronRight, FaEllipsisH, FaTrash } from "react-icons/fa";
 import { timeAgo } from "../../utils/timeAgo";
 import { useDeleteNotification, useMarksAsRead } from '../../hooks/useNotifications';
-
+import NotificationDropdown from './NotificationDropdown';
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 
@@ -12,108 +11,68 @@ export default function NotificationItem({ notification, lastNotificationRef }) 
     console.log(notification);
 
     const { mutate: markNotificationAsRead } = useMarksAsRead(filter);
-    const { mutate: deleteNotification, isPending: isDeleting } = useDeleteNotification()
+    const { mutate: deleteNotification, isPending: isDeleting } = useDeleteNotification();
 
-    const handleMarkNotificationAsRead = () => {
-        markNotificationAsRead(notification._id);
-    }
+    const handleMarkAsRead = () => markNotificationAsRead(notification._id);
+    const handleDelete = () => deleteNotification(notification._id);
 
-    const handleNotificationDeletion = () => {
-        deleteNotification(notification._id);
-    }
-
+    const isCommentOrReaction = notification.type === "comment" || notification.type === "reaction";
+    const isNewPost = notification.type === "newPost";
 
     return (
-        <div className={`px-4 py-3 cursor-pointer border-b border-gray-300 flex gap-x-2 ${notification.read ? "hover:bg-base-200" : "bg-[#378fe933] hover:bg-[#C3DDF8]"}`} ref={lastNotificationRef} onClick={handleMarkNotificationAsRead}>
-            {
-                (notification.type === "comment" || notification.type === "reaction") && <>
-                    <Link to={`/profile/${notification.triggeredBy.username}`} className='shrink-0'>
-                        <img
-                            src={notification.triggeredBy.profilePicture
-                                ? `${CLOUDINARY_BASE_URL + notification.triggeredBy.profilePicture}`
-                                : '/assets/avatar.png'}
-                            alt={`${notification.triggeredBy.name}'s avatar`}
-                            className='size-10 rounded-full'
-                        />
-                    </Link>
+        <div
+            ref={lastNotificationRef}
+            onClick={handleMarkAsRead}
+            className={`px-4 py-3 border-b border-gray-300 flex gap-x-2 cursor-pointer relative ${notification.read ? "hover:bg-base-200" : "bg-[#378fe933] hover:bg-[#C3DDF8] before:absolute before:left-1.5 before:top-1/2 before:-translate-y-1/2 before:size-1 before:rounded-full before:bg-blue-500"}`}>
 
-                    <Link to={`/post/${notification.relatedPost._id}`} className='flex-1 mt-1'>
-                        <p className='text-xs mb-0.5'>
-                            <span className='font-extrabold'>{notification.triggeredBy.name}</span>
-                            {
-                                notification.type === "comment"
-                                    ? <span> and 2 others commented on your post.</span>
-                                    : <span> and 2 others reacted on your post.</span>
-                            }
-                        </p>
-                        <div className='border-[1.5px] mt-1 border-gray-300 rounded-box'>
-                            {
-                                notification.type === "comment" && <p className='p-2 border-b-[1.5px] text-xs border-gray-300'>Insightful</p>
-                            }
-                            <div className='flex gap-x-2 p-1 bg-[#378fe9]/2 items-center'>
-                                {
-                                    notification.relatedPost.image && <div className='shrink-0'>
-                                        <img
-                                            src={CLOUDINARY_BASE_URL + notification.relatedPost.image}
-                                            alt="image"
-                                            className={`${notification.type === "comment" ? "w-14" : "w-16 h-12"}`}
-                                        />
-                                    </div>
-                                }
-                                {
-                                    notification.relatedPost.content && <div className='flex-1'>
-                                        <p className='text-black/70 line-clamp-2 text-xs'>{notification.relatedPost.content}</p>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                        <div className='flex mt-1 items-center gap-x-1.5 text-[12px] text-black/70 font-extralight'>
-                            <p>22 reactions</p>
-                            <p className='size-[3px] bg-black/70 rounded-full shrink-0'></p>
-                            <p>12 comments</p>
-                        </div>
-                    </Link>
+            <Link to={`/profile/${notification.triggeredBy.username}`} className='shrink-0 self-start relative'>
+                <img
+                    src={notification.triggeredBy.profilePicture ? `${CLOUDINARY_BASE_URL + notification.triggeredBy.profilePicture}` : '/assets/avatar.png'}
+                    alt={`${notification.triggeredBy.name}'s avatar`}
+                    className='size-10 rounded-full'
+                />
+            </Link>
 
-                    <div className='shrink-0 flex mt-1 flex-col gap-y-0.5 items-center'>
-                        <p className='text-[12px] text-black/70'>{timeAgo(notification.createdAt)}</p>
+            <Link to={`/post/${notification.relatedPost._id}`} className='flex-1'>
+                <p className='text-xs mb-0.5 line-clamp-3'>
+                    <span className='font-extrabold'>{notification.triggeredBy.name}</span>
+                    {isCommentOrReaction && (
+                        <span> and {notification.type === "comment" ? notification.commentsCount - 1 : notification.reactionsCount - 1} others {notification.type === "comment" ? "commented" : "reacted"} on your post.</span>
+                    )}
 
-                        <div className="dropdown">
-                            <div tabIndex={0} role="button" className='btn btn-circle btn-sm border-0 btn-ghost'>
-                                <FaEllipsisH className='text-black/70' />
-                            </div>
-                            <ul tabIndex={0} className='dropdown-content !mt-1 !right-0 menu menu-sm bg-base-100 rounded-box !rounded-tr-none z-[1] text-gray-700 !px-0 w-fit py-1 font-bold shadow-md border border-gray-300'>
-                                <li>
-                                    <button
-                                        type='button'
-                                        className='rounded-none  btn btn-ghost leading-loose whitespace-nowrap tracking-wide !justify-start btn-sm'
-                                        disabled
-                                    >
-                                        <FaBell />
-                                        Change notification preferences
-                                        <FaChevronRight />
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        type='button'
-                                        className='rounded-none btn-sm btn btn-ghost leading-loose whitespace-nowrap tracking-wide !justify-start'
-                                        onClick={handleNotificationDeletion}
-                                        disabled={isDeleting}
-                                    >
-                                        <FaTrash />
-                                        Delete Notification
-                                    </button>
-                                </li>
-                            </ul>
+                    {isNewPost && <span className=''> posted: {notification.relatedPost.content}</span>}
+                </p>
+
+                {isCommentOrReaction && (
+                    <div className='border-[1.5px] mt-1 border-gray-300 rounded-box'>
+                        <div className='flex gap-x-2 p-1 bg-[#378fe9]/2 items-center'>
+                            {notification.relatedPost.image && (
+                                <img
+                                    src={CLOUDINARY_BASE_URL + notification.relatedPost.image}
+                                    alt="Post"
+                                    className='w-16 h-12'
+                                />
+                            )}
+                            {notification.relatedPost.content && (
+                                <p className='text-black/70 line-clamp-2 text-xs'>{notification.relatedPost.content}</p>
+                            )}
                         </div>
                     </div>
-                </>
-            }
-            {
-                notification.type === "newPost" && <>
-                    new post notification
-                </>
-            }
-        </div >
-    )
+                )}
+                {
+                    isCommentOrReaction && <div className='flex mt-1 items-center gap-x-1.5 text-[12px] text-black/70 font-extralight'>
+                        <p>{notification.reactionsCount} reactions</p>
+                        <p className='size-[3px] bg-black/70 rounded-full shrink-0'></p>
+                        <p>{notification.commentsCount} comments</p>
+                    </div>
+                }
+
+            </Link>
+
+            <div className='shrink-0 self-start flex flex-col gap-y-0.5 items-center' onClick={(e) => e.stopPropagation()}>
+                <p className='text-[12px] text-black/70'>{timeAgo(notification.createdAt)}</p>
+                <NotificationDropdown onDelete={handleDelete} isDeleting={isDeleting} />
+            </div>
+        </div>
+    );
 }

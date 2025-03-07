@@ -71,7 +71,7 @@ export default function Home() {
                     sortOption={sortOption}
                 />
                 {
-                    isStale && (
+                    (isStale && !isLoading) && (
                         <motion.div
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -83,7 +83,6 @@ export default function Home() {
                                 type="button"
                                 className="btn btn-primary shadow-gray-500 shadow-md rounded-full btn-xs"
                                 onClick={refetchPostsFeed}
-                                disabled={isLoading}
                                 aria-label="Fetch new posts"
                             >
                                 <FaArrowUp /> New Posts

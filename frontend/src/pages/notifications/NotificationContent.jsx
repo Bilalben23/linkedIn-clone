@@ -4,7 +4,7 @@ import NotificationItem from "./NotificationItem";
 export default function NotificationContent({ notifications, isLoading, isError, error, hasNextPage, isFetchingNextPage, lastNotificationRef }) {
 
     return (
-        <div className='flex mt-3 flex-col bg-white rounded-box shadow-xs border border-gray-300'>
+        <div className='flex mt-3 overflow-x-hidden flex-col bg-white rounded-box shadow-xs border border-gray-300'>
             {
                 isLoading
                     ? Array.from({ length: 8 }).map((_, index) => <NotificationSkeleton

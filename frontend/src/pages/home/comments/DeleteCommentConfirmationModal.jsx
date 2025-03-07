@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
+
 export default function DeleteCommentConfirmationModal({ comment, setIsConfirmCommentDeletion, isEdited, formattedTimeAgo, dialogFormRef, isDeleting, isMyPost, isMyCommentAndNotMyPost, isMyCommentAndMyPost }) {
     return (
         <dialog id="delete_comment_confirmation_modal" className="modal">

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export default function NotificationFooter() {
 
     return (
-        <div className='sticky top-18'>
+        <div className='md:sticky md:top-18'>
             <div>
                 <img src="/assets/hiring_thumbnail.png" alt="Hiring Thumbnail" className='w-full rounded-box object-cover' />
             </div>

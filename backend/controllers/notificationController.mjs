@@ -1,38 +1,92 @@
-import { Notification } from "../models/notificationModel.mjs"
+import { Notification } from "../models/notificationModel.mjs";
 
 
 export const getUserNotifications = async (req, res) => {
-    const pageNumber = Number(req.query?.page) || 1;
-    const { filter } = req.query;
-    const limit = 8;
-    const userId = req.user._id;
-
-    let filterTypes = [];
-    if (filter === "all") {
-        filterTypes = ["reaction", "comment", "newPost"];
-    } else if (filter === "my_posts_all") {
-        filterTypes = ["reaction", "comment"];
-    } else if ("connection_accepted") {
-        filterTypes = ["connectionAccepted"];
-    } else {
-        filterTypes = ["reaction", "comment", "newPost", "connectionAccepted"];
-    }
-
     try {
-        const totalNotifications = await Notification.countDocuments({ recipient: userId, type: { $in: filterTypes } });
+        const pageNumber = Number(req.query?.page) || 1;
+        const { filter } = req.query;
+        const limit = 8;
+        const userId = req.user._id;
 
-        const paginatedNotifications = await Notification.find({ recipient: userId, type: { $in: filterTypes } })
-            .sort({ createdAt: -1 })
-            .skip((pageNumber - 1) * limit)
-            .limit(limit)
-            .populate("triggeredBy", "name username profilePicture headline")
-            .populate({
-                path: "relatedPost",
-                select: "content image",
-                match: { _id: { $ne: null } }
-            })
-            .select("-recipient")
-            .lean();
+        let filterTypes = [];
+        if (filter === "all") {
+            filterTypes = ["reaction", "comment", "newPost"];
+        } else if (filter === "my_posts_all") {
+            filterTypes = ["reaction", "comment"];
+        } else if (filter === "connection_accepted") {
+            filterTypes = ["connectionAccepted"];
+        } else {
+            filterTypes = ["reaction", "comment", "newPost", "connectionAccepted"];
+        }
+
+        const totalNotifications = await Notification.countDocuments({
+            recipient: userId,
+            type: { $in: filterTypes }
+        });
+
+        const paginatedNotifications = await Notification.aggregate([
+            { $match: { recipient: userId, type: { $in: filterTypes } } },
+            { $sort: { createdAt: -1 } },
+            { $skip: (pageNumber - 1) * limit },
+            { $limit: limit },
+            {
+                $lookup: {
+                    from: "users",
+                    let: { triggeredById: "$triggeredBy" },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ["$_id", "$$triggeredById"] } } },
+                        {
+                            $project: {
+                                name: 1,
+                                username: 1,
+                                headline: 1,
+                                profilePicture: 1
+                            }
+                        }
+                    ],
+                    as: "triggeredBy"
+                }
+            },
+            { $unwind: "$triggeredBy" },
+            {
+                $lookup: {
+                    from: "posts",
+                    localField: "relatedPost",
+                    foreignField: "_id",
+                    as: "relatedPost"
+                }
+            },
+            { $unwind: { path: "$relatedPost", preserveNullAndEmptyArrays: true } },
+            {
+                $lookup: {
+                    from: "comments",
+                    localField: "relatedPost._id",
+                    foreignField: "post",
+                    as: "comments"
+                }
+            },
+            {
+                $lookup: {
+                    from: "reactions",
+                    localField: "relatedPost._id",
+                    foreignField: "post",
+                    as: "reactions"
+                }
+            },
+            {
+                $addFields: {
+                    commentsCount: { $size: "$comments" },
+                    reactionsCount: { $size: "$reactions" }
+                }
+            },
+            {
+                $project: {
+                    recipient: 0,
+                    comments: 0,
+                    reactions: 0
+                }
+            }
+        ]);
 
         const totalPages = Math.ceil(totalNotifications / limit);
 
@@ -43,23 +97,23 @@ export const getUserNotifications = async (req, res) => {
             hasPrevPage: pageNumber > 1,
             nextPage: pageNumber < totalPages ? pageNumber + 1 : null,
             prevPage: pageNumber > 1 ? pageNumber - 1 : null,
-        }
+        };
 
         res.status(200).json({
             success: true,
             data: paginatedNotifications,
             pagination
-        })
+        });
 
     } catch (err) {
-        console.log(err);
+        console.error("Error fetching notifications:", err);
         return res.status(500).json({
             success: false,
             message: "Internal Server Error",
             error: err.message
-        })
+        });
     }
-}
+};
 
 
 export const getUnreadNotificationCount = async (req, res) => {
