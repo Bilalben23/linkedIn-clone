@@ -22,6 +22,7 @@ export default function Home() {
         isLoading,
         isError,
         error,
+        isPending,
         isStale,
         refetch,
         isFetchingNextPage,
@@ -71,7 +72,7 @@ export default function Home() {
                     sortOption={sortOption}
                 />
                 {
-                    (isStale && !isLoading) && (
+                    (isStale && !isLoading && !isPending) && (
                         <motion.div
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useFetchNotifications } from '../../hooks/useNotifications';
+import { useFetchNotifications, useMarkAllNotificationsAsRead } from '../../hooks/useNotifications';
 import { useSearchParams } from 'react-router-dom';
 import NotificationSidebar from './NotificationSidebar';
 import NotificationContent from './NotificationContent';
@@ -13,6 +13,7 @@ export default function Notifications() {
     const [searchParams, setSearchParams] = useSearchParams();
     const filter = searchParams.get("filter") || "all";
     const lastNotificationRef = useRef(null);
+    const { mutate: markAllNotificationsAsRead } = useMarkAllNotificationsAsRead()
 
     const {
         data: notifications,
@@ -20,6 +21,7 @@ export default function Notifications() {
         isStale,
         isError,
         error,
+        isPending,
         refetch,
         fetchNextPage,
         isFetchingNextPage,
@@ -40,6 +42,14 @@ export default function Notifications() {
         });
         refetch();
     }
+
+    useEffect(() => {
+        return () => {
+            markAllNotificationsAsRead();
+        }
+    }, [])
+
+    console.log(notifications);
 
 
     useEffect(() => {
@@ -76,7 +86,7 @@ export default function Notifications() {
                 />
 
                 {
-                    (isStale && !isLoading) && (
+                    (isStale && !isLoading && !isPending) && (
                         <motion.div
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -88,7 +98,7 @@ export default function Notifications() {
                                 type="button"
                                 className="btn btn-primary shadow-gray-500 shadow-md rounded-full btn-xs"
                                 onClick={refetchNotifications}
-                                disabled={isLoading}
+                                disabled={isPending}
                                 aria-label="Fetch new notifications"
                             >
                                 <FaArrowUp /> New Notifications

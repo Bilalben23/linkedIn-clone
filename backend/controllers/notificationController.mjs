@@ -231,25 +231,3 @@ export const deleteNotification = async (req, res) => {
         })
     }
 }
-
-
-export const deleteAllNotifications = async (req, res) => {
-    const userId = req.user._id;
-
-    try {
-        const result = await Notification.deleteMany({ recipient: userId });
-
-        res.status(200).json({
-            success: true,
-            message: `${result.deletedCount} notification${result.deletedCount !== 1 ? "s" : ""} deleted successfully`,
-            deletedCount: result.deletedCount
-        })
-
-    } catch (err) {
-        return res.status(500).json({
-            success: false,
-            message: "Internal Server Error",
-            error: err.message
-        })
-    }
-}

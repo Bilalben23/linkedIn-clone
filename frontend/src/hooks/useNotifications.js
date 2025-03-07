@@ -26,7 +26,7 @@ export function useFetchNotifications(filter) {
 
 
 // Mark notification as read
-export function useMarksAsRead(filter) {
+export function useMarksNotificationAsRead(filter) {
     const axiosInstance = useAxios();
     const queryClient = useQueryClient();
 
@@ -59,6 +59,24 @@ export function useUnreadNotificationsCount() {
     })
 }
 
+
+// Mark all as read
+export function useMarkAllNotificationsAsRead(filter) {
+    const axiosInstance = useAxios();
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationKey: ["markAllNotificationsAsRead"],
+        mutationFn: async () => {
+            const { data } = await axiosInstance.patch("/api/v1/notifications/mark-all-read");
+            return data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["notifications"], exact: false });
+            queryClient.invalidateQueries({ queryKey: ["unreadNotificationsCount"] });
+        }
+    })
+}
 
 // delete notification
 export function useDeleteNotification() {

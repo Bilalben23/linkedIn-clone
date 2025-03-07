@@ -13,8 +13,8 @@ const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 export default function Navbar() {
     const queryClient = useQueryClient();
     const logout = useLogout();
-    const { data: unreadCount } = useUnreadNotificationsCount();
-    const { pendingRequestsCount } = usePendingRequestsCount();
+    const { data: unreadCount, isLoading: isUnreadNotificationsCountLoading } = useUnreadNotificationsCount();
+    const { pendingRequestsCount, isLoading: isPendingRequestsCountLoading } = usePendingRequestsCount();
     const { authState: { user } } = useAuth();
 
     const queryState = queryClient.getQueryState(['postsFeed']);
@@ -65,7 +65,7 @@ export default function Navbar() {
                             <span className='indicator'>
                                 <MdPeopleAlt size={30} className='opacity-70 group-[.active-link]:opacity-100 transition-opacity group-hover:opacity-100' />
                                 {
-                                    pendingRequestsCount !== 0 && <span className='indicator-item flex items-center justify-center size-[20px] shadow bg-red-700 top-0.5 rounded-full text-[11px] text-white font-semibold right-1'>{pendingRequestsCount}</span>
+                                    (pendingRequestsCount !== 0 && !isPendingRequestsCountLoading) && <span className='indicator-item flex items-center justify-center size-[20px] shadow bg-red-700 top-0.5 rounded-full text-[11px] text-white font-semibold right-1'>{pendingRequestsCount}</span>
                                 }
 
                             </span>
@@ -77,7 +77,7 @@ export default function Navbar() {
                             <span className='indicator'>
                                 <MdNotifications size={30} className='opacity-70 transition-opacity group-hover:opacity-100 group-[.active-link]:opacity-100' />
                                 {
-                                    unreadCount !== 0 && <span className='indicator-item flex items-center justify-center size-[20px] shadow bg-red-700 right-1 top-0.5 rounded-full text-[11px] text-white font-semibold'>{unreadCount}</span>
+                                    (unreadCount !== 0 && !isUnreadNotificationsCountLoading) && <span className='indicator-item flex items-center justify-center size-[20px] shadow bg-red-700 right-1 top-0.5 rounded-full text-[11px] text-white font-semibold'>{unreadCount}</span>
                                 }
                             </span>
                             <span className='text-xs opacity-70 transition-opacity group-hover:opacity-100 group-[.active-link]:opacity-100'>Notifications</span>

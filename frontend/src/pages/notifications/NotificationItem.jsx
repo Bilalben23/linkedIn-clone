@@ -1,6 +1,6 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import { timeAgo } from "../../utils/timeAgo";
-import { useDeleteNotification, useMarksAsRead } from '../../hooks/useNotifications';
+import { useDeleteNotification, useMarksNotificationAsRead } from '../../hooks/useNotifications';
 import NotificationDropdown from './NotificationDropdown';
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
@@ -8,9 +8,8 @@ const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 export default function NotificationItem({ notification, lastNotificationRef }) {
     const [searchParams] = useSearchParams();
     const filter = searchParams.get("filter") || "all";
-    console.log(notification);
 
-    const { mutate: markNotificationAsRead } = useMarksAsRead(filter);
+    const { mutate: markNotificationAsRead } = useMarksNotificationAsRead(filter);
     const { mutate: deleteNotification, isPending: isDeleting } = useDeleteNotification();
 
     const handleMarkAsRead = () => markNotificationAsRead(notification._id);
@@ -18,6 +17,7 @@ export default function NotificationItem({ notification, lastNotificationRef }) 
 
     const isCommentOrReaction = notification.type === "comment" || notification.type === "reaction";
     const isNewPost = notification.type === "newPost";
+
 
     return (
         <div

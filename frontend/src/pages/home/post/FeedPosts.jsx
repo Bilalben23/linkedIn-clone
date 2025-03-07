@@ -5,10 +5,14 @@ export default function FeedPosts({ postsFeed, isLoading, isError, error, lastPo
 
     if (isError) {
         return (
-            <div className="p-5 border border-red-300 rounded-lg text-red-600 bg-red-50 text-sm text-center">
-                <p className="font-medium">⚠️ error occurred: {error?.message}</p>
+            <div className="p-5 border border-red-400 rounded-lg bg-red-50 text-red-700 text-sm text-center shadow-sm">
+                <p className="font-semibold flex items-center justify-center gap-2">
+                    <span className="text-lg">⚠️</span> Something went wrong
+                </p>
+                <p className="mt-1 text-xs text-red-600">{error?.message || "We couldn't load the posts. Please try again."}</p>
             </div>
         );
+
     }
 
 

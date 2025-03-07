@@ -10,8 +10,7 @@ import {
     getUserNotifications,
     markNotificationAsRead,
     markAllNotificationsAsRead,
-    deleteNotification,
-    deleteAllNotifications
+    deleteNotification
 } from "../controllers/notificationController.mjs"
 
 
@@ -45,7 +44,7 @@ router.patch("/:notificationId/read", validateMarkNotificationAsRead, validateRe
  * @desc Mark all notifications as read for the authenticated user 
  * @access Private (requires authentication)
  */
-router.patch("/read-all", markAllNotificationsAsRead);
+router.patch("/mark-all-read", markAllNotificationsAsRead);
 
 /**
  * @route DELETE /api/v1/notifications/:notificationId
@@ -53,12 +52,5 @@ router.patch("/read-all", markAllNotificationsAsRead);
  * @access Private (requires authentication)
  */
 router.delete("/:notificationId", validateDeleteNotification, validateRequest, deleteNotification);
-
-/**
- * DELETE /api/v1/notifications
- * @desc Delete all notifications for the authenticated user
- * @access Private (requires authentication)
- */
-router.delete("/", deleteAllNotifications);
 
 export default router;
