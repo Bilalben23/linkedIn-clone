@@ -21,11 +21,14 @@ export default function Invitations() {
 
 
     if (isError) {
-        return <div>
-            <p>{error.message}</p>
-        </div>
+        return (
+            <div className='border border-red-400 shadow-xs rounded-box p-3 bg-red-50'>
+                <p className="text-red-600 text-center text-sm font-medium">
+                    Failed to load invitations: {error?.message || "Something went wrong."}
+                </p>
+            </div>
+        );
     }
-
 
     return (
         <div className='border shadow-xs rounded-box border-gray-300 bg-base-100'>

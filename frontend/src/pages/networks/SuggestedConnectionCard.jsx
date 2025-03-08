@@ -42,7 +42,7 @@ export default function SuggestedConnectionCard({ user }) {
                 preload="auto"
             />
 
-            <div className='shadow-xs border border-gray-200 rounded-box relative'>
+            <div className='border border-gray-200 rounded-box relative hover:shadow-md'>
                 <div className='absolute top-1 right-1 z-1'>
                     <button type="button" className="btn btn-xs btn-circle btn-neutral !bg-black/50 border-none">
                         <IoClose size={20} />

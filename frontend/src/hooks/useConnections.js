@@ -125,6 +125,8 @@ export function useSuggestedConnections(limit) {
             });
             return data.data;
         }
+        ,
+        refetchOnWindowFocus: false
     })
 }
 

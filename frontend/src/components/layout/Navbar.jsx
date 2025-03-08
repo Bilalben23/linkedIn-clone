@@ -27,6 +27,10 @@ export default function Navbar() {
         queryClient.invalidateQueries({ queryKey: ["notifications"], exact: false, refetchType: "none" });
     }, [unreadCount])
 
+    useEffect(() => {
+        queryClient.invalidateQueries({ queryKey: ["pendingRequests"] });
+    }, [pendingRequestsCount])
+
     return (
         <header className='px-8 flex items-center justify-between shadow-xs border-b border-gray-300 w-full fixed top-0 bg-base-100 z-50'>
             <div className='flex items-center gap-x-3'>
