@@ -112,13 +112,17 @@ export const useRejectConnectionRequest = () => {
 }
 
 
-export function useSuggestedConnections() {
+export function useSuggestedConnections(limit) {
     const axiosInstance = useAxios();
 
     return useQuery({
         queryKey: ["suggestedConnections"],
         queryFn: async () => {
-            const { data } = await axiosInstance.get("/api/v1/users/suggestions");
+            const { data } = await axiosInstance.get("/api/v1/users/suggestions", {
+                params: {
+                    limit
+                }
+            });
             return data.data;
         }
     })

@@ -134,6 +134,7 @@ export const deleteAccount = async (req, res) => {
 
 
 export const getSuggestedConnections = async (req, res) => {
+    const limit = req.query.limit || 4;
     const userId = req.user._id;
 
     try {
@@ -153,8 +154,8 @@ export const getSuggestedConnections = async (req, res) => {
                 $nin: [...connectedUserIds, userId]
             }
         })
-            .select("name username profilePicture headline")
-            .limit(3)
+            .select("name username profilePicture bannerImg headline")
+            .limit(limit)
             .lean()
 
         res.status(200).json({

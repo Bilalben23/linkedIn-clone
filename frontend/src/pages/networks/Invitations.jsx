@@ -2,11 +2,23 @@ import React, { useRef } from 'react'
 import InvitationItem from './InvitationItem'
 import InvitationItemSkeleton from '../../components/skeletons/InvitationItemSkeleton'
 import PaginationControls from './PaginationControls'
+import { useSearchParams } from 'react-router-dom';
+import { usePendingRequests } from '../../hooks/useConnections';
 
 const CONNECT_SOUND_URL = "/assets/sounds/connect.mp3";
 
-export default function Invitations({ invitations, isLoading, isError, error }) {
+export default function Invitations() {
     const connectSoundEffect = useRef(null);
+    const [searchParams] = useSearchParams();
+    const currentPage = +searchParams.get("page") || 1;
+
+    const {
+        data: invitations,
+        isLoading,
+        isError,
+        error
+    } = usePendingRequests(currentPage);
+
 
     if (isError) {
         return <div>
@@ -14,13 +26,12 @@ export default function Invitations({ invitations, isLoading, isError, error }) 
         </div>
     }
 
-    console.log(invitations);
 
     return (
         <div className='border shadow-xs rounded-box border-gray-300 bg-base-100'>
             <div className='flex text-xs items-center justify-between p-3 border-b border-gray-200'>
                 <div>
-                    <p>Invitations</p>
+                    <h1>Invitations</h1>
                 </div>
                 <div>
                     {

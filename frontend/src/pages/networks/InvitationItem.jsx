@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useAcceptConnectionRequest, useRejectConnectionRequest } from '../../hooks/useConnections';
+import { toast } from 'react-toastify';
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
-
 
 export default function InvitationItem({ user, connectSoundEffect }) {
     const { mutate: acceptRequest, isPending: isAccepting } = useAcceptConnectionRequest();
@@ -17,10 +17,18 @@ export default function InvitationItem({ user, connectSoundEffect }) {
                         console.error("Audio play error:", err);
                     });
                 }
+            },
+            onError: (err) => {
+                toast.error(err.response?.data?.message || "Something went wrong!");
             }
         })
     };
-    const handleRejectRequest = () => rejectRequest(user._id);
+
+    const handleRejectRequest = () => rejectRequest(user._id, {
+        onError: (err) => {
+            toast.error(err.response?.data?.message || "Something went wrong!");
+        }
+    });
 
     return (
         <>

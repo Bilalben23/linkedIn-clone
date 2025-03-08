@@ -10,7 +10,7 @@ export default function SuggestedConnections() {
         isLoading,
         isError,
         error
-    } = useSuggestedConnections();
+    } = useSuggestedConnections(4);
 
     return (
         <div className='border p-4 bg-base-100 hidden md:block shadow-xs rounded-box border-gray-300'>
