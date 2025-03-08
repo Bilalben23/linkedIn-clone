@@ -25,7 +25,6 @@ export default function Networks() {
                     invitations={invitations}
                     isLoading={isLoading}
                     isError={isError}
-                    currentPage={currentPage}
                     error={error}
                 />
                 <PeopleYouMayKnow />
