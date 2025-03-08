@@ -1,4 +1,5 @@
 import { Connection } from "../models/connectionModel.mjs";
+import { Notification } from "../models/notificationModel.mjs";
 
 export const getUserConnections = async (req, res) => {
     const userId = req.user._id;
@@ -61,23 +62,23 @@ export const getPendingRequests = async (req, res) => {
     try {
         // Get total count of sent pending requests for pagination
         const totalPendingRequests = await Connection.countDocuments({
-            sender: userId,
+            receiver: userId,
             status: "pending"
         })
 
         // Fetch paginated sent pending connection requests (sort by latest)
         const sentPendingRequests = await Connection.find({
-            sender: userId,
+            receiver: userId,
             status: "pending"
         })
             .sort({ createdAt: -1 })
             .limit(limit)
             .skip((pageNumber - 1) * limit)
-            .populate("receiver", "name username profilePicture headline")
+            .populate("sender", "name username profilePicture headline")
             .lean();
 
-        // Extract only receiver details (since current user is the sender)
-        const pendingRequests = sentPendingRequests.map(req => req.receiver);
+        // Extract only sender details (since current user is the receiver)
+        const pendingRequests = sentPendingRequests.map(req => req.sender);
 
         // pagination object
         const totalPages = Math.ceil(totalPendingRequests / limit);
@@ -187,19 +188,19 @@ export const acceptConnectionRequest = async (req, res) => {
     const receiver = req.user._id;
     const sender = req.params.userId;
 
-    // TODO: send accept connection request email in parallel,
-
     try {
-
-        const acceptedConnectionRequest = await Connection.findOneAndUpdate(
+        const acceptedConnectionRequest = await Connection.findOneAndUpdate({
+            sender,
+            receiver,
+            status: "pending"
+        },
             {
-                sender,
-                receiver,
-                status: "pending"
+                $set: {
+                    status: "accepted"
+                }
             },
-            { $set: { status: "accepted" } },
             { new: true }
-        )
+        );
 
         if (!acceptedConnectionRequest) {
             return res.status(404).json({
@@ -232,7 +233,6 @@ export const acceptConnectionRequest = async (req, res) => {
     }
 }
 
-
 export const rejectConnectionRequest = async (req, res) => {
     const receiver = req.user._id;
     const sender = req.params.userId;
@@ -247,6 +247,7 @@ export const rejectConnectionRequest = async (req, res) => {
         )
 
         if (!declinedConnectionRequest) {
+            console.log("Connection not found")
             return res.status(404).json({
                 success: false,
                 message: "No Pending connection request found"

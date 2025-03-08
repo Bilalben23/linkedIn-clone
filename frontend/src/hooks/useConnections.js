@@ -72,6 +72,46 @@ export function useSendConnectionRequest(sendFrom = "suggestedConnections") {
 }
 
 
+export const useAcceptConnectionRequest = () => {
+    const axiosInstance = useAxios();
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationKey: ["acceptConnectionRequest"],
+        mutationFn: async (userId) => {
+            const { data } = await axiosInstance.patch(`/api/v1/connections/${userId}/accept`);
+            return data;
+        },
+        onSuccess: () => {
+            console.log("connection accepted");
+            queryClient.invalidateQueries({ queryKey: ["pendingRequests"], exact: false });
+            queryClient.invalidateQueries({ queryKey: ["pendingRequestsCount"] });
+        },
+        onError: (err) => {
+            console.error(err);
+            toast.error(err.response?.data?.message || "Something went wrong");
+        }
+    })
+}
+
+export const useRejectConnectionRequest = () => {
+    const axiosInstance = useAxios();
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationKey: ["rejectConnectionRequest"],
+        mutationFn: async (userId) => {
+            const { data } = await axiosInstance.delete(`/api/v1/connections/${userId}/reject`);
+            return data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["pendingRequests"], exact: false });
+            queryClient.invalidateQueries({ queryKey: ["pendingRequestsCount"] });
+        }
+    })
+}
+
+
 export function useSuggestedConnections() {
     const axiosInstance = useAxios();
 
