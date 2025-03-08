@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 
 export default function InvitationItem({ user }) {
-    console.log(user);
+
     return (
         <div className='flex items-center justify-between p-3 border-b border-gray-300 gap-x-3'>
             <Link to={`/profile/${user.username}`} className='shrink-0 block'>

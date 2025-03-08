@@ -6,10 +6,8 @@ import { usePendingRequests } from '../../hooks/useConnections'
 import { useSearchParams } from 'react-router-dom'
 
 export default function Networks() {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const currentPage = searchParams.get("page") || 1;
-
-    const updatePageParam = (page) => setSearchParams({ page });
+    const [searchParams] = useSearchParams();
+    const currentPage = +searchParams.get("page") || 1;
 
     const {
         data: invitations,
@@ -27,6 +25,7 @@ export default function Networks() {
                     invitations={invitations}
                     isLoading={isLoading}
                     isError={isError}
+                    currentPage={currentPage}
                     error={error}
                 />
                 <PeopleYouMayKnow />
