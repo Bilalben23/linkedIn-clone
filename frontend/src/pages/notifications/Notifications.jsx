@@ -3,10 +3,11 @@ import { useFetchNotifications, useMarkAllNotificationsAsRead } from '../../hook
 import { useSearchParams } from 'react-router-dom';
 import NotificationSidebar from './NotificationSidebar';
 import NotificationContent from './NotificationContent';
-import NotificationFooter from './NotificationFooter';
+import NotificationFooter from '../../components/CommonFooter';
 import NotificationFilters from './NotificationFilters';
 import { FaArrowUp } from 'react-icons/fa';
 import { motion } from "framer-motion"
+import CommonFooter from '../../components/CommonFooter';
 
 
 export default function Notifications() {
@@ -48,8 +49,6 @@ export default function Notifications() {
             markAllNotificationsAsRead();
         }
     }, [])
-
-    console.log(notifications);
 
 
     useEffect(() => {
@@ -119,7 +118,7 @@ export default function Notifications() {
 
             </section>
 
-            <NotificationFooter />
+            <CommonFooter />
         </section>
     );
 }

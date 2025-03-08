@@ -55,7 +55,7 @@ export const getUserConnections = async (req, res) => {
 
 export const getPendingRequests = async (req, res) => {
     const userId = req.user._id;
-    const limit = 20;
+    const limit = 6;
     const pageNumber = Number(req.query.page) || 1;
 
     try {

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function NotificationFooter() {
+export default function CommonFooter() {
 
     return (
         <div className='md:sticky md:top-18'>

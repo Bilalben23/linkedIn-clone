@@ -12,7 +12,6 @@ export default function FeedPosts({ postsFeed, isLoading, isError, error, lastPo
                 <p className="mt-1 text-xs text-red-600">{error?.message || "We couldn't load the posts. Please try again."}</p>
             </div>
         );
-
     }
 
 

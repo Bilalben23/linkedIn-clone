@@ -3,7 +3,7 @@ import { LuGlobe } from "react-icons/lu";
 import { FaUserPlus } from 'react-icons/fa';
 import { IoClose } from "react-icons/io5";
 import { timeAgo } from "../../../utils/timeAgo";
-import useSendConnectionRequest from '../../../hooks/useSendConnectionRequest';
+import { useSendConnectionRequest } from '../../../hooks/useConnections';
 import { useEffect, useRef, useState } from 'react';
 import { MdOutlineSchedule } from "react-icons/md";
 import useAuth from '../../../hooks/useAuth';

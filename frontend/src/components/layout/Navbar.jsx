@@ -2,7 +2,7 @@ import { Link, NavLink } from 'react-router-dom'
 import useLogout from '../../hooks/useLogout';
 import { MdHome, MdPeopleAlt, MdNotifications, MdSearch, MdLogout } from "react-icons/md";
 import { useUnreadNotificationsCount } from '../../hooks/useNotifications';
-import usePendingRequestsCount from '../../hooks/usePendingRequestsCount';
+import { usePendingRequestsCount } from '../../hooks/useConnections';
 import useAuth from '../../hooks/useAuth';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';

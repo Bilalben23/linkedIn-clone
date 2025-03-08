@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaUserPlus } from "react-icons/fa";
-import useSendConnectionRequest from "../../../hooks/useSendConnectionRequest";
+import { useSendConnectionRequest } from "../../../hooks/useConnections";
 import { useRef } from "react";
 import { MdOutlineSchedule } from "react-icons/md";
 
