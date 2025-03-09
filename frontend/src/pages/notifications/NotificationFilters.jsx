@@ -8,7 +8,7 @@ export default function NotificationFilters({ filter, updateSearchParam, isLoadi
     ];
 
     return (
-        <div className='flex items-center gap-x-2 bg-white rounded-box p-3 shadow-xs border border-gray-300'>
+        <div className='flex items-center gap-x-2 bg-white md:rounded-box p-3 shadow-xs border border-gray-300'>
             {filters.map(({ key, label, disabled }) => (
                 <button
                     key={key}

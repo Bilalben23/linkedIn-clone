@@ -25,7 +25,7 @@ export default function NotificationContent({ notifications, isLoading, isError,
 
     if (noNotifications) {
         return (
-            <div className="p-4 bg-base-100 rounded-box border border-gray-300 shadow-sm mt-3 text-center">
+            <div className="p-4 bg-base-100 md:rounded-box border border-gray-300 shadow-sm mt-3 text-center">
                 <h4 className="text-sm font-medium text-gray-800">No notifications yet</h4>
                 <p className="text-xs mt-0.5 text-gray-500">
                     You don't have any notifications at the moment.
@@ -35,7 +35,7 @@ export default function NotificationContent({ notifications, isLoading, isError,
     }
 
     return (
-        <div className='flex mt-3 overflow-x-hidden flex-col bg-white rounded-box shadow-xs border border-gray-300'>
+        <div className='flex mt-3 overflow-x-hidden flex-col bg-white md:rounded-box shadow-xs border border-gray-300'>
             {
                 isLoading
                     ? Array.from({ length: 8 }).map((_, index) => <NotificationSkeleton

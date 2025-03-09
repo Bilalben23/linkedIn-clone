@@ -22,7 +22,21 @@ createRoot(document.getElementById('root')).render(
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <App />
-        <ToastContainer />
+        <ToastContainer
+          position="bottom-left"
+          autoClose={3000}
+          hideProgressBar={true}
+          newestOnTop={true}
+          closeButton={false}
+          pauseOnHover={true}
+          draggable={false}
+          rtl={false}
+          style={{
+            borderRadius: '8px',
+            fontSize: '14px',
+            padding: '10px 20px',
+          }}
+        />
       </AuthProvider>
       <ReactQueryDevtools />
     </QueryClientProvider>

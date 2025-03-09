@@ -1,6 +1,6 @@
 export default function PostSkeleton() {
     return (
-        <div className='bg-base-100 rounded-box shadow-2xs border border-gray-300 py-2'>
+        <div className='bg-base-100 sm:rounded-box shadow-2xs border border-gray-300 py-2'>
             <div className="flex px-4 gap-x-2.5 items-center">
                 <div className="shrink-0">
                     <p className="skeleton size-11 rounded-full "></p>

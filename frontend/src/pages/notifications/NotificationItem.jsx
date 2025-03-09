@@ -17,7 +17,7 @@ export default function NotificationItem({ notification, lastNotificationRef }) 
 
     const isCommentOrReaction = notification.type === "comment" || notification.type === "reaction";
     const isNewPost = notification.type === "newPost";
-
+    console.log(notification);
 
     return (
         <div
@@ -37,7 +37,7 @@ export default function NotificationItem({ notification, lastNotificationRef }) 
                 <p className='text-xs mb-0.5 line-clamp-3'>
                     <span className='font-extrabold'>{notification.triggeredBy.name}</span>
                     {isCommentOrReaction && (
-                        <span> and {notification.type === "comment" ? notification.commentsCount - 1 : notification.reactionsCount - 1} others {notification.type === "comment" ? "commented" : "reacted"} on your post.</span>
+                        <span> {notification.reactionsCount - 1 > 0 && `and ${notification.type === "comment" ? notification.commentsCount - 1 : notification.reactionsCount - 1} other${notification.commentsCount - 1 > 1 ? "s" : ""}`} {notification.type === "comment" ? "commented" : "reacted"} on your post.</span>
                     )}
 
                     {isNewPost && <span className=''> posted: {notification.relatedPost.content}</span>}

@@ -10,7 +10,7 @@ export default function PostCreation({ user }) {
 
     return (
         <section>
-            <div className='border bg-base-100 rounded-box shadow-xs border-gray-300 px-4 pt-4 pb-2 flex flex-col gap-y-5'>
+            <div className='border bg-base-100 sm:rounded-box shadow-xs border-gray-300 px-4 pt-4 pb-2 flex flex-col gap-y-5'>
                 <div className='flex items-center gap-x-3'>
                     <Link to={`/profile/${user.username}`} className='flex-none'>
                         <img
@@ -29,7 +29,7 @@ export default function PostCreation({ user }) {
                             className='btn !justify-start !border-gray-400 btn-outline rounded-full btn-block'
                             onClick={() => document.getElementById('createPost_modal').showModal()}
                         >
-                            Start a post
+                            <span>Start a post</span>
                         </button>
 
                         <CreatePostModal user={user} />
@@ -38,18 +38,18 @@ export default function PostCreation({ user }) {
 
                 <div className='flex justify-between items-center'>
                     <button
-                        type="button" className='btn btn-ghost'
+                        type="button" className='btn flex-col !gap-y-0 sm:flex-row h-12 sm:h-8 btn-ghost'
                     >
                         <FiImage className="text-[#378fe9] size-5" />
-                        Photo
+                        <span>Photo</span>
                     </button>
-                    <button type="button" className='btn btn-ghost'>
+                    <button type="button" className='btn flex-col h-12 sm:h-8 sm:flex-row !gap-y-0 btn-ghost'>
                         <BsPlayBtnFill className="text-[#5f9b41] size-5" />
-                        Video
+                        <span>Video</span>
                     </button>
-                    <button type="button" className='btn btn-ghost'>
+                    <button type="button" className='btn h-12 sm:h-8 gap-y-0 flex-col sm:flex-row btn-ghost'>
                         <RiArticleFill className="text-[#e06847] size-5" />
-                        Write article
+                        <span>Write article</span>
                     </button>
                 </div>
             </div>

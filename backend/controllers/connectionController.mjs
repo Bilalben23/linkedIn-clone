@@ -210,7 +210,7 @@ export const acceptConnectionRequest = async (req, res) => {
         }
 
         Notification.create({
-            receiver: sender,
+            recipient: sender,
             triggeredBy: receiver,
             type: "connectionAccepted"
         }).catch(err => {

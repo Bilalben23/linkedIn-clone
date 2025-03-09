@@ -7,7 +7,7 @@ export default function PeopleYouMayKnow() {
     const { data: suggestedConnections, isLoading, isError, error } = useSuggestedConnections(10);
 
     return (
-        <section className='border shadow-xs border-gray-300 rounded-box p-3 bg-base-100'>
+        <section className='border shadow-xs border-gray-300 sm:rounded-box p-3 bg-base-100'>
             <h2 className='text-sm mb-2'>People you may know</h2>
             {
                 isError

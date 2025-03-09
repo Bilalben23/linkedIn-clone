@@ -9,7 +9,7 @@ export default function Networks() {
         <section className='grid grid-cols-1 items-start md:grid-cols-4 mt-3 gap-4'>
             <CommonFooter />
 
-            <div className='col-span-3 flex gap-y-3 flex-col'>
+            <div className='col-span-3 flex gap-y-3 flex-col order-first md:order-none'>
                 <Invitations />
                 <PeopleYouMayKnow />
             </div>

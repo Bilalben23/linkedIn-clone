@@ -1,7 +1,7 @@
 
 export default function SortDropdown({ handleSortChange, sortOption }) {
     return (
-        <div className="divider before:h-[1px] divider-end text-xs">
+        <div className="divider px-3 before:h-[1px] divider-end text-xs">
             <span className='text-gray-800'>Sort By: </span>
             <div className="dropdown">
                 <div tabIndex={0} role="button" className="cursor-pointer flex items-center justify-center gap-x-1">

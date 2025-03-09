@@ -55,9 +55,9 @@ app.use("/api/v1/notifications", authenticateJWT, notificationRoutes);
 
 
 const PORT = ENV_VARS.PORT;
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
     connectDB();
-    console.log(`listening on http://localhost:${PORT}`)
+    console.log(`listening on http://0.0.0.0:${PORT}`)
 })
 
 
@@ -80,5 +80,9 @@ app.listen(PORT, () => {
 */
 
 // learn "numeral" to deal with short forms of numbers, like 1k, 1M...
-
 // what is SSO ( Single Sign-On)
+// Learn GraphQL
+// Explorer Bun.js
+// Design patterns
+// Js questions / React questions
+// caching: Server-Side Caching...

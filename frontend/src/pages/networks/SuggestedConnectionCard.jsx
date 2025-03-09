@@ -33,7 +33,6 @@ export default function SuggestedConnectionCard({ user }) {
 
     const isConnected = isSuccess && data?.isConnected;
 
-
     return (
         <>
             <audio
@@ -49,17 +48,17 @@ export default function SuggestedConnectionCard({ user }) {
                     </button>
                 </div>
                 <Link to={`/profile/${user.username}`} className='relative mb-9 block'>
-                    <div className='h-[80px] w-full'>
+                    <div className='h-[60px] sm:h-[80px] w-full'>
                         <img src={
                             user.bannerImg
                                 ? `${CLOUDINARY_BASE_URL + user.bannerImg}`
                                 : "/assets/banner.png"
                         }
                             alt={`${user.name}'s banner`}
-                            className="size-full rounded-t-lg"
+                            className="size-full rounded-t-box"
                         />
                     </div>
-                    <div className='absolute rounded-full left-1/2 -translate-x-1/2 -bottom-[40px] size-18'>
+                    <div className='absolute rounded-full left-1/2 -translate-x-1/2 -bottom-[30px] sm:-bottom-[40px] size-14 sm:size-18'>
                         <img src={user.profilePicture
                             ? `${CLOUDINARY_BASE_URL + user.profilePicture}`
                             : "/assets/avatar.png"

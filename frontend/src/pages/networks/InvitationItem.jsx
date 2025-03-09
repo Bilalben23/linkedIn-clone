@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useAcceptConnectionRequest, useRejectConnectionRequest } from '../../hooks/useConnections';
 import { toast } from 'react-toastify';
+import { IoClose } from "react-icons/io5";
+import { FaCheck } from 'react-icons/fa';
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 
@@ -50,10 +52,10 @@ export default function InvitationItem({ user, connectSoundEffect }) {
                     </p>
                     <p className='text-black/70 line-clamp-1 text-xs'>{user.headline}</p>
                 </div>
-                <div className='shrink-0 flex items-center gap-x-3'>
+                <div className='shrink-0 flex items-center gap-x-1 sm:gap-x-3'>
                     <button
                         type="button"
-                        className='btn btn-ghost btn-sm text-black/80 !border-none'
+                        className='btn btn-ghost btn-sm  text-black/80 !border-none'
                         aria-label="Ignore request"
                         onClick={handleRejectRequest}
                         disabled={isRejecting}
@@ -65,7 +67,8 @@ export default function InvitationItem({ user, connectSoundEffect }) {
                                 className="w-3"
                             />
                         }
-                        Ignore
+                        <span className="hidden sm:inline">Ignore</span>
+                        <IoClose size={20} className="sm:hidden" />
                     </button>
                     <button
                         type="button"
@@ -81,7 +84,8 @@ export default function InvitationItem({ user, connectSoundEffect }) {
                                 className="w-3"
                             />
                         }
-                        Accept
+                        <span className='hidden sm:inline'>Accept</span>
+                        <FaCheck className="sm:hidden" />
                     </button>
                 </div>
             </div>

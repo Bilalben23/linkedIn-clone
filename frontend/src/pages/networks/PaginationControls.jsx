@@ -19,7 +19,7 @@ export default function PaginationControls({ isLoading, pagination }) {
                     disabled={isLoading || !pagination?.hasPrevPage}
                 >
                     <FaChevronLeft />
-                    Previous
+                    <span className='hidden sm:inline'>Previous</span>
                 </button>
             </div>
             <div className='flex items-center gap-x-1 gap-y-2 flex-wrap'>
@@ -41,7 +41,7 @@ export default function PaginationControls({ isLoading, pagination }) {
                     onClick={() => updatePageParam(currentPage + 1)}
                     disabled={isLoading || !pagination?.hasNextPage}
                 >
-                    Next
+                    <span className='hidden sm:inline'>Next</span>
                     <FaChevronRight />
                 </button>
             </div>

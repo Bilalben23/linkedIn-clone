@@ -87,7 +87,7 @@ export default function CreatePostModal({ user }) {
     return (
         <dialog id="createPost_modal" className="modal">
             <audio ref={connectSoundEffect} src={CONNECT_SOUND_URL} preload="auto" />
-            <div className="modal-box scrollbar-thin !max-w-[60%] !w-full px-0 py-3">
+            <div className="modal-box scrollbar-thin md:!max-w-[60%] !w-full px-0 py-3">
                 {/* Header */}
                 <div className="flex justify-between px-4">
                     <div className="flex items-center gap-x-3">

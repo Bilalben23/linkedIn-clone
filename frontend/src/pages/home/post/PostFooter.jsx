@@ -143,7 +143,7 @@ const PostFooter = ({ post, toggleShowComments }) => {
                     {/* Reaction Button */}
                     <button
                         type="button"
-                        className="btn w-full btn-sm btn-ghost hover:bg-gray-200/50 border-0 text-gray-700 font-bold flex items-center gap-x-1"
+                        className="btn !gap-y-0 h-12 sm:h-8 w-full btn-sm flex-col sm:flex-row btn-ghost hover:bg-gray-200/50 border-0 text-gray-700 font-bold flex items-center gap-x-1"
                         onClick={() => handleReaction(post.reactions.hasReacted ? post.reactions.userReactionType : "like")}
                     >
                         <img
@@ -153,7 +153,7 @@ const PostFooter = ({ post, toggleShowComments }) => {
                                     : "/assets/icons/like-outline.svg"
                             }
                             alt={post.reactions.hasReacted ? post.reactions.userReactionType : "like-outline"}
-                            className="size-4"
+                            className="size-5 sm:size-4"
                         />
                         <span
                             className='capitalize'
@@ -169,18 +169,21 @@ const PostFooter = ({ post, toggleShowComments }) => {
                 {/* Comment Button */}
                 <button
                     type='button'
-                    className='btn flex-1 btn-bold btn-sm hover:bg-gray-200/50 btn-ghost border-0 text-gray-700 font-bold'
+                    className='btn flex-1 !gap-y-0 h-12 sm:h-8 flex-col sm:flex-row btn-bold btn-sm hover:bg-gray-200/50 btn-ghost border-0 text-gray-700 font-bold'
                     onClick={toggleShowComments}
                 >
-                    <FaRegCommentDots size={18} /> Comment
+                    <FaRegCommentDots size={18} />
+                    <span>Comment</span>
                 </button>
                 {/* Repost Button */}
-                <button type='button' className='btn flex-1 btn-sm btn-ghost hover:bg-gray-200/50 border-0 text-gray-700 font-bold'>
-                    <RiRepeatLine size={18} /> Repost
+                <button type='button' className='btn flex-1 h-12 sm:h-8 !gap-y-0 flex-col sm:flex-row btn-sm btn-ghost hover:bg-gray-200/50 border-0 text-gray-700 font-bold'>
+                    <RiRepeatLine size={18} />
+                    <span>Repost</span>
                 </button>
                 {/* Send Button */}
-                <button type='button' className='btn flex-1 hover:bg-gray-200/50 btn-sm btn-ghost border-0 text-gray-700 font-bold'>
-                    <TbSend size={18} /> Send
+                <button type='button' className='btn h-12 md:h-8 flex-col sm:flex-row !gap-y-0 flex-1 hover:bg-gray-200/50 btn-sm btn-ghost border-0 text-gray-700 font-bold'>
+                    <TbSend size={18} />
+                    <span>Send</span>
                 </button>
             </div>
         </div>

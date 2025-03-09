@@ -57,16 +57,12 @@ export function useSendConnectionRequest(sendFrom = "suggestedConnections") {
             }
 
             if (data.isConnected) {
-                toast.success(data.message, {
-                    position: "bottom-left"
-                })
+                toast.success(data.message)
             }
         },
         onError: (error) => {
             console.error(error);
-            toast.error(error.message || "Something went wrong", {
-                position: "bottom-left"
-            });
+            toast.error(error.message || "Something went wrong");
         }
     })
 }

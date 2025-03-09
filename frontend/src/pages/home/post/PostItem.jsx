@@ -11,7 +11,7 @@ export default function PostItem({ post, lastPostRef }) {
     }
 
     return (
-        <div className='bg-base-100 rounded-box shadow-2xs border border-gray-300 py-2' ref={lastPostRef} >
+        <div className='bg-base-100 sm:rounded-box shadow-2xs border border-gray-300 py-2' ref={lastPostRef} >
             {/* Post Header */}
             <PostHeader post={post} />
 
