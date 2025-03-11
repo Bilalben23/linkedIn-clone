@@ -16,7 +16,7 @@ export default function ProfileDetails({ username }) {
     return (
         <div className='col-span-3 flex flex-col gap-y-3'>
             <ProfileHeader details={data?.data} isLoading={isLoading} />
-            <AboutSection />
+            <AboutSection aboutContent={data?.data?.about} isLoading={isLoading} />
             <ActivitySection />
             <SkillsSection />
             <EducationSection />

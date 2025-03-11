@@ -15,10 +15,10 @@ const PostContent = ({ post }) => {
                             expandedText ? post.content : post.content.slice(0, 200)
                         }
                         {
-                            (post.content.length > 200 && !expandedText) && <span
-                                className='hover:text-[#0A66C2] hover:underline cursor-pointer ml-1'
+                            (post.content.length > 200 && !expandedText) && <button type="button"
+                                className='hover:text-primary hover:underline cursor-pointer ml-1'
                                 onClick={() => setExpandedText(true)}
-                            >...more</span>
+                            >...more</button>
                         }
                     </p>
                 </div>
