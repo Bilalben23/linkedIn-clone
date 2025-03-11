@@ -1,5 +1,6 @@
 import cloudinary from "../configs/cloudinary.mjs";
 import { Connection } from "../models/connectionModel.mjs";
+import { Post } from "../models/postModel.mjs";
 import { User } from "../models/userModel.mjs"
 import { hashPassword } from "../utils/bcryptUtils.mjs";
 import { uploadImage } from "../utils/uploadImage.mjs";
@@ -198,7 +199,7 @@ export const getPublicProfile = async (req, res) => {
 
     try {
         const user = await User.findOne({ username })
-            .select("-password")
+            .select("-password -__v")
             .lean();
 
         if (!user) {
@@ -208,10 +209,28 @@ export const getPublicProfile = async (req, res) => {
             })
         }
 
+        const [posts, connectionsCount] = await Promise.all([
+            Post.find({ author: user._id })
+                .sort({ createdAt: -1 })
+                .limit(10)
+                .lean(),
+            Connection.countDocuments({
+                $or: [
+                    { sender: user._id },
+                    { receiver: user._id }
+                ],
+                status: "accepted"
+            })
+        ])
+
         res.status(200).json({
             success: true,
             message: "User profile retrieved successfully",
-            data: user
+            data: {
+                user,
+                posts,
+                connectionsCount
+            }
         })
 
     } catch (err) {

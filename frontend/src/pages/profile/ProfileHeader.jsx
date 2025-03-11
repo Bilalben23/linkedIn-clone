@@ -1,9 +1,11 @@
 import { FiEdit2 } from "react-icons/fi";
+import { formatNumber } from "../../utils/formatNumber";
+
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 
 
-export default function ProfileHeader({ details, isLoading }) {
+export default function ProfileHeader({ details, connectionsCount, isMyProfile, isLoading }) {
 
     return (
         <div className='border border-gray-300 shadow-xs rounded-box p-0.5 bg-base-100'>
@@ -15,16 +17,20 @@ export default function ProfileHeader({ details, isLoading }) {
 
                         {/* banner and profile picture */}
                         <div className="relative pb-1 mb-2">
-                            <div className="absolute top-2 right-2 z-1">
-                                <button type="button" className="btn btn-xs btn-ghost btn-circle border-0 bg-base-100">
-                                    <FiEdit2 strokeWidth={3} className="text-blue-800" size={15} />
-                                </button>
-                            </div>
-                            <div className="absolute bottom-0 right-2 z-1">
-                                <button type="button" className="btn btn-sm btn-circle border-0 btn-ghost">
-                                    <FiEdit2 strokeWidth={3} size={20} />
-                                </button>
-                            </div>
+                            {
+                                isMyProfile && <>
+                                    <div className="absolute top-2 right-2 z-1">
+                                        <button type="button" className="btn btn-xs btn-ghost btn-circle border-0 bg-base-100">
+                                            <FiEdit2 strokeWidth={3} className="text-blue-800" size={15} />
+                                        </button>
+                                    </div>
+                                    <div className="absolute bottom-0 right-2 z-1">
+                                        <button type="button" className="btn btn-sm btn-circle border-0 btn-ghost">
+                                            <FiEdit2 strokeWidth={3} size={20} />
+                                        </button>
+                                    </div>
+                                </>
+                            }
 
                             <div className='relative mb-10'>
 
@@ -60,19 +66,18 @@ export default function ProfileHeader({ details, isLoading }) {
                                 <span className="size-0.5 rounded-full bg-black"></span>
                                 <button className="text-primary font-bold cursor-pointer link-hover">Contact info</button>
                             </div>
-                            <button className="text-primary cursor-pointer font-bold link-hover text-xs">5555 connections</button>
-
-                            <div className="flex items-center gap-x-2 mt-2">
-                                <button type="button" className="btn btn-xs font-black rounded-full btn-primary">Open to</button>
-                                <button type="button" className="btn btn-xs rounded-full btn-outline font-black btn-primary">Add profile section</button>
-                                <button type="button" className="btn btn-xs rounded-full btn-primary btn-outline font-black">Open to</button>
-                                <button type="button" className="btn btn-xs rounded-full btn-neutral btn-outline">Open to</button>
-                            </div>
+                            <button className="text-primary cursor-pointer font-bold link-hover text-xs">{formatNumber(connectionsCount)} connection{connectionsCount === 1 ? "" : "s"}</button>
+                            {
+                                isMyProfile && <div className="flex items-center gap-x-2 mt-2">
+                                    <button type="button" className="btn btn-xs font-black rounded-full btn-primary">Open to</button>
+                                    <button type="button" className="btn btn-xs rounded-full btn-outline font-black btn-primary">Add profile section</button>
+                                    <button type="button" className="btn btn-xs rounded-full btn-primary btn-outline font-black">Open to</button>
+                                    <button type="button" className="btn btn-xs rounded-full btn-neutral btn-outline">Open to</button>
+                                </div>
+                            }
                         </div>
-
                     </div>
             }
-
         </div>
     )
 }

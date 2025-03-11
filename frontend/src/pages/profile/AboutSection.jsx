@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { FiEdit2 } from 'react-icons/fi'
 
-export default function AboutSection({ aboutContent, isLoading }) {
+export default function AboutSection({ aboutContent, isMyProfile, isLoading }) {
     const [expandedText, setExpandedText] = useState(false);
 
     return (
@@ -14,9 +14,11 @@ export default function AboutSection({ aboutContent, isLoading }) {
                         ? <>
                             <div className='mb-2 flex items-center justify-between'>
                                 <h2 className='font-black'>About</h2>
-                                <button type='button' className='btn btn-circle border-0 btn-ghost'>
-                                    <FiEdit2 strokeWidth={3} size={20} />
-                                </button>
+                                {
+                                    isMyProfile && <button type='button' className='btn btn-circle border-0 btn-ghost'>
+                                        <FiEdit2 strokeWidth={3} size={20} />
+                                    </button>
+                                }
                             </div>
 
                             <p className='text-xs'>

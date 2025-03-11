@@ -6,19 +6,34 @@ import ActivitySection from './ActivitySection';
 import SkillsSection from './SkillsSection';
 import EducationSection from './EducationSection';
 import ExperienceSection from './ExperienceSection';
+import useAuth from '../../hooks/useAuth';
 
 export default function ProfileDetails({ username }) {
     const { data, isLoading, isError, error } = useFetchProfile(username);
+    const { authState: { user } } = useAuth();
 
+    const isMyProfile = user._id === data?.data?.user?._id;
     console.log(data);
-
 
     return (
         <div className='col-span-3 flex flex-col gap-y-3'>
-            <ProfileHeader details={data?.data} isLoading={isLoading} />
-            <AboutSection aboutContent={data?.data?.about} isLoading={isLoading} />
+            <ProfileHeader
+                details={data?.data?.user}
+                connectionsCount={data?.data?.connectionsCount}
+                isMyProfile={isMyProfile}
+                isLoading={isLoading}
+            />
+            <AboutSection
+                aboutContent={data?.data?.user?.about}
+                isMyProfile={isMyProfile}
+                isLoading={isLoading}
+            />
+            <SkillsSection
+                skills={data?.data?.user?.skills}
+                isMyProfile={isMyProfile}
+                isLoading={isLoading}
+            />
             <ActivitySection />
-            <SkillsSection />
             <EducationSection />
             <ExperienceSection />
         </div>

@@ -61,7 +61,7 @@ export default function Navbar() {
                                 }
 
                             </span>
-                            <span className='text-xs group-[.active-link]:opacity-100 opacity-70 transition-opacity group-hover:opacity-100'>Home</span>
+                            <span className='text-xs group-[.active-link]:opacity-100 opacity-70 transition-opacity group-hover:opacity-100' title='Home'>Home</span>
                         </NavLink>
                     </li>
                     <li className='flex-1'>
@@ -73,7 +73,7 @@ export default function Navbar() {
                                 }
 
                             </span>
-                            <span className='text-xs group-[.active-link]:opacity-100 opacity-70 transition-opacity group-hover:opacity-100 whitespace-nowrap'>My Network</span>
+                            <span className='text-xs group-[.active-link]:opacity-100 opacity-70 transition-opacity group-hover:opacity-100 whitespace-nowrap' title='My Network'>My Network</span>
                         </NavLink>
                     </li>
                     <li className='flex-1'>
@@ -84,7 +84,7 @@ export default function Navbar() {
                                     (unreadCount !== 0 && !isUnreadNotificationsCountLoading) && <span className='indicator-item flex items-center justify-center size-[20px] shadow bg-red-700 right-1 top-0.5 rounded-full text-[11px] text-white font-semibold'>{unreadCount}</span>
                                 }
                             </span>
-                            <span className='text-xs opacity-70 transition-opacity group-hover:opacity-100 group-[.active-link]:opacity-100'>Notifications</span>
+                            <span className='text-xs opacity-70 transition-opacity group-hover:opacity-100 group-[.active-link]:opacity-100' title="Notifications">Notifications</span>
                         </NavLink>
                     </li>
 
