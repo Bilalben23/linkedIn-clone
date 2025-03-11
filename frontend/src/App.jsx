@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import Layout from "./components/layout/Layout";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AppLayout from "./components/layouts/AppLayout";
 import Home from "./pages/home/Home";
 import Signup from "./pages/auth/Signup";
 import Signin from "./pages/auth/Signin";
@@ -9,6 +9,8 @@ import Profile from "./pages/profile/Profile";
 import PersistLogin from "./components/PersistLogin";
 import Networks from "./pages/networks/Networks";
 import Notifications from "./pages/notifications/Notifications";
+import Post from "./pages/Post";
+import HomeLayout from "./components/layouts/HomeLayout";
 
 
 export default function App() {
@@ -25,11 +27,14 @@ export default function App() {
         {/* Protected routes - requires authentication*/}
         <Route element={<PersistLogin />}>
           <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Home />} />
+            <Route path="/" element={<AppLayout />}>
+              <Route path="/" element={<HomeLayout />}>
+                <Route index element={<Home />} />
+                <Route path="/post/:postId" element={<Post />} />
+              </Route>
               <Route path="/networks" element={<Networks />} />
               <Route path="/notifications" element={<Notifications />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile/:username" element={<Profile />} />
 
               {/* .... */}
 

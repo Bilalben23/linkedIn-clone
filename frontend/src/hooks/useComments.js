@@ -34,6 +34,7 @@ export const useAddComment = (postId) => {
             return data;
         },
         onSuccess: () => {
+            // ✅ Invalidate comments query for the post
             queryClient.invalidateQueries({ queryKey: ["comments", postId] });
 
             // ✅ Update posts feed cache (increment commentsCount)
@@ -50,6 +51,19 @@ export const useAddComment = (postId) => {
                                 : post
                         )
                     }))
+                };
+            });
+
+            // ✅ Update the single post cache
+            queryClient.setQueryData(["post", postId], oldPost => {
+                if (!oldPost || !oldPost.data) return oldPost;
+
+                return {
+                    ...oldPost,
+                    data: {
+                        ...oldPost.data,
+                        commentsCount: oldPost.data.commentsCount + 1
+                    }
                 };
             });
         }

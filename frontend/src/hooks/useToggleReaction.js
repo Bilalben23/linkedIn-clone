@@ -14,9 +14,12 @@ export default function useToggleReaction() {
             })
             return data;
         },
-        onSuccess: () => {
+        onSuccess: (_, variables) => {
+            const { postId } = variables;
             // invalid and refetch the post feed to update reactions
             queryClient.refetchQueries({ queryKey: ["postsFeed"] });
+            queryClient.refetchQueries({ queryKey: ["post", postId] });
+
         },
         onError: (err) => {
             toast.error(err.message);

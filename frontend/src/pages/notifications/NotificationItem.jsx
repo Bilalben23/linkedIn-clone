@@ -17,7 +17,6 @@ export default function NotificationItem({ notification, lastNotificationRef }) 
 
     const isCommentOrReaction = notification.type === "comment" || notification.type === "reaction";
     const isNewPost = notification.type === "newPost";
-    console.log(notification);
 
     return (
         <div

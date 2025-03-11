@@ -5,6 +5,7 @@ import { uploadImage } from "../utils/uploadImage.mjs";
 import { Connection } from "../models/connectionModel.mjs";
 import { Comment } from "../models/commentModel.mjs";
 import { Notification } from "../models/notificationModel.mjs";
+import mongoose from "mongoose"
 
 export const getFeedPosts = async (req, res) => {
     const userId = req.user._id;
@@ -103,38 +104,83 @@ export const getFeedPosts = async (req, res) => {
 };
 
 
-
-
 export const getPostById = async (req, res) => {
     const { postId } = req.params;
+    const userId = req.user._id;
+    const postObjectId = new mongoose.Types.ObjectId(postId);
 
     try {
-        const [post, reactionsCount] = await Promise.all([
-            Post.findById(postId).populate("author", "name username profilePicture headline"),
-            Reaction.countDocuments({ post: postId })
-        ])
+        // Fetch all required data in parallel
+        const [post, reactionsData, connections, commentsCount] = await Promise.all([
+            Post.findById(postId).populate("author", "name username profilePicture headline").lean(),
+            Reaction.aggregate([ // Fetch reactions data for the post
+                { $match: { post: postObjectId } },
+                {
+                    $group: {
+                        _id: "$post",
+                        reactionsCount: { $sum: 1 },
+                        uniqueReactions: { $addToSet: "$type" },
+                        userReactions: { $push: { user: "$user", type: "$type" } }
+                    }
+                }
+            ]),
+            Connection.find({ // Fetch connections related to the user
+                $or: [{ sender: userId }, { receiver: userId }]
+            }).select("sender receiver status"),
+            Comment.countDocuments({ post: postId }) // Fetch total comments count
+        ]);
 
         if (!post) {
             return res.status(404).json({
                 success: false,
                 message: "Post not found"
-            })
+            });
         }
 
+        // Create lookup maps for fast access
+        const reactionsMap = new Map(reactionsData.map(r => [r._id.toString(), r]));
+        const connectionStatusMap = new Map(
+            connections.map(conn => {
+                const otherUserId = conn.sender.toString() === userId.toString()
+                    ? conn.receiver.toString()
+                    : conn.sender.toString();
+                return [otherUserId, conn.status];
+            })
+        );
+
+        // Get the reaction data for the post
+        const reactionInfo = reactionsMap.get(post._id.toString()) || { reactionsCount: 0, uniqueReactions: [], userReactions: [] };
+
+        // Enrich the post with additional data
+        const enrichedPost = {
+            ...post,
+            connectionStatus: connectionStatusMap.get(post.author._id.toString()) || null,
+            isConnected: connectionStatusMap.get(post.author._id.toString()) === "accepted",
+            reactions: {
+                reactionsCount: reactionInfo.reactionsCount,
+                uniqueReactions: reactionInfo.uniqueReactions,
+                hasReacted: reactionInfo.userReactions.some(r => r.user.toString() === userId.toString()),
+                userReactionType: reactionInfo.userReactions.find(r => r.user.toString() === userId.toString())?.type || null
+            },
+            repostsCount: 0, // Assuming repost count is not implemented yet
+            commentsCount: commentsCount // Total number of comments
+        };
+
+        // Return the enriched post data
         res.status(200).json({
             success: true,
-            data: post,
-            reactionsCount
-        })
+            data: enrichedPost // Wrap the post in an array to match the feed structure
+        });
 
     } catch (err) {
+        console.error("Error in getPostById:", err);
         return res.status(500).json({
             success: false,
             message: "Internal Server Error",
             error: err.message
-        })
+        });
     }
-}
+};
 
 
 export const createPost = async (req, res) => {

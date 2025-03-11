@@ -19,8 +19,7 @@ export function useFetchNotifications(filter) {
         },
         initialPageParam: 1,
         getNextPageParam: (lastPage) => lastPage.pagination.hasNextPage ? lastPage.pagination.nextPage : undefined,
-        staleTime: 1000 * 60 * 5,
-        refetchOnWindowFocus: false
+        staleTime: 1000 * 60 * 5
     })
 }
 
@@ -59,24 +58,6 @@ export function useUnreadNotificationsCount() {
     })
 }
 
-
-// Mark all as read
-export function useMarkAllNotificationsAsRead(filter) {
-    const axiosInstance = useAxios();
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationKey: ["markAllNotificationsAsRead"],
-        mutationFn: async () => {
-            const { data } = await axiosInstance.patch("/api/v1/notifications/mark-all-read");
-            return data;
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["notifications"], exact: false });
-            queryClient.invalidateQueries({ queryKey: ["unreadNotificationsCount"] });
-        }
-    })
-}
 
 // delete notification
 export function useDeleteNotification() {

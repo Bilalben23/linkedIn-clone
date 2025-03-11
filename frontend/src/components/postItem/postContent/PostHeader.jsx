@@ -18,7 +18,7 @@ const CONNECT_SOUND_URL = "/assets/sounds/connect.mp3";
 export default function PostHeader({ post }) {
     const connectSoundEffect = useRef(null);
     const { authState: { user } } = useAuth();
-    const isMyPost = user._id.toString() === post.author._id.toString();
+    const isMyPost = user?._id.toString() === post?.author?._id.toString();
     const [isConfirmPostDeletion, setIsConfirmPostDeletion] = useState(false);
     const { mutate: deletePost, isPending: isDeleting } = useDeletePost()
     const { mutate: sendConnectionRequest, isPending: isSending } = useSendConnectionRequest("postsFeed");
@@ -93,12 +93,12 @@ export default function PostHeader({ post }) {
 
             <div className='flex justify-between items-start gap-x-5 px-4'>
                 {/* User Profile */}
-                <Link to={`/profile/${post.author.username}`} className='flex items-center gap-x-2.5'>
+                <Link to={`/profile/${post?.author?.username}`} className='flex items-center gap-x-2.5'>
                     <div className='shrink-0'>
                         <img
                             src={
                                 post.author.profilePicture
-                                    ? `${CLOUDINARY_BASE_URL + post.author.profilePicture}`
+                                    ? `${CLOUDINARY_BASE_URL + post?.author?.profilePicture}`
                                     : "/assets/avatar.png"
                             }
                             alt={`${post.author.name}'s avatar`}
@@ -108,14 +108,14 @@ export default function PostHeader({ post }) {
                     <div className='flex flex-col items-start'>
                         {isMyPost ? (
                             <div className='flex items-center gap-x-1'>
-                                <span className='font-black hover:text-[#0A66C2] hover:link-hover text-sm line-clamp-1'>{post.author.name} </span>
+                                <span className='font-black hover:text-[#0A66C2] hover:link-hover text-sm line-clamp-1'>{post?.author?.name} </span>
                                 <span className='text-gray-500 text-[12px]'>•</span>
                                 <span className='text-gray-500 text-[12px]'>You</span>
                             </div>
                         ) : (
-                            <p className='font-black hover:text-[#0A66C2] hover:link-hover text-sm line-clamp-1'>{post.author.name} </p>
+                            <p className='font-black hover:text-[#0A66C2] hover:link-hover text-sm line-clamp-1'>{post?.author?.name} </p>
                         )}
-                        <p className='text-[13px] line-clamp-1 text-gray-700'>{post.author.headline}</p>
+                        <p className='text-[13px] line-clamp-1 text-gray-700'>{post?.author?.headline}</p>
                         <p className='text-[12px] flex items-center gap-x-1 text-gray-700'>
                             <span>{timeAgo(post.createdAt)}</span>
                             <span>•</span>

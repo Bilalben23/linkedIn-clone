@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import useAxios from './useAxios'
 
 export const usePostsFeed = () => {
@@ -14,6 +14,31 @@ export const usePostsFeed = () => {
         getNextPageParam: (lastPage) => lastPage.pagination.hasNextPage ? lastPage.pagination.nextPage : undefined,
         staleTime: 1000 * 60 * 5,
         refetchOnWindowFocus: false
+    })
+}
+
+
+export const usePostById = (postId) => {
+    const axiosInstance = useAxios();
+    const queryClient = useQueryClient();
+
+    return useQuery({
+        queryKey: ["post", postId],
+        queryFn: async () => {
+            const { data } = await axiosInstance.get(`/api/v1/posts/${postId}`);
+            return data;
+        },
+        enabled: !!postId,
+        staleTime: 5 * 60 * 1000,
+        initialData: () => {
+            const postsFeedData = queryClient.getQueryData(["postsFeed"]);
+            if (postsFeedData) {
+                // If postsFeed is paginated, flatten all pages and search for the post
+                const allPosts = postsFeedData.pages.flatMap(page => page.data);
+                return allPosts.find(post => post._id === postId);
+            }
+            return undefined;
+        }
     })
 }
 

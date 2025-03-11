@@ -55,9 +55,9 @@ app.use("/api/v1/notifications", authenticateJWT, notificationRoutes);
 
 
 const PORT = ENV_VARS.PORT;
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, () => {
     connectDB();
-    console.log(`listening on http://0.0.0.0:${PORT}`)
+    console.log(`listening on http://localhost:${PORT}`)
 })
 
 

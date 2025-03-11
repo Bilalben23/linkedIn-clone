@@ -44,7 +44,6 @@ router.patch("/:notificationId/read", validateMarkNotificationAsRead, validateRe
  * @desc Mark all notifications as read for the authenticated user 
  * @access Private (requires authentication)
  */
-router.patch("/mark-all-read", markAllNotificationsAsRead);
 
 /**
  * @route DELETE /api/v1/notifications/:notificationId

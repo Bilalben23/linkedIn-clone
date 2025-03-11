@@ -1,9 +1,8 @@
 import { useEffect, useRef } from 'react';
-import { useFetchNotifications, useMarkAllNotificationsAsRead } from '../../hooks/useNotifications';
+import { useFetchNotifications } from '../../hooks/useNotifications';
 import { useSearchParams } from 'react-router-dom';
 import NotificationSidebar from './NotificationSidebar';
 import NotificationContent from './NotificationContent';
-import NotificationFooter from '../../components/CommonFooter';
 import NotificationFilters from './NotificationFilters';
 import { FaArrowUp } from 'react-icons/fa';
 import { motion } from "framer-motion"
@@ -14,7 +13,6 @@ export default function Notifications() {
     const [searchParams, setSearchParams] = useSearchParams();
     const filter = searchParams.get("filter") || "all";
     const lastNotificationRef = useRef(null);
-    const { mutate: markAllNotificationsAsRead } = useMarkAllNotificationsAsRead()
 
     const {
         data: notifications,
@@ -43,13 +41,6 @@ export default function Notifications() {
         });
         refetch();
     }
-
-    useEffect(() => {
-        return () => {
-            markAllNotificationsAsRead();
-        }
-    }, [])
-
 
     useEffect(() => {
         if (!hasNextPage) return;

@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { validateRequest } from "../middlewares/validateRequest.mjs";
 import {
-    validateCreatePost,
-    validateDeletePost,
     validateGetFeedPosts,
     validateGetPostById,
+    validateCreatePost,
+    validateDeletePost,
     validateUpdatePost
 } from "../validations/postValidations.mjs";
 import {
