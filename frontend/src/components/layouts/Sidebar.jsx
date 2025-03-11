@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 
-
 export default function Sidebar({ user }) {
     return (
         <section className="md:flex-col md:gap-y-2 hidden md:flex">
