@@ -107,22 +107,22 @@ export default function Navbar() {
                             </div>
                             <ul tabIndex={0} className="dropdown-content mt-1 border border-gray-200 !right-0 rounded-b-box rounded-tl-box z-[1] w-52 p-2 shadow-lg bg-base-100" role='menu'>
                                 <li className='border-b pb-3 border-gray-300'>
-                                    <Link to="/profile" className='flex items-start gap-x-2 mb-1'>
+                                    <Link to={`/profile/${user.username}`} className='flex items-start gap-x-2 mb-1'>
                                         <div className='shrink-0'>
                                             <img src={user.profilePicture
                                                 ? `${CLOUDINARY_BASE_URL + user.profilePicture}`
                                                 : "/assets/avatar.png"
                                             }
                                                 alt="avatar"
-                                                className='w-11 rounded-full'
+                                                className='w-11 rounded-full select-none'
                                             />
                                         </div>
                                         <div>
-                                            <p className='font-semibold mb-0.5 text-sm'>{user.name}</p>
+                                            <p className='font-semibold mb-0.5 text-sm select-none'>{user.name}</p>
                                             <p className='text-xs'>{user.headline}</p>
                                         </div>
                                     </Link>
-                                    <Link to="/profile" className='btn btn-outline btn-block rounded-full btn-xs btn-primary'>View Profile</Link>
+                                    <Link to={`/profile/${user.username}`} className='btn btn-outline btn-block rounded-full btn-xs btn-primary'>View Profile</Link>
                                 </li>
                                 <li className='mt-3'>
                                     <button type='button' className='btn btn-sm btn-outline rounded-full btn-block' onClick={logout}>
