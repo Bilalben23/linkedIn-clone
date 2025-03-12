@@ -7,6 +7,7 @@ import { useUpdateProfile } from "../../hooks/useUserProfile";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import readFileAsDataURL from "../../utils/readFileAsDataURL";
+import ProfileHeaderSkelton from "../../components/skeletons/ProfileHeaderSkelton";
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -70,9 +71,8 @@ export default function ProfileHeader({ details, connectionsCount, isMyProfile, 
     return (
         <div className='border border-gray-300 shadow-xs rounded-box p-0.5 bg-base-100'>
             {
-                isLoading
-                    ? <p>Loading...</p>
-
+                !isLoading
+                    ? <ProfileHeaderSkelton />
                     : <div>
 
                         {/* banner and profile picture */}
