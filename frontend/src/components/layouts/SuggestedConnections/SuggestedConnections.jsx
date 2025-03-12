@@ -4,6 +4,8 @@ import SuggestedConnectionItem from './SuggestedConnectionItem';
 import SuggestedConnectionSkeleton from '../../skeletons/SuggestedConnectionSkeleton';
 import { FaUserSlash } from 'react-icons/fa';
 
+
+
 export default function SuggestedConnections() {
     const {
         data: suggestedConnections,

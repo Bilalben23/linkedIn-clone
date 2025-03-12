@@ -10,6 +10,7 @@ export const updateProfile = async (req, res) => {
     const userId = req.user._id;
     const updates = { ...req.body };
     const timestamp = Date.now();
+    console.log(updates);
 
     try {
 
@@ -17,7 +18,22 @@ export const updateProfile = async (req, res) => {
             updates.password = await hashPassword(updates.password);
         }
 
-        // upload profile picture
+        // handle profile picture deletion
+        if (updates.profilePicture === "") {
+            if (req.user.profilePicture) {
+                await cloudinary.uploader.destroy(req.user.profilePicture);
+            }
+            updates.profilePicture = null;
+        }
+
+        if (updates.bannerImg === "") {
+            if (req.user.bannerImg) {
+                await cloudinary.uploader.destroy(req.user.bannerImg);
+            }
+            updates.bannerImg = null;
+        }
+
+        // upload new profile picture
         if (req.files?.profilePicture) {
             try {
 
@@ -35,6 +51,7 @@ export const updateProfile = async (req, res) => {
 
                 updates.profilePicture = newProfilePicture;
             } catch (err) {
+                console.log("error in uploading profile picture: " + err)
                 return res.status(400).json({
                     success: false,
                     message: "Profile picture upload failed",
@@ -43,7 +60,7 @@ export const updateProfile = async (req, res) => {
             }
         }
 
-        // upload banner image
+        // upload new banner image
         if (req.files?.bannerImg) {
             try {
 
@@ -53,12 +70,14 @@ export const updateProfile = async (req, res) => {
                     "linkedin/banner_images",
                     bannerName
                 );
+
                 // if upload successful, delete old banner image
                 if (req.user.bannerImg) {
                     await cloudinary.uploader.destroy(req.user.bannerImg);
                 }
                 updates.bannerImg = newBannerImg;
             } catch (err) {
+                console.log("error in uploading banner image: " + err)
                 return res.status(400).json({
                     success: false,
                     message: "Banner image upload failed",
@@ -80,6 +99,7 @@ export const updateProfile = async (req, res) => {
         })
 
     } catch (err) {
+        console.error("Error in updating profile: " + err);
         return res.status(500).json({
             success: false,
             message: "Internal Server Error",

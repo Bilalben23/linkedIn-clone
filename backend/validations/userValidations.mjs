@@ -50,6 +50,16 @@ export const updateProfileValidation = checkSchema({
             errorMessage: "Password must contain at least one letter, one number, and one special character",
         }
     },
+    profilePicture: {
+        in: "body",
+        optional: true,
+        trim: true
+    },
+    bannerImg: {
+        in: "body",
+        optional: true,
+        trim: true
+    },
     headline: {
         in: "body",
         optional: true,
@@ -152,7 +162,6 @@ export const updateProfileValidation = checkSchema({
         }
     }
 
-
     ,
     education: {
         in: "body",
@@ -214,6 +223,7 @@ export const updateProfileValidation = checkSchema({
         }
     }
 })
+
 
 export const validateGetPublicProfile = checkSchema({
     username: {

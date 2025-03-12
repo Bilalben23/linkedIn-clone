@@ -13,7 +13,6 @@ export default function ProfileDetails({ username }) {
     const { authState: { user } } = useAuth();
 
     const isMyProfile = user._id === data?.data?.user?._id;
-    console.log(data);
 
     return (
         <div className='col-span-3 flex flex-col gap-y-3'>
