@@ -4,7 +4,7 @@ const CLIENT_URL = import.meta.env.VITE_CLIENT_URL;
 
 export default function RightSidebar({ username }) {
     return (
-        <div className='flex flex-col gap-y-2'>
+        <div className='flex-col gap-y-2 hidden md:flex'>
             <div className='border px-3 border-gray-300 rounded-box shadow-xs bg-base-100'>
 
                 <div className='py-3 border-b border-gray-200'>

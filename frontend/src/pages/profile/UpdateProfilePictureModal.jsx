@@ -12,7 +12,7 @@ const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 export default function UpdateProfilePictureModal({ profilePicture }) {
     const { mutate: updateProfile, isPending } = useUpdateProfile();
     const dialogFormRef = useRef();
-    const { updateProfileImage } = useAuth();
+    const { updateProfileDetails } = useAuth();
 
     const [newProfilePicture, setNewProfilePicture] = useState(null);
     const [newProfilePicturePreview, setNewProfilePicturePreview] = useState(null);
@@ -44,7 +44,7 @@ export default function UpdateProfilePictureModal({ profilePicture }) {
 
         updateProfile(formData, {
             onSuccess: (data) => {
-                updateProfileImage(data.data?.profilePicture);
+                updateProfileDetails("profilePicture", data.data?.profilePicture);
                 setNewProfilePicture(null);
                 setNewProfilePicturePreview(null);
                 dialogFormRef.current?.submit();

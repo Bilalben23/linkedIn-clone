@@ -149,7 +149,7 @@ export default function Signin() {
                         <div className='mb-4'>
                             <button
                                 type="submit"
-                                className='btn btn-block rounded-full disabled:!bg-gray-400'
+                                className='btn btn-block rounded-full btn-neutral disabled:!bg-gray-400'
                                 disabled={isSubmitting || !isValid}
                             >
                                 {

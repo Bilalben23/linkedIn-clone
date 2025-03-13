@@ -49,13 +49,6 @@ export default function Invitations() {
                 </div>
             </div>
             {
-                <div className='p-3 flex flex-col gap-y-2'>
-                    <div>
-                        <p>Accept Connections notifications</p>
-                    </div>
-                </div>
-            }
-            {
                 !isLoading && invitations?.pagination?.totalPendingRequests === 0
                     ? <p className='p-3 text-sm text-gray-600'>
                         You're all caught up! No pending invitations at the moment.

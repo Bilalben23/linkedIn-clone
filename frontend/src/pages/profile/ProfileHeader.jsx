@@ -67,7 +67,8 @@ export default function ProfileHeader({ details, connectionsCount, isMyProfile, 
                                     />
 
                                 </div>
-                                <div className='absolute rounded-full cursor-pointer left-[5%] -bottom-10 size-32 border-4 border-white' onClick={() => document.getElementById('updateProfilePictureModal').showModal()}>
+                                <div className='absolute rounded-full cursor-pointer left-[5%] -bottom-10 size-32 border-4 border-white'
+                                    onClick={() => document.getElementById('updateProfilePictureModal').showModal()}>
                                     <img src={details.profilePicture
                                         ? `${CLOUDINARY_BASE_URL + details.profilePicture}`
                                         : "/assets/avatar.png"

@@ -38,7 +38,7 @@ export default function SkillsSection({ skills = [], isMyProfile, isLoading }) {
                         </div>
 
                     </>
-                        : <>
+                        : isMyProfile ? <>
                             <div className="flex items-center gap-2 mb-3">
                                 <img src="/assets/skills-placeholder.png" alt="Skills Placeholder" className="w-7" />
                                 <p className="font-bold text-sm text-gray-800">
@@ -52,7 +52,9 @@ export default function SkillsSection({ skills = [], isMyProfile, isLoading }) {
                                 Add skills
                             </button>
                         </>
-
+                            : <div className="text-center text-gray-500 text-sm italic">
+                                No skills added yet.
+                            </div>
             }
         </div>
     )

@@ -24,12 +24,12 @@ export function AuthProvider({ children }) {
         setAuthState(INITIAL_STATE);
     }
 
-    const updateProfileImage = (newProfilePicture) => {
+    const updateProfileDetails = (field, value) => {
         setAuthState(prevState => ({
             ...prevState,
             user: {
                 ...prevState.user,
-                profilePicture: newProfilePicture
+                [field]: value
             }
         }))
     }
@@ -39,7 +39,7 @@ export function AuthProvider({ children }) {
             authState,
             login,
             logout,
-            updateProfileImage
+            updateProfileDetails
         }}>
             {children}
         </AuthContext.Provider>

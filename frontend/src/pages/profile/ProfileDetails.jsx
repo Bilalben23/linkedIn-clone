@@ -12,10 +12,20 @@ export default function ProfileDetails({ username }) {
     const { data, isLoading, isError, error } = useFetchProfile(username);
     const { authState: { user } } = useAuth();
 
+    if (isError) {
+        return (
+            <div className="col-span-3 flex flex-col items-center justify-center py-4">
+                <p className="text-sm text-red-500 text-center">
+                    {error?.message || "Something went wrong while fetching the profile. Please try again later."}
+                </p>
+            </div>
+        );
+    }
+
     const isMyProfile = user._id === data?.data?.user?._id;
 
     return (
-        <div className='col-span-3 flex flex-col gap-y-3'>
+        <div className='col-span-3 flex flex-col gap-y-3 order-first md:order-none'>
             <ProfileHeader
                 details={data?.data?.user}
                 connectionsCount={data?.data?.connectionsCount}

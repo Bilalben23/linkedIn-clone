@@ -91,8 +91,8 @@ export const updateProfileValidation = checkSchema({
             errorMessage: "About section must be a string"
         },
         isLength: {
-            options: { max: 500 },
-            errorMessage: "About section must not exceed 500 characters",
+            options: { max: 2000 },
+            errorMessage: "About section must not exceed 2000 characters",
         }
     },
     skills: {

@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useUpdateProfile } from "../../hooks/useUserProfile";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import useAuth from "../../hooks/useAuth";
 
 const profileInfoSchema = yup.object().shape({
     name: yup.string()
@@ -20,13 +21,13 @@ const profileInfoSchema = yup.object().shape({
 export default function UpdateProfileInfoModal({ name, headline, location }) {
     const { mutate: updateProfile, isPending } = useUpdateProfile();
     const dialogFormRef = useRef();
+    const { updateProfileDetails } = useAuth();
 
     const {
         getFieldProps,
         handleSubmit,
         errors,
         touched,
-        isValid,
         dirty
     } = useFormik({
         initialValues: {
@@ -35,10 +36,15 @@ export default function UpdateProfileInfoModal({ name, headline, location }) {
             location: location || "",
         },
         validationSchema: profileInfoSchema,
-        onSubmit: (values) => {
+        onSubmit: (values, actions) => {
             updateProfile(values, {
-                onSuccess: () => {
+                onSuccess: ({ data }) => {
                     dialogFormRef.current?.submit();
+                    console.log(data.name);
+                    updateProfileDetails("name", data.name);
+                    updateProfileDetails("headline", data.headline);
+                    updateProfileDetails("location", data.location);
+                    actions.resetForm();
                     toast.success("Profile info updated successfully");
                 },
                 onError: (err) => {

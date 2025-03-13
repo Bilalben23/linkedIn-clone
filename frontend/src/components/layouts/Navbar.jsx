@@ -32,28 +32,32 @@ export default function Navbar() {
     }, [pendingRequestsCount])
 
     return (
-        <header className='px-8 flex items-center justify-between shadow-xs border-b border-gray-300 w-full fixed top-0 bg-base-100 z-50'>
+        <header className='px-4 md:px-8 flex items-center justify-between shadow-xs border-b border-gray-300 w-full fixed top-0 bg-base-100 z-50'>
             <div className='flex items-center gap-x-3'>
                 <div>
-                    <img src="/assets/small-logo.png" alt="linkedIn logo" className='w-8 rounded-md' />
+                    <img src="/assets/small-logo.png" alt="linkedIn logo" className='w-7 md:w-8 rounded-md' />
                 </div>
-                <form>
-                    <div className="flex items-center input-sm input bg-blue-50 rounded-md px-2 transition-all duration-300 focus-within:w-70 w-50">
-                        <MdSearch size={25} />
-                        <input
-                            type="text"
-                            className="w-full bg-transparent outline-none transition-all duration-500 focus:w-full"
-                            placeholder="Search"
-                        />
-                    </div>
 
-                </form>
+                {/* icon for small devices*/}
+                <button type="button" className='md:hidden p-2 cursor-pointer hover:opacity-80'>
+                    <MdSearch size={30} className="opacity-70" />
+                </button>
+
+                <div className="hidden md:flex items-center input-sm input bg-blue-50 rounded-md px-2 transition-all duration-300 focus-within:w-70 w-50">
+                    <MdSearch size={25} />
+                    <input
+                        type="text"
+                        className="w-full bg-transparent outline-none transition-all duration-500 focus:w-full"
+                        placeholder="Search"
+                    />
+                </div>
+
             </div>
 
             <nav>
                 <ul className='flex items-center gap-x-3'>
                     <li className='flex-1'>
-                        <NavLink to="/" className={({ isActive }) => `relative group flex flex-col after:w-0 py-2 px-5 items-center  ${isActive ? "active-link after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-full after:h-[2px] after:bg-black after:transition-[width] after:duration-300" : ""}`}>
+                        <NavLink to="/" className={({ isActive }) => `relative group flex flex-col after:w-0 py-2 px-1 md:px-5 items-center  ${isActive ? "active-link after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-full after:h-[2px] after:bg-black after:transition-[width] after:duration-300" : ""}`}>
                             <span className='indicator'>
                                 <MdHome size={30} className='opacity-70 group-[.active-link]:opacity-100 transition-opacity group-hover:opacity-100' />
                                 {
@@ -61,11 +65,11 @@ export default function Navbar() {
                                 }
 
                             </span>
-                            <span className='text-xs group-[.active-link]:opacity-100 opacity-70 transition-opacity group-hover:opacity-100' title='Home'>Home</span>
+                            <span className='hidden md:block text-xs group-[.active-link]:opacity-100 opacity-70 transition-opacity group-hover:opacity-100' title='Home'>Home</span>
                         </NavLink>
                     </li>
                     <li className='flex-1'>
-                        <NavLink to="/networks" className={({ isActive }) => `relative group flex flex-col after:w-0 py-2 px-3 items-center  ${isActive ? "active-link after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-full after:h-[2px] after:bg-black after:transition-[width] after:duration-300" : ""}`}>
+                        <NavLink to="/networks" className={({ isActive }) => `relative group flex flex-col after:w-0 py-2 px-1 md:px-3 items-center  ${isActive ? "active-link after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-full after:h-[2px] after:bg-black after:transition-[width] after:duration-300" : ""}`}>
                             <span className='indicator'>
                                 <MdPeopleAlt size={30} className='opacity-70 group-[.active-link]:opacity-100 transition-opacity group-hover:opacity-100' />
                                 {
@@ -73,39 +77,39 @@ export default function Navbar() {
                                 }
 
                             </span>
-                            <span className='text-xs group-[.active-link]:opacity-100 opacity-70 transition-opacity group-hover:opacity-100 whitespace-nowrap' title='My Network'>My Network</span>
+                            <span className='hidden md:block text-xs group-[.active-link]:opacity-100 opacity-70 transition-opacity group-hover:opacity-100 whitespace-nowrap' title='My Network'>My Network</span>
                         </NavLink>
                     </li>
                     <li className='flex-1'>
-                        <NavLink to="/notifications?filter=all" className={({ isActive }) => `relative group flex flex-col after:w-0 py-2 px-3 items-center  ${isActive ? "active-link after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-full after:h-[2px] after:bg-black after:transition-[width] after:duration-300" : ""}`}>
+                        <NavLink to="/notifications?filter=all" className={({ isActive }) => `relative group flex flex-col after:w-0 py-2 px-1 md:px-3 items-center  ${isActive ? "active-link after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-full after:h-[2px] after:bg-black after:transition-[width] after:duration-300" : ""}`}>
                             <span className='indicator'>
                                 <MdNotifications size={30} className='opacity-70 transition-opacity group-hover:opacity-100 group-[.active-link]:opacity-100' />
                                 {
                                     (unreadCount !== 0 && !isUnreadNotificationsCountLoading) && <span className='indicator-item flex items-center justify-center size-[20px] shadow bg-red-700 right-1 top-0.5 rounded-full text-[11px] text-white font-semibold'>{unreadCount}</span>
                                 }
                             </span>
-                            <span className='text-xs opacity-70 transition-opacity group-hover:opacity-100 group-[.active-link]:opacity-100' title="Notifications">Notifications</span>
+                            <span className='hidden md:block text-xs opacity-70 transition-opacity group-hover:opacity-100 group-[.active-link]:opacity-100' title="Notifications">Notifications</span>
                         </NavLink>
                     </li>
 
                     <li className='flex-1'>
                         <div className="dropdown">
-                            <div tabIndex={0} role="button" className='flex px-2 flex-col cursor-pointer justify-center items-center'>
+                            <div tabIndex={0} role="button" className='flex md:px-2 flex-col cursor-pointer justify-center items-center'>
                                 <img src={user.profilePicture
                                     ? `${CLOUDINARY_BASE_URL + user.profilePicture}`
                                     : '/assets/avatar.png'
                                 }
                                     alt={`${user.name}'s avatar`}
-                                    className='size-7 rounded-full'
+                                    className='size-6 md:size-7 rounded-full'
                                 />
-                                <p className='text-[14px] flex justify-center items-center gap-x-1'>
+                                <p className='text-[14px] hidden md:flex justify-center items-center gap-x-1'>
                                     <span>Me</span>
                                     <svg width="10" height="10" viewBox="0 0 10 10" fill="black" xmlns="http://www.w3.org/2000/svg">
                                         <polygon points="0,0 10,0 5,6" />
                                     </svg>
                                 </p>
                             </div>
-                            <ul tabIndex={0} className="dropdown-content mt-1 border border-gray-200 !right-0 rounded-b-box rounded-tl-box z-[1] w-52 p-2 shadow-lg bg-base-100" role='menu'>
+                            <ul tabIndex={0} className="dropdown-content mt-3 md:mt-1 border border-gray-200 !right-0 rounded-b-box rounded-tl-box z-[1] w-52 p-2 shadow-lg bg-base-100" role='menu'>
                                 <li className='border-b pb-3 border-gray-300'>
                                     <Link to={`/profile/${user.username}`} className='flex items-start gap-x-2 mb-1'>
                                         <div className='shrink-0'>
