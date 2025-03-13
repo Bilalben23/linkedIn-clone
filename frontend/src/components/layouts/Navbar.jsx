@@ -96,7 +96,7 @@ export default function Navbar() {
                                     : '/assets/avatar.png'
                                 }
                                     alt={`${user.name}'s avatar`}
-                                    className='w-7 rounded-full'
+                                    className='size-7 rounded-full'
                                 />
                                 <p className='text-[14px] flex justify-center items-center gap-x-1'>
                                     <span>Me</span>
@@ -113,8 +113,8 @@ export default function Navbar() {
                                                 ? `${CLOUDINARY_BASE_URL + user.profilePicture}`
                                                 : "/assets/avatar.png"
                                             }
-                                                alt="avatar"
-                                                className='w-11 rounded-full select-none'
+                                                alt={`${user.username}'s avatar`}
+                                                className='size-11 rounded-full select-none'
                                             />
                                         </div>
                                         <div>
