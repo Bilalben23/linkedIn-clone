@@ -8,18 +8,17 @@ import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import readFileAsDataURL from "../../utils/readFileAsDataURL";
 import ProfileHeaderSkelton from "../../components/skeletons/ProfileHeaderSkelton";
+import UpdateProfilePictureModal from "./UpdateProfilePictureModal";
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 
 export default function ProfileHeader({ details, connectionsCount, isMyProfile, isLoading }) {
-    const isConnected = false;
-
     const { mutate: updateProfile, isPending } = useUpdateProfile()
     const [bannerImg, setBannerImg] = useState(null);
     const [bannerImgPreview, setBannerImgPreview] = useState(null);
-
+    const isConnected = false;
 
     const handleDeleteBannerImage = () => {
         const isConfirmed = confirm("Are you sure you want to delete this banner image?");
@@ -71,7 +70,7 @@ export default function ProfileHeader({ details, connectionsCount, isMyProfile, 
     return (
         <div className='border border-gray-300 shadow-xs rounded-box p-0.5 bg-base-100'>
             {
-                !isLoading
+                isLoading
                     ? <ProfileHeaderSkelton />
                     : <div>
 
@@ -136,7 +135,7 @@ export default function ProfileHeader({ details, connectionsCount, isMyProfile, 
                                             : "/assets/banner.png")
                                     }
                                         alt={`${details.name}'s banner`}
-                                        className="size-full rounded-t-lg"
+                                        className="size-full rounded-t-box"
                                     />
 
                                     {
@@ -160,7 +159,7 @@ export default function ProfileHeader({ details, connectionsCount, isMyProfile, 
                                         </div>
                                     }
                                 </div>
-                                <div className='absolute rounded-full left-[5%] -bottom-10 size-32 border-4 border-white'>
+                                <div className='absolute rounded-full cursor-pointer left-[5%] -bottom-10 size-32 border-4 border-white' onClick={() => document.getElementById('updateProfilePictureModal').showModal()}>
                                     <img src={details.profilePicture
                                         ? `${CLOUDINARY_BASE_URL + details.profilePicture}`
                                         : "/assets/avatar.png"
@@ -169,6 +168,8 @@ export default function ProfileHeader({ details, connectionsCount, isMyProfile, 
                                         className='size-full rounded-full'
                                     />
                                 </div>
+
+                                <UpdateProfilePictureModal profilePicture={details.profilePicture} />
                             </div>
                         </div>
 
@@ -216,6 +217,6 @@ export default function ProfileHeader({ details, connectionsCount, isMyProfile, 
                         </div>
                     </div>
             }
-        </div >
+        </div>
     )
 }

@@ -5,7 +5,7 @@ export default function ProfileHeaderSkelton() {
         <div>
             <div className='relative mb-13'>
                 <div className='skeleton w-full h-[220px] !rounded-b-none !rounded-t-lg'></div>
-                <div className='skeleton size-32 rounded-full border-4 border-white absolute -bottom-10 left-[5%]'> </div>
+                <div className='skeleton size-32 rounded-full border-4 border-white absolute -bottom-10 left-[5%]'></div>
             </div>
             <div className="pb-4 px-5">
                 <div className='skeleton w-42 h-4'></div>
