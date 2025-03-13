@@ -5,6 +5,7 @@ import { MdOutlineSchedule } from "react-icons/md";
 import ProfileHeaderSkelton from "../../components/skeletons/ProfileHeaderSkelton";
 import UpdateProfilePictureModal from "./UpdateProfilePictureModal";
 import UpdateBannerImageModal from "./UpdateBannerImageModal";
+import UpdateProfileInfoModal from "./UpdateProfileInfoModal";
 
 const CLOUDINARY_BASE_URL = import.meta.env.VITE_CLOUDINARY_BASE_URL;
 
@@ -32,15 +33,24 @@ export default function ProfileHeader({ details, connectionsCount, isMyProfile, 
                                                 <FiEdit2 strokeWidth={3} className="text-blue-800" size={15} />
                                             </button>
 
-                                            <UpdateBannerImageModal bannerImage={details.bannerImg} />
+                                            <UpdateBannerImageModal bannerImage={details?.bannerImg} />
 
                                         </div>
                                     </div>
 
                                     <div className="absolute bottom-0 right-2 z-1">
-                                        <button type="button" className="btn btn-sm btn-circle border-0 btn-ghost">
+                                        <button
+                                            type="button"
+                                            className="btn btn-sm btn-circle border-0 btn-ghost"
+                                            onClick={() => document.getElementById('updateProfileInfoModal').showModal()}
+                                        >
                                             <FiEdit2 strokeWidth={3} size={20} />
                                         </button>
+                                        <UpdateProfileInfoModal
+                                            name={details?.name}
+                                            headline={details?.headline}
+                                            location={details?.location}
+                                        />
                                     </div>
                                 </>
                             }
@@ -48,8 +58,8 @@ export default function ProfileHeader({ details, connectionsCount, isMyProfile, 
                             <div className='relative mb-10'>
 
                                 <div className='h-[220px] w-full relative'>
-                                    <img src={details.bannerImg
-                                        ? `${CLOUDINARY_BASE_URL + details.bannerImg}`
+                                    <img src={details?.bannerImg
+                                        ? `${CLOUDINARY_BASE_URL + details?.bannerImg}`
                                         : "/assets/banner.png"
                                     }
                                         alt={`${details.name}'s banner`}
