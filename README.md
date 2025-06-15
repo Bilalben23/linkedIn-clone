@@ -1,4 +1,4 @@
-# LinkedIn Clone
+# LinkedIn Clone ![Responsive](https://img.shields.io/badge/UI-Responsive-%2300C49A?style=flat-square&logo=tailwind-css&logoColor=white)
 
 ## Overview
 
@@ -183,7 +183,7 @@ This project is still in an early stage, and there’s plenty of room for enhanc
 
 ### 🚀 Live Demo
 
-Experience the app live: [**Click here to try it out**](#)
+Experience the app live: [**Click here to try it out**](https://linkedin-sigma-jet.vercel.app)
 
 ---
 

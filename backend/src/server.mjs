@@ -40,6 +40,8 @@ app.use(cors({
     credentials: true
 }))
 
+connectDB();
+
 app.use(passport.initialize());
 configurePassport();
 
@@ -53,36 +55,10 @@ app.use("/api/v1/comments", authenticateJWT, commentRoutes);
 app.use("/api/v1/notifications", authenticateJWT, notificationRoutes);
 
 
-const PORT = ENV_VARS.PORT;
-app.listen(PORT, () => {
-    connectDB();
-    console.log(`listening on http://localhost:${PORT}`)
-})
+//const PORT = ENV_VARS.PORT;
+// app.listen(PORT, () => {
+//    connectDB();
+//    console.log(`listening on http://localhost:${PORT}`)
+// })
 
-
-// to handle notifications in large scale apps, we should use:  BullMQ + Redis  
-// send emails
-// polling concept & websockets
-
-/*
- * 10 Habits to Become a Successful Developer
- 1. Practice coding daily.
- 2. Read and analyze other developers' code.
- 3. Understand the fundamentals before focusing on tools.
- 4. Solve real-world problems, not just write code.
- 5. Keep learning and stay updated with new technologies.
- 6. Write clean, structured, and maintainable code.
- 7. Understand systems architecture, not just individual code snippets.
- 8. Work on real projects to gain hands-on experience.
- 9. Engage with and contribute to the developer community.
-10. Learn to debug efficiently and optimize performance.
-*/
-
-// learn "numeral" to deal with short forms of numbers, like 1k, 1M...
-// what is SSO ( Single Sign-On)
-// Learn GraphQL
-// Explorer Bun.js
-// Design patterns
-// Js questions / React questions
-// caching: Server-Side Caching...
-// react-dnd
+export default app;
