@@ -68,7 +68,7 @@ export default function SuggestedConnectionCard({ user }) {
                         />
                     </div>
                 </Link>
-                <Link to={`/profile/${user.username}`} className="mt-2 block text-center">
+                <Link to={`/profile/${user.username}`} className="mt-12 block text-center">
                     <p className="text-sm link-hover font-bold">{user.name}</p>
                     <p className="text-xs text-black/70 line-clamp-2">{user.headline}</p>
                 </Link>
@@ -91,7 +91,6 @@ export default function SuggestedConnectionCard({ user }) {
                         }
                     </button>
                 </div>
-
             </div>
         </>
     )

@@ -1,4 +1,4 @@
-import CommentInput from './commentInput';
+import CommentInput from "./CommentInput";
 import { useFetchComments } from "../../../hooks/useComments";
 import { Fragment } from 'react';
 import CommentItem from './CommentItem';

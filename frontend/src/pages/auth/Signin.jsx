@@ -7,7 +7,7 @@ import { signinValidationSchema } from '../../validations/authValidations';
 import { axiosInstance } from "../../utils/axiosInstance";
 import { ClipLoader } from "react-spinners";
 import { toast } from 'react-toastify';
-import useAuth from "../../hooks/useAuth";
+import useAuth from '../../hooks/useAuth';
 
 
 export default function Signin() {
@@ -67,24 +67,24 @@ export default function Signin() {
     return (
         <section className='min-h-screen px-5 pb-5'>
 
-            <div className="flex justify-between items-center ">
+            <div className="flex items-center justify-between ">
                 <div>
                     <img src="/assets/logo.svg" alt="linkedIn Logo" className='w-36 md:w-40 lg:44' />
                 </div>
                 <div>
-                    <Link to="/signup" className='btn btn-primary rounded-full md:px-8'>Join Now</Link>
+                    <Link to="/signup" className='rounded-full btn btn-primary md:px-8'>Join Now</Link>
                 </div>
             </div>
 
-            <div className='flex gap-x-10 items-center'>
+            <div className='flex items-center gap-x-10'>
 
                 {/* Sign-in Form */}
-                <div className="md:flex-1 p-10 shadow rounded-sm">
-                    <h1 className="text-2xl md:text-3xl lg:text-4xl text-balance font-medium leading-10 text-orange-900 mb-6">Welcome to your professional community</h1>
+                <div className="p-10 rounded-sm shadow md:flex-1">
+                    <h1 className="mb-6 text-2xl font-medium leading-10 text-orange-900 md:text-3xl lg:text-4xl text-balance">Welcome to your professional community</h1>
                     <form onSubmit={handleSubmit}>
 
                         {/* Email Input */}
-                        <div className="mb-4 flex flex-col w-full">
+                        <div className="flex flex-col w-full mb-4">
                             <label
                                 htmlFor="email"
                                 className='text-sm mb-0.5 text-slate-800'>Email Address</label>
@@ -104,7 +104,7 @@ export default function Signin() {
                         </div>
 
                         {/* Password Input */}
-                        <div className="mb-4 flex flex-col w-full">
+                        <div className="flex flex-col w-full mb-4">
                             <label
                                 htmlFor="password"
                                 className='text-sm mb-0.5 text-slate-800'>Password</label>
@@ -117,7 +117,7 @@ export default function Signin() {
                                     className='w-full text-base'
                                     {...getFieldProps("password")}
                                 />
-                                <button type='button' className='cursor-pointer p-2' onClick={togglePasswordVisibility}>
+                                <button type='button' className='p-2 cursor-pointer' onClick={togglePasswordVisibility}>
                                     {
                                         isPasswordVisible ? <FiEye size={20} /> : <FiEyeOff size={20} />
                                     }
@@ -129,8 +129,8 @@ export default function Signin() {
                         </div>
 
                         {/* Remember Me & Forgot Password */}
-                        <div className='flex items-centers justify-between mb-6'>
-                            <div className='flex items-centers space-x-2'>
+                        <div className='flex justify-between mb-6 items-centers'>
+                            <div className='flex space-x-2 items-centers'>
                                 <input
                                     type="checkbox"
                                     id="rememberMe"
@@ -161,15 +161,15 @@ export default function Signin() {
                         </div>
                     </form>
 
-                    <div className='divider divider-neutral my-6'>Or</div>
+                    <div className='my-6 divider divider-neutral'>Or</div>
 
                     {/* Social Sign-in & Signup Link */}
                     <div className='flex flex-col gap-y-3'>
-                        <Link to="#" className='btn btn-outline rounded-full'>
+                        <Link to="#" className='rounded-full btn btn-outline'>
                             <FcGoogle size={25} />
                             Continue with Google
                         </Link>
-                        <Link to="/signup" className='btn btn-primary rounded-full'>
+                        <Link to="/signup" className='rounded-full btn btn-primary'>
                             New To Linkedin? Join Now
                         </Link>
                     </div>
@@ -177,7 +177,7 @@ export default function Signin() {
                 </div>
 
                 {/* Side Image */}
-                <div className="md:flex-1 overflow-hidden hidden md:block">
+                <div className="hidden overflow-hidden md:flex-1 md:block">
                     <img src="/assets/login-image.svg" alt="login image" className="size-full" />
                 </div>
             </div>

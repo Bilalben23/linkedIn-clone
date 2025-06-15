@@ -179,10 +179,35 @@ linkedin-clone/
 
 This project is still in an early stage, and there’s plenty of room for enhancements! If you'd like to contribute, **fork this repository**, work on a feature, and submit a pull request. Your contributions are highly appreciated!
 
-## License
+---
 
-This project is licensed under the MIT License.
+### 🚀 Live Demo
+
+Experience the app live: [**Click here to try it out**](#)
 
 ---
 
-Happy Coding! 🚀
+### 📸 Screenshots
+
+A quick glance at the app’s core features:
+
+- 🔐 **Login Page**  
+  ![Login](./frontend/public/assets/screenshots/login_page.png)
+
+- 🏠 **Home Page**  
+  ![Home](./frontend/public/assets/screenshots/home_page.png)
+
+- 📝 **Create Post Modal**  
+  ![Create Post](./frontend/public/assets/screenshots/create_post.png)
+
+- 📄 **Post Page**  
+  ![Post](./frontend/public/assets/screenshots/post_page.png)
+
+- 🌐 **Network Page**  
+  ![Network](./frontend/public/assets/screenshots/network_page.png)
+
+- 🔔 **Notification Page**  
+  ![Notification](./frontend/public/assets/screenshots/notifications_page.png)
+
+- 🙍 **Profile Page**  
+  ![Profile](./frontend/public/assets/screenshots/profile_page.png)

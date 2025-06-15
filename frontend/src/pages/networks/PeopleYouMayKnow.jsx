@@ -30,8 +30,7 @@ export default function PeopleYouMayKnow() {
                                     : suggestedConnections?.map(user => <SuggestedConnectionCard
                                         key={user._id}
                                         user={user}
-                                    />
-                                    )
+                                    />)
                         }
                     </div>
             }

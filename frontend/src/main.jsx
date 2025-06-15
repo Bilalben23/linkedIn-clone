@@ -1,10 +1,10 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App.jsx';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { AuthProvider } from './context/authContext.jsx';
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import {AuthProvider} from "./context/AuthContext.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -38,7 +38,7 @@ createRoot(document.getElementById('root')).render(
           }}
         />
       </AuthProvider>
-      <ReactQueryDevtools />
+    {/* <ReactQueryDevtools /> */}  
     </QueryClientProvider>
   </StrictMode>
 )

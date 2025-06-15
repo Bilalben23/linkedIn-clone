@@ -27,7 +27,7 @@ export default function PersistLogin() {
 
 
     return isLoading
-        ? <div className="min-h-screen flex items-center justify-center">
+        ? <div className="flex items-center justify-center min-h-screen">
             <img
                 src="/assets/loading-spinner.gif"
                 alt='loading-spinner'
